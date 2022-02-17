@@ -1,57 +1,215 @@
 const getDatabase = require('../util/database').getDatabase;
 const User = require('../models/user')
+const EmailSender = require('../util/emailSender')
+const crypto = require("crypto");
 
-exports.findUserById = async (username) => {
-    const db = getDatabase();
-    return db
-        .collection('user')
-        .find({ _id: username })
-        .next()
-        .then(userData => {
-            // const user = new User(userData._id)
-            // user.name = userData.name
-            // user.coin = userData.coin
-            // return user;
-        })
-        .catch(err => {
-            throw err; 
-        });
-}
+const emailSender = new EmailSender("http://localhost:8080/user/activate?m=%email%&id=%id%")
+const pendingAccount = {};
+const pendingLogin = {};
 
-exports.createNewUser = async (req, res, next) => {
+exports.createNewAccount = async (req, res, next) => {
     const email = req.body.email
     const name = req.body.name
-    const username = req.body.username
-    const password = req.body.password
 
-    const user = new User(email, name, username, password)
+    var user;
+    try {
+        user = await User.findByEmail(email)
+    } catch(e) {
+    }
 
-    const db = getDatabase()
+    if (user) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "This email is already in use."
+        }, null, "\t"));
+        res.end();
+        return
+    }
+
+    const activateId = crypto.randomBytes(20).toString('hex');
+    pendingAccount[email] = { 'email': email, 'name': name, 'activateId': activateId };
+
+    // Set expire
+    setTimeout((email, id) => {
+        if (!(email in pendingAccount)) return;
+        if (pendingAccount[email].activateId == id)
+            delete pendingAccount[email]
+    }, 15 * 60 * 1000, email, activateId);
+
+    emailSender.sendAccountActivation(email, name, activateId, function(error, info) {
+        if (error) 
+            console.log(error);
+        else       
+            console.log(info.response);
+    });
+
+    res.write(JSON.stringify({
+        "success": true
+    }, null, "\t"));
+    res.end();
+
+    console.log('email', email);
+    console.log('activateId', activateId);
+}
+
+exports.activateAccount = async (req, res, next) => {
+    const email = req.query.m
+    const activateId = req.query.id
+
+    if (!(email in pendingAccount) || pendingAccount[email].activateId != activateId) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "This activation has expired."
+        }, null, "\t"));
+        res.end();
+        return
+    }
+
+    const user = new User(pendingAccount[email].email, pendingAccount[email].name);
+    delete pendingAccount[email];
 
     try {
-        await db.collection('user').insertOne(user)
+        await user.create();
     } catch (e) {
         res.write(JSON.stringify(e, null, "\t"))
         res.end()
         return
     }
+
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "Your account is activated."
+    }, null, "\t"));
     res.end()
-    return
 }
 
 exports.login = async (req, res, next) => {
-    const username = req.body.username
-    const password = req.body.password
+    const email = req.body.email
 
-    const db = getDatabase()
+    // Check login session
+    const loginSession = req.session.login;
+    if (loginSession) 
+        if (loginSession.email == email && loginSession.verified) {
+            res.write(JSON.stringify({
+                "success": true,
+                "message": "You already login",
+                "user": { 'id': loginSession.id, 'email': email, 'name': loginSession.name }
+            }, null, "\t"));
+            res.end();
+            return;
+        }
+
+    var user;
     try {
-        await db.collection('user')
-                .find({ _id: username, password: password })
-    } catch (e) {
-        res.write(JSON.stringify(e, null, "\t"))
-        res.end()
+        user = await User.findByEmail(email)
+    } catch {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Account is not exist."
+        }, null, "\t"));
+        res.end();
         return
     }
-    res.end()
-    return
+
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    pendingLogin[email] = { 'email': email, 'code': verificationCode };
+
+    // Set expire
+    setTimeout((email, verificationCode) => {
+        if (!(email in pendingLogin)) return;
+        if (pendingLogin[email].code == verificationCode)
+            delete pendingLogin[email]
+    }, 5 * 60 * 1000, email, verificationCode);
+
+    emailSender.sendLoginVerification(email, verificationCode, function(error, info) {
+        if (error) {
+            res.write(JSON.stringify({
+                "success": false,
+                "message": "Unknown error. Please try again later."
+            }, null, "\t"));
+            res.end();
+            console.log(error);
+            return;
+        } else       
+            console.log(info.response);
+    });
+
+    // Add session
+    req.session.login = {
+        'id': null,
+        'email': email,
+        'name': null,
+        'verified': false
+    };
+
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "Email is sent"
+    }, null, "\t"));
+    res.end();
+
+    console.log('verificationCode', verificationCode);
+}
+
+exports.loginVerify = async (req, res, next) => {
+    const loginSession = req.session.login;
+    if (!loginSession) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Session is not exist. Please login again."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    const email = loginSession.email
+    const code = req.body.code
+
+    if (!(email in pendingLogin)) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "The verification code is expired."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    if (code !== pendingLogin[email].code) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "The verification code is incorrect."
+        }, null, "\t"));
+        res.end();
+        console.log(pendingLogin[email].code)
+        return;
+    }
+    delete pendingLogin[email]
+
+    // Get user information
+    var user;
+    try {
+        user = await User.findByEmail(email)
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Unknown error. Please try again later. " + e.message
+        }, null, "\t"));
+        res.end();
+        console.log(pendingLogin[email].code)
+        return;
+    }
+    
+    // Update session
+    req.session.login = {
+        'id': user.id,
+        'email': email,
+        'name': user.name,
+        'verified': true
+    };
+
+    res.write(JSON.stringify({
+        "success": true,
+        "user": user
+    }, null, "\t"));
+    res.end();
 }

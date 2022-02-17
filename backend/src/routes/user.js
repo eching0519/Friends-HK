@@ -6,7 +6,11 @@ const User = require('../models/user')
 
 const userController = require('../controllers/user')
 
+// userController.initUserController();
+
 userRouter.post('/login', userController.login)
-userRouter.post('/register', userController.createNewUser)
+userRouter.post('/login/verify', userController.loginVerify)
+userRouter.post('/register', userController.createNewAccount)
+userRouter.get('/activate', userController.activateAccount)
 
 module.exports = userRouter;
