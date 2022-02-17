@@ -13,7 +13,7 @@ exports.createNewAccount = async (req, res, next) => {
 
     var user;
     try {
-        user = await User.findByEmail(email)
+        user = await User.findByEmail(email, 'login')
     } catch(e) {
     }
 
@@ -101,7 +101,7 @@ exports.login = async (req, res, next) => {
 
     var user;
     try {
-        user = await User.findByEmail(email)
+        user = await User.findByEmail(email, 'login')
     } catch {
         res.write(JSON.stringify({
             "success": false,
@@ -186,7 +186,7 @@ exports.loginVerify = async (req, res, next) => {
     // Get user information
     var user;
     try {
-        user = await User.findByEmail(email)
+        user = await User.findByEmail(email, 'login')
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,

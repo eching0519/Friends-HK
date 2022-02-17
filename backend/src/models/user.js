@@ -7,16 +7,22 @@ class User {
         return result.toArray();
     }
 
-    static findByEmail = async (email) => {
+    static findByEmail = async (email, usage) => {
         const db = getDatabase();
         return await db
             .collection('user')
             .find({ email: email })
             .next()
             .then(data => {
-                const user = new User(data.email, data.name);
-                user.id = data._id
-                return user;
+                switch (usage) {
+                    case 'login':
+                        const user = new User(data.email, data.name);
+                        user.id = data._id
+                        return user;
+
+                    default:
+                        return data;
+                }
             })
             .catch(err => {
                 throw err; 
@@ -35,7 +41,7 @@ class User {
 
     update() {
         const db = getDatabase();
-        return db.collection('user').updateOne( { _id: this._id },
+        return db.collection('user').updateOne( { _id: this.id },
                                                 { $set: this },
                                                 { upsert: false })
     }
