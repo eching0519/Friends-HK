@@ -87,7 +87,7 @@ exports.login = async (req, res, next) => {
     const email = req.body.email
 
     // Check login session
-    const loginSession = req.session.login;
+    const loginSession = req.session.verification;
     if (loginSession) 
         if (loginSession.email == email && loginSession.verified) {
             res.write(JSON.stringify({
@@ -135,10 +135,8 @@ exports.login = async (req, res, next) => {
     });
 
     // Add session
-    req.session.login = {
-        'id': null,
+    req.session.verification = {
         'email': email,
-        'name': null,
         'verified': false
     };
 
@@ -152,7 +150,7 @@ exports.login = async (req, res, next) => {
 }
 
 exports.loginVerify = async (req, res, next) => {
-    const loginSession = req.session.login;
+    const loginSession = req.session.verification;
     if (!loginSession) {
         res.write(JSON.stringify({
             "success": false,
@@ -200,7 +198,7 @@ exports.loginVerify = async (req, res, next) => {
     }
     
     // Update session
-    req.session.login = {
+    req.session.verification = {
         'id': user.id,
         'email': email,
         'name': user.name,

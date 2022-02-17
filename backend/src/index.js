@@ -56,6 +56,12 @@ const userRoute = require('./routes/user')
 const { Session } = require('inspector')
 app.use('/user',userRoute)
 
+// Route for testing
+app.get('/checkSession', (req, res, next) => {
+    res.write(JSON.stringify(req.session, null, "\t"));
+    res.end();
+})
+
 mongoConnect(() => {
     server.listen(port, () => {
         console.log(`Server is up on port ${port}!`)
