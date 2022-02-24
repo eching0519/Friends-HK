@@ -83,10 +83,7 @@ exports.activateAccount = async (req, res, next) => {
     res.end()
 }
 
-exports.login = async (req, res, next) => {
-    const email = req.body.email
-
-    // Check login session
+function alreadyLogin(req, res, email) {
     const loginSession = req.session.verification;
     if (loginSession) 
         if (loginSession.email == email && loginSession.verified) {
@@ -96,8 +93,50 @@ exports.login = async (req, res, next) => {
                 "user": { 'id': loginSession.id, 'email': email, 'name': loginSession.name }
             }, null, "\t"));
             res.end();
-            return;
+            return true;
         }
+
+    return false;
+}
+
+exports.login = async (req, res, next) => {
+    const email = req.body.email
+    const password = req.body.password
+
+    if (alreadyLogin(req, res, email)) return
+
+    var user;
+    try {
+        user = await User.findByEmailAndPassword(email, password)
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Incorrect email or password."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    // Update session
+    req.session.verification = {
+        'id': user.id,
+        'email': email,
+        'name': user.name,
+        'verified': true
+    };
+
+    res.write(JSON.stringify({
+        "success": true,
+        "user": user
+    }, null, "\t"));
+    res.end();
+}
+
+exports.loginByEmail = async (req, res, next) => {
+    const email = req.body.email
+
+    // Check login session
+    if (alreadyLogin(req, res, email)) return
 
     var user;
     try {
@@ -210,4 +249,130 @@ exports.loginVerify = async (req, res, next) => {
         "user": user
     }, null, "\t"));
     res.end();
+}
+
+exports.logout = (req, res, next) => {
+    const loginSession = req.session.verification;
+    if (loginSession) 
+        delete req.session.verification
+
+    res.write(JSON.stringify({
+        "success": true
+    }, null, "\t"));
+    res.end();
+}
+
+function userIsVerified(req, res) {
+    const loginSession = req.session.verification;
+    if (loginSession)   return true
+
+    res.write(JSON.stringify({
+        "success": false,
+        "message": "Please login"
+    }, null, "\t"));
+    res.end();
+    return false;
+}
+
+exports.getUserInfo = async (req, res, next) => {
+    if (!userIsVerified(req, res)) return
+
+    const id = req.session.verification.id  // User Id
+    var user;
+    try {
+        user = await User.findById(id, 'query')
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Unknown error. " + e.message
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    res.write(JSON.stringify({
+        "success": true,
+        "user": user
+    }, null, "\t"));
+    res.end();
+    return;
+}
+
+exports.updateProfilePicture = async (req, res, next) => {
+    if (!userIsVerified(req, res)) return
+
+    const id = req.session.verification.id  // User Id
+    var user;
+    try {
+        user = await User.findById(id, 'update')
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Unknown error."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    console.log(req.body.picture)
+    console.log(req.body)
+    // user.profilePicture = req.picture.path
+    // user.updateProfilePicture()
+
+    res.write(JSON.stringify({
+        "success": true
+    }, null, "\t"));
+    res.end();
+    return;
+
+    // const pic_path = fs.readFileSync(req.picture.path)
+    // const pic_encode = pic_path.toString('base64')
+    // const picture = {
+    //     contentType: req.picture.mimetype,
+    //     img: new Buffer(pic_encode, 'base64')
+    // }
+    
+}
+
+exports.updatePreferences = async (req, res, next) => {
+    if (!userIsVerified(req, res)) return
+
+    const id = req.session.verification.id  // User Id
+    var user;
+    try {
+        user = await User.findById(id, 'update')
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Unknown error."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+    
+    // Please update value in user.preferences
+    // ...
+
+    user.updatePreferences()
+}
+
+exports.updatePassword = async (req, res, next) => {
+    if (!userIsVerified(req, res)) return
+
+    const id = req.session.verification.id  // User Id
+    var user;
+    try {
+        user = await User.findById(id)
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Unknown error."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    // Password...
+
+    
 }
