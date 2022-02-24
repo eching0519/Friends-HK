@@ -20,7 +20,7 @@ userRouter.get('/profile', userController.getUserInfo)
 
 userRouter.post('/profile/picture/update', fileEngine.single('picture'), userController.updateProfilePicture)
 userRouter.post('/profile/preferences/update', userController.updatePreferences)
-userRouter.post('/profile/password/update', userController.updatePassword)
+userRouter.post('/profile/update', userController.updateProfile)
 
 // userRouter.post('/profile/picture/upload', upload.single('picture'), (req, res, next)=> {
 //     res.write(JSON.stringify({

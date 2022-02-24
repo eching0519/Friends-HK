@@ -11,6 +11,7 @@ const pendingLogin = {};
 exports.createNewAccount = async (req, res, next) => {
     const email = req.body.email
     const name = req.body.name
+    const password = req.body.password
 
     var user;
     try {
@@ -28,7 +29,7 @@ exports.createNewAccount = async (req, res, next) => {
     }
 
     const activateId = crypto.randomBytes(20).toString('hex');
-    pendingAccount[email] = { 'email': email, 'name': name, 'activateId': activateId };
+    pendingAccount[email] = { 'email': email, 'name': name, 'password': password, 'activateId': activateId };
 
     // Set expire
     setTimeout((email, id) => {
@@ -67,6 +68,8 @@ exports.activateAccount = async (req, res, next) => {
     }
 
     const user = new User(pendingAccount[email].email, pendingAccount[email].name);
+    user.password = pendingAccount[email].password
+    user.status = 'active'
     delete pendingAccount[email];
 
     try {
@@ -118,6 +121,15 @@ exports.login = async (req, res, next) => {
         return;
     }
 
+    if (user.status != 'active') {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Your account status is '" + user.status + "'. Contact us for more information."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
     // Update session
     req.session.verification = {
         'id': user.id,
@@ -149,6 +161,15 @@ exports.loginByEmail = async (req, res, next) => {
         }, null, "\t"));
         res.end();
         return
+    }
+
+    if (user.status != 'active') {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Your account status is '" + user.status + "'. Contact us for more information."
+        }, null, "\t"));
+        res.end();
+        return;
     }
 
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -276,10 +297,14 @@ function userIsVerified(req, res) {
 }
 
 exports.getUserInfo = async (req, res, next) => {
-    if (!userIsVerified(req, res)) return
-
-    const id = req.session.verification.id  // User Id
+    var id = req.query.id
     var user;
+
+    if (id == null) {
+        if (!userIsVerified(req, res)) return
+        id = req.session.verification.id
+    }
+
     try {
         user = await User.findById(id, 'query')
     } catch (e) {
@@ -290,6 +315,9 @@ exports.getUserInfo = async (req, res, next) => {
         res.end();
         return;
     }
+
+    // Remove password before response
+    delete user.password
 
     res.write(JSON.stringify({
         "success": true,
@@ -349,7 +377,7 @@ exports.updatePreferences = async (req, res, next) => {
     user.updatePreferences()
 }
 
-exports.updatePassword = async (req, res, next) => {
+exports.updateProfile = async (req, res, next) => {
     if (!userIsVerified(req, res)) return
 
     const id = req.session.verification.id  // User Id
@@ -365,7 +393,7 @@ exports.updatePassword = async (req, res, next) => {
         return;
     }
 
-    // Password...
+    // Password, Name...
 
     
 }

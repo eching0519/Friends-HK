@@ -46,10 +46,12 @@ class User {
                     case 'register', 'login':
                         var user = new User(data.email, data.name);
                         user.id = data._id;
+                        user.status = data.status;
                         return user;
                     case 'all':
                         var user = new User(data.email, data.name);
                         user.id = data._id;
+                        user.status = data.status;
                         user.preferences = data.preferences
                         return user;
                     default:
@@ -70,6 +72,7 @@ class User {
             .then(data => {
                 const user = new User(data.email, data.name);
                 user.id = data._id;
+                user.status = data.status
                 return user;
             })
             .catch(err => {
