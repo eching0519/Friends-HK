@@ -2,6 +2,7 @@ const getDatabase = require('../util/database').getDatabase;
 const User = require('../models/user')
 const EmailSender = require('../util/emailSender')
 const crypto = require("crypto");
+const path = require("path")
 
 const emailSender = new EmailSender("http://localhost:8080/user/activate?m=%email%&id=%id%")
 const pendingAccount = {};
@@ -299,6 +300,9 @@ exports.getUserInfo = async (req, res, next) => {
 }
 
 exports.updateProfilePicture = async (req, res, next) => {
+    console.log(req.file)
+    const picUrl = "http://localhost:8080/user/profile/picture/" + req.file.filename
+
     if (!userIsVerified(req, res)) return
 
     const id = req.session.verification.id  // User Id
@@ -314,24 +318,13 @@ exports.updateProfilePicture = async (req, res, next) => {
         return;
     }
 
-    console.log(req.body.picture)
-    console.log(req.body)
-    // user.profilePicture = req.picture.path
-    // user.updateProfilePicture()
+    user.picture = picUrl
+    user.updateProfilePicture()
 
     res.write(JSON.stringify({
         "success": true
     }, null, "\t"));
     res.end();
-    return;
-
-    // const pic_path = fs.readFileSync(req.picture.path)
-    // const pic_encode = pic_path.toString('base64')
-    // const picture = {
-    //     contentType: req.picture.mimetype,
-    //     img: new Buffer(pic_encode, 'base64')
-    // }
-    
 }
 
 exports.updatePreferences = async (req, res, next) => {

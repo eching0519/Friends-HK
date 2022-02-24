@@ -54,6 +54,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Route
 const userRoute = require('./routes/user')
 const { Session } = require('inspector')
+app.use('/user/profile/picture', express.static(__dirname + '/util/img'))
 app.use('/user',userRoute)
 
 // Route for testing

@@ -104,7 +104,12 @@ class User {
     }
 
     updateProfilePicture() {
-        // storageEngine.single('file', )
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: this.id },
+                                                { $set: {
+                                                    'picture': this.picture
+                                                } },
+                                                { upsert: false })
     }
 }
 
