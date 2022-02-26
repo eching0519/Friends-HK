@@ -50,6 +50,15 @@ class Admin {
                                                 { $set: this },
                                                 { upsert: false })
     }
+
+    static updatePassword(id, password) {
+        const db = getDatabase();
+        return db.collection('admin').updateOne( { _id: id },
+                                                { $set: {
+                                                    'password': password
+                                                } },
+                                                { upsert: false })
+    }
 }
 
 module.exports = Admin;
