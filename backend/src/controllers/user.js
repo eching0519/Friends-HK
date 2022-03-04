@@ -2,7 +2,8 @@ const getDatabase = require('../util/database').getDatabase;
 const User = require('../models/user')
 const EmailSender = require('../util/emailSender')
 const crypto = require("crypto");
-const path = require("path")
+const path = require("path");
+const { type } = require('os');
 
 const emailSender = new EmailSender("http://localhost:8080/user/activate?m=%email%&id=%id%")
 const pendingAccount = {};
@@ -370,11 +371,18 @@ exports.updatePreferences = async (req, res, next) => {
         res.end();
         return;
     }
-    
     // Please update value in user.preferences
     // ...
-
-    user.updatePreferences()
+    // console.log(typeof(req.body.language));
+    // console.log(req.body.language);
+    const language = new Array(req.body.language);
+    const hobbies = new Array(req.body.hobbies);
+    user.preferences = language.concat(hobbies);
+    user.updatePreferences();
+    res.write(JSON.stringify({
+        "success": true
+    }, null, "\t"));
+    res.end();
 }
 
 exports.updateProfile = async (req, res, next) => {
@@ -383,7 +391,7 @@ exports.updateProfile = async (req, res, next) => {
     const id = req.session.verification.id  // User Id
     var user;
     try {
-        user = await User.findById(id)
+        user = await User.findById(id, 'update')
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
@@ -394,6 +402,28 @@ exports.updateProfile = async (req, res, next) => {
     }
 
     // Password, Name...
+    const newName = req.body.name;
+    const newPassword = req.body.password;
+    if (newName!=""){
+        user.name = newName;
+        user.updateName();
+        res.write(JSON.stringify({
+            "success": true
+        }, null, "\t"));
+        res.end();
+        console.log("update name");
+    }
+
+    if (newPassword!=""){
+        user.password = newPassword;
+        user.updatePassword();
+        res.write(JSON.stringify({
+            "success": true
+        }, null, "\t"));
+        res.end();
+        console.log("update password");
+    }
+
 
     
 }
