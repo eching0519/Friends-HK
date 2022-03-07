@@ -9,7 +9,8 @@ const Admin = require('../models/admin');
 const adminController = require('../controllers/admin');
 const fileEngine = require('../util/fileEngine');
 
-adminRouter.post('/block',Admin.adminBlockUser);
+adminRouter.post('/block',adminController.adminBlockUser);
+adminRouter.post('/login', adminController.adminLogin);
 
 
 

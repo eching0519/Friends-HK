@@ -18,7 +18,7 @@ class Admin {
                 throw err; 
             });
     }
-
+    //problem still return null for finding admin
     static findByIdAndPassword = async (id, password) => {
         const db = getDatabase();
         return await db

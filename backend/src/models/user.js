@@ -83,6 +83,12 @@ class User {
     constructor(email, name) {
         this.email = email;
         this.name = name;
+        // for personal self introduction
+        // example:
+        // reputation
+        // interest
+        // age....
+
     }
 
     async create() {
