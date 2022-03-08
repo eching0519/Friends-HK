@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Template used:
+
+Purple react(https://www.bootstrapdash.com/product/purple-react-free/#product-demo-section), code in frontend/template
+
 ## Available Scripts
 
 In the project directory, you can run:
