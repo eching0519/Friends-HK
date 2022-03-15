@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Chatbox from "../Chatbox/Chatbox";
 import Sidebar from "../Sidebar/Sidebar";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,9 +7,13 @@ import './Home.css';
 
 function Home(props) {
     let navigate = useNavigate();
-    if (props.token == null) {
-        //navigate('/');
-    }
+
+    useEffect(() => {
+        if (localStorage.token == null) {
+            navigate("/");  // back to login page if there is no valid session token
+        }
+    });
+    
     return (
         <>
             <h1>This is home page!</h1>
