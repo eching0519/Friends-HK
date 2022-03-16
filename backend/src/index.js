@@ -13,6 +13,8 @@ const server = http.createServer(app);
 const io = socketio(server);
 const router=express.Router();
 
+
+
 const port = process.env.PORT || 8080
 // const publicDirectoryPath = path.join(__dirname, '../public')
 
@@ -59,6 +61,16 @@ const { Session } = require('inspector')
 app.use('/user/profile/picture', express.static(path.join(__dirname, '..', '_file/profilePicture')))
 app.use('/user',userRoute)
 app.use('/admin',adminRoute)
+
+//set-up of body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(function (req, res) {
+    res.setHeader('Content-Type', 'text/plain')
+    res.write('you posted:\n')
+    res.end(JSON.stringify(req.body, null, 2))
+  })
+//
 
 // Route for testing
 app.get('/checkSession', (req, res, next) => {

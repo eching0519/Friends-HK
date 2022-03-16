@@ -138,6 +138,15 @@ class User {
                                                 } },
                                                 { upsert: false })
     }
+
+
+    //get the list of blocklist
+    //for compare , if block=>can't login
+    //else, can log in
+    getBlocklist(id){
+        
+    } 
+
 }
 
 module.exports = User;
