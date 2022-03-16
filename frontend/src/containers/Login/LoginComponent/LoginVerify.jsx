@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function LoginVerify(props) {
+const LoginVerify = props => {
     return (
         <form className="pt-3">
             <div className="d-flex search-field">

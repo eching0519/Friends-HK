@@ -52,7 +52,7 @@ function LoginBox(props) {
                         () => {
                             localStorage.setItem('token', 12345);
                         }
-                    }>Login (to be remove)</Link>
+                    }>Go To Home directly</Link>
                 </div>
                 <div className="my-2 d-flex justify-content-between align-items-center">
                     <div className="form-check">
@@ -71,7 +71,7 @@ function LoginBox(props) {
 
                 </div>
                 <div className="text-center mt-4 font-weight-light">
-                    Don't have an account? <a herf='#' className="text-primary" onClick={() => {props.setloginState('signup');}}>Create</a>
+                    Don't have an account? <button type="button" className="btn btn-link text-primary" onClick={() => {props.setloginState('signup');}}>Create</button>
                 </div>
             </form>
         </>

@@ -20,7 +20,8 @@ function Signup(props) {
         console.log(data);
         setDisableInput(false);
         if (data.success) {
-            props.setloginState('verify');
+            console.log('register successful');
+            //props.setloginState('verify');
             //setloginState('success');
         }
     };
@@ -52,7 +53,7 @@ function Signup(props) {
                     } disabled={disableInput}>Confirm</button>
                 </div>
                 <div className="my-2 d-flex justify-content-between align-items-center">
-                    <a className="nav-link active" aria-current="page" herf='#' onClick={() => {props.setloginState('login');}}>Back</a>
+                    <button type="button" className="btn btn-link" aria-current="page" onClick={() => {props.setloginState('login');}}>Back</button>
                 </div>
                 <div className="mb-2">
                     
