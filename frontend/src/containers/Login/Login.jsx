@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import LoginBox from "./LoginComponent/LoginBox";
 import LoginVerify from "./LoginComponent/LoginVerify";
 import './Login.css';
+import Signup from "./LoginComponent/Signup";
 
 function Login() {
     const [loginState, setloginState] = useState("login");
@@ -50,13 +51,18 @@ function Login() {
         })
         */
     };
+    
     let loginplaceholder = 0;
     if (loginState === 'login') {
-        loginplaceholder = <LoginBox setUserName={setUserName} setUserPassword={setUserPassword} sendLoginRequest={sendLoginRequest} />;
+        loginplaceholder = <LoginBox setUserName={setUserName} setUserPassword={setUserPassword} sendLoginRequest={sendLoginRequest} setloginState = {setloginState}/>;
     }
 
     if (loginState === 'verify') {
         loginplaceholder = <LoginVerify />;
+    }
+
+    if (loginState === 'signup') {
+        loginplaceholder = <Signup setloginState = {setloginState}/>;        
     }
 
 
@@ -73,9 +79,10 @@ function Login() {
                 <div className="col-lg-4 mx-auto login-box-fragment">
                     <div className="auth-form-light text-left py-5 px-4 px-sm-5">
                         <div className="brand-logo">
+                            
                         </div>
+                        
                         <h4>Hello! let's get started</h4>
-                        <h6 className="font-weight-light">Sign in to continue.</h6>
                         {loginplaceholder}
                     </div>
                 </div>

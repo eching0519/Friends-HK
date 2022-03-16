@@ -22,7 +22,7 @@ function Home(props) {
                     <Sidebar />
                     <Link className="btn btn-primary" to ='/' onClick={
                         () => {
-                           console.log('logout!');
+                           console.log('logout...');
                         }
                     }>Logout</Link>
                 </div>
@@ -31,7 +31,6 @@ function Home(props) {
                 </div>
 
             </div>
-
         </>
     )
 }

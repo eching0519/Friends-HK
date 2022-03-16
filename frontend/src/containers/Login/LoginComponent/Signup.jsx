@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 
-function LoginBox(props) {
+function Signup(props) {
+    const [userEmail, setUserEmail] = useState('');
     const [userName, setUserName] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [disableInput, setDisableInput] = useState(false);
 
-    const sendLoginRequest = async () => {
-        
-        let url = '/user/login';
+    const sendRegisterRequest = async () => {
+        let url = '/user/register';
         let res = await fetch(url, {
             method: 'POST',
             body: JSON.stringify({
-                email: userName,
+                email: userEmail,
+                name: userName,
                 password: userPassword
             })
         });
@@ -23,55 +23,43 @@ function LoginBox(props) {
             props.setloginState('verify');
             //setloginState('success');
         }
-
     };
 
     return (
         <>
-            <h6 className="font-weight-light">Sign in to continue.</h6>
+            <h6 className="font-weight-light">Create a new account:</h6>
             <form className="pt-3">
                 <div className="d-flex search-field">
                     <input type="email" placeholder="Username" size="lg" className="h-auto" onChange={(event) => {
                         setUserName(event.target.value);
-                    }} disabled={disableInput}/>
+                    }} />
+                </div>
+                <div className="d-flex search-field">
+                    <input type="text" placeholder="Username" size="lg" className="h-auto" onChange={(event) => {
+                        setUserEmail(event.target.value);
+                    }} />
                 </div>
                 <div className="d-flex search-field">
                     <input type="password" placeholder="Password" size="lg" className="h-auto" onChange={(event) => {
                         setUserPassword(event.target.value);
-                    }} disabled={disableInput}/>
+                    }} />
                 </div>
                 <div className="mt-3">
                     <button type="button" className="btn btn-primary" onClick={
                         () => {
-                            setDisableInput(true);
-                            sendLoginRequest();
-                            //localStorage.setItem('token', 12345);
+                            sendRegisterRequest();
                         }
-                    } disabled={disableInput}>Login</button>
-                    <Link className="btn btn-primary" to='/home' onClick={
-                        () => {
-                            localStorage.setItem('token', 12345);
-                        }
-                    }>Login (to be remove)</Link>
+                    } disabled={disableInput}>Confirm</button>
                 </div>
                 <div className="my-2 d-flex justify-content-between align-items-center">
-                    <div className="form-check">
-                        <label className="form-check-label text-muted">
-                            <input type="checkbox" className="form-check-input" />
-                            <i className="input-helper"></i>
-                            Keep me signed in
-                        </label>
-                    </div>
-                    <a href="!#" className="auth-link text-black">Forgot password?</a>
+                    <a className="nav-link active" aria-current="page" herf='#' onClick={() => {props.setloginState('login');}}>Back</a>
                 </div>
                 <div className="mb-2">
-                    <button type="button" className="btn btn-block btn-facebook auth-form-btn">
-                        <i className="mdi mdi-facebook mr-2"></i>Connect using facebook
-                    </button>
+                    
 
                 </div>
                 <div className="text-center mt-4 font-weight-light">
-                    Don't have an account? <a herf='#' className="text-primary" onClick={() => {props.setloginState('signup');}}>Create</a>
+                    
                 </div>
             </form>
         </>
@@ -79,4 +67,4 @@ function LoginBox(props) {
     )
 }
 
-export default LoginBox;
+export default Signup;
