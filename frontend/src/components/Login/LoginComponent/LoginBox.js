@@ -7,14 +7,23 @@ function LoginBox(props) {
     const [disableInput, setDisableInput] = useState(false);
 
     const sendLoginRequest = async () => {
-        
+
         let url = '/user/login';
+        //console.log('hello')
+        //console.log(userName);
+        /*
+        let body = {
+            email: `${userName}`,
+            password: `${userPassword}`
+        }
+        */
+        let body = `email=${userName}&password=${userPassword}`;
+ 
         let res = await fetch(url, {
             method: 'POST',
-            body: JSON.stringify({
-                email: userName,
-                password: userPassword
-            })
+            //mode: 'cors',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body,
         });
         let data = await res.json();
 
@@ -33,12 +42,12 @@ function LoginBox(props) {
                 <div className="d-flex search-field">
                     <input type="email" placeholder="Username" size="lg" className="h-auto" onChange={(event) => {
                         setUserName(event.target.value);
-                    }} disabled={disableInput}/>
+                    }} disabled={disableInput} />
                 </div>
                 <div className="d-flex search-field">
                     <input type="password" placeholder="Password" size="lg" className="h-auto" onChange={(event) => {
                         setUserPassword(event.target.value);
-                    }} disabled={disableInput}/>
+                    }} disabled={disableInput} />
                 </div>
                 <div className="mt-3">
                     <button type="button" className="btn btn-primary" onClick={
@@ -51,7 +60,7 @@ function LoginBox(props) {
                             //sessionStorage.setItem('token', 12345);
                         }
                     } disabled={disableInput}>Login</button>
-                    <Link to='/home' className="btn btn-primary"  onClick={
+                    <Link to='/home' className="btn btn-primary" onClick={
                         () => {
                             sessionStorage.setItem('token', 12345);
                         }
@@ -74,7 +83,7 @@ function LoginBox(props) {
 
                 </div>
                 <div className="text-center mt-4 font-weight-light">
-                    Don't have an account? <button type="button" className="btn btn-link text-primary" onClick={() => {props.setloginState('signup');}}>Create</button>
+                    Don't have an account? <button type="button" className="btn btn-link text-primary" onClick={() => { props.setloginState('signup'); }}>Create</button>
                 </div>
             </form>
         </>

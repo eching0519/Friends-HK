@@ -13,6 +13,7 @@ const Login = () => {
     let navigate = useNavigate();
 
     useEffect(() => {
+        console.log(`changed to ${loginState}`)
         if (loginState === 'success') {
             navigate("/home");
         }
@@ -41,7 +42,7 @@ const Login = () => {
     }
 
     if (loginState === 'verify') {
-        loginplaceholder = <LoginVerify />;
+        loginplaceholder = <LoginVerify setloginState={setloginState}/>;
     }
 
     if (loginState === 'signup') {

@@ -107,6 +107,8 @@ exports.login = async (req, res, next) => {
             "success": false,
             "message": "Account is not exist."
         }, null, "\t"));
+        console.log('hello')//////////////////////////////////////////////////////
+        console.log(req.body);
         res.end();
         return
     }
@@ -140,6 +142,9 @@ exports.login = async (req, res, next) => {
         'verified': false
     };
 
+    console.log('hello')/////////////////////////////////////////////////////////
+    console.log(req.body);//
+    
     res.write(JSON.stringify({
         "success": true,
         "message": "Email is sent"

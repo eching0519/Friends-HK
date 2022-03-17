@@ -8,24 +8,21 @@ const LoginVerify = props => {
     const sendVerifyRequest = async () => {
 
         let url = '/user/login/verify';
+        let body = `code=${verifyCode}`;
+
         let res = await fetch(url, {
             method: 'POST',
-            body: JSON.stringify({
-                code: verifyCode
-            })
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body
         });
         let data = await res.json();
         console.log(data);
 
         setDisableInput(false);
         if (data.success) {
+            console.log('finally!!!!')
             props.setloginState('success');
         }
-
-        res.catch((error) => {
-            setDisableInput(false);
-            console.log('server have some problem...');
-        })
 
     };
 
@@ -40,7 +37,10 @@ const LoginVerify = props => {
             <div className="mt-3">
                 <button type="button" className="btn btn-primary" onClick={
                     () => {
-                        sendVerifyRequest();
+                        sendVerifyRequest().catch((error) => {
+                            setDisableInput(false);
+                            console.log('server have some problem...');
+                        });
                     }
                 }>Confirm</button>
             </div>
