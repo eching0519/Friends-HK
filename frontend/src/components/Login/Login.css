@@ -1,6 +1,12 @@
 .login-icon-fragment {
     background-color:plum;
+    
+}
 
+@media (max-width: 800px) {
+    .login-icon-fragment {
+        display: none;
+    }
 }
 
 .login-box-fragment {
