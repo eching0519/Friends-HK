@@ -8,9 +8,12 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoConnect = require('./util/database').mongoConnect
 
-const app = express()
-const server = http.createServer(app)
-const io = socketio(server)
+const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
+const router=express.Router();
+
+
 
 const port = process.env.PORT || 8080
 // const publicDirectoryPath = path.join(__dirname, '../public')
@@ -53,20 +56,36 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Route
 const userRoute = require('./routes/user')
+const adminRoute = require('./routes/admin')
 const { Session } = require('inspector')
 app.use('/user/profile/picture', express.static(path.join(__dirname, '..', '_file/profilePicture')))
 app.use('/user',userRoute)
+app.use('/admin',adminRoute)
+
+//set-up of body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(function (req, res) {
+    res.setHeader('Content-Type', 'text/plain')
+    res.write('you posted:\n')
+    res.end(JSON.stringify(req.body, null, 2))
+  })
+//
 
 // Route for testing
 app.get('/checkSession', (req, res, next) => {
     res.write(JSON.stringify(req.session, null, "\t"));
     res.end();
 })
-
+// Connection of mongDB
 mongoConnect(() => {
     server.listen(port, () => {
         console.log(`Server is up on port ${port}!`)
     })
 })
+
+
+
+
 
 

@@ -83,6 +83,12 @@ class User {
     constructor(email, name) {
         this.email = email;
         this.name = name;
+        // for personal self introduction
+        // example:
+        // reputation
+        // interest
+        // age....
+
     }
 
     async create() {
@@ -114,6 +120,33 @@ class User {
                                                 } },
                                                 { upsert: false })
     }
+
+    updateName() {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: this.id },
+                                                { $set: {
+                                                    'name': this.name
+                                                } },
+                                                { upsert: false })
+    }
+
+    updatePassword() {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: this.id },
+                                                { $set: {
+                                                    'password': this.password
+                                                } },
+                                                { upsert: false })
+    }
+
+
+    //get the list of blocklist
+    //for compare , if block=>can't login
+    //else, can log in
+    getBlocklist(id){
+        
+    } 
+
 }
 
 module.exports = User;
