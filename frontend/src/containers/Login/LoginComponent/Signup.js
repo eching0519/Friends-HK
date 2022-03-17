@@ -21,8 +21,6 @@ function Signup(props) {
         setDisableInput(false);
         if (data.success) {
             console.log('register successful');
-            //props.setloginState('verify');
-            //setloginState('success');
         }
     };
 

@@ -45,12 +45,12 @@ function LoginBox(props) {
                         () => {
                             setDisableInput(true);
                             sendLoginRequest();
-                            //localStorage.setItem('token', 12345);
+                            //sessionStorage.setItem('token', 12345);
                         }
                     } disabled={disableInput}>Login</button>
-                    <Link className="btn btn-primary" to='/home' onClick={
+                    <Link to='/home' className="btn btn-primary"  onClick={
                         () => {
-                            localStorage.setItem('token', 12345);
+                            sessionStorage.setItem('token', 12345);
                         }
                     }>Go To Home directly</Link>
                 </div>
