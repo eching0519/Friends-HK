@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const LoginVerify = props => {
     const [verifyCode, setVerifyCode] = useState('');
+    const [disableInput, setDisableInput] = useState(false);
 
     const sendVerifyRequest = async () => {
-        
+
         let url = '/user/login/verify';
         let res = await fetch(url, {
             method: 'POST',
@@ -15,10 +16,16 @@ const LoginVerify = props => {
         });
         let data = await res.json();
         console.log(data);
+
         setDisableInput(false);
         if (data.success) {
             props.setloginState('success');
         }
+
+        res.catch((error) => {
+            setDisableInput(false);
+            console.log('server have some problem...');
+        })
 
     };
 
@@ -27,7 +34,7 @@ const LoginVerify = props => {
             <div className="d-flex search-field">
                 <input type="text" placeholder="n-digit code" size="lg" className="h-auto" onChange={(event) => {
                     setVerifyCode(event.target.value);
-                }} />
+                }} disabled={disableInput} />
             </div>
 
             <div className="mt-3">

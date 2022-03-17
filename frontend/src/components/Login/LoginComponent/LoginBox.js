@@ -17,13 +17,13 @@ function LoginBox(props) {
             })
         });
         let data = await res.json();
+
         console.log(data);
         setDisableInput(false);
         if (data.success) {
             props.setloginState('verify');
             //setloginState('success');
         }
-
     };
 
     return (
@@ -44,7 +44,10 @@ function LoginBox(props) {
                     <button type="button" className="btn btn-primary" onClick={
                         () => {
                             setDisableInput(true);
-                            sendLoginRequest();
+                            sendLoginRequest().catch((error) => {
+                                setDisableInput(false);
+                                console.error('server have some problem... probably node server havent start');
+                            })
                             //sessionStorage.setItem('token', 12345);
                         }
                     } disabled={disableInput}>Login</button>

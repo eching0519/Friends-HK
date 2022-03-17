@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { Login, Home } from './containers'
+import { Login, Home } from './components'
 
 function App() {
   return (

@@ -33,23 +33,6 @@ const Login = () => {
             setloginState('verify');
             //setloginState('success');
         }
-
-
-        /*
-        fetch(url, {
-            method: 'POST',
-            //mode: 'no-cors',
-            body: JSON.stringify({
-                "email": userName,
-                "password": userPassword
-            })
-        }).then((res) => {
-            let data = await res.json();
-            console.log(data);
-        }).catch((error) => {
-            console.log(error);
-        })
-        */
     };
 
     let loginplaceholder = 0;

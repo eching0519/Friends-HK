@@ -9,7 +9,7 @@ function Home(props) {
     let navigate = useNavigate();
 
     useEffect(() => {
-        if (localStorage.token == null) {
+        if (!localStorage.token || !sessionStorage.token) {
             navigate("/");  // back to login page if there is no valid session token
         }
     });
