@@ -26,11 +26,12 @@ function App() {
   //let page = login_status ? navigate('/home') : navigate('/login');
   return (
     <div className="App">
-      <h1 className="">hello world! </h1>
+      
       
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
       
 
