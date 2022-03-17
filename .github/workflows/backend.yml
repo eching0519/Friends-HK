@@ -1,0 +1,8 @@
+on:
+  push:
+    paths:
+      - 'backend/**'
+jobs:
+  my-job:
+    name: My Job
+    runs-on: ubuntu-latest
