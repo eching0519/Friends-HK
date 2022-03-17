@@ -1,7 +1,18 @@
 import React from "react";
+import Sidebar from "../Sidebar/Sidebar";
+import Chat from "../ToChat/Chat";
 
 function Chatbox(props) {
-    return <h1>Chatbox!</h1>
+    return(
+        <div>
+        <h1>Chatbox!</h1>
+        <div>
+           
+        </div>    
+        </div>
+    ) 
+    
+    
 }
 
 export default Chatbox;

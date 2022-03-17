@@ -1,0 +1,11 @@
+.Afriend-fragment {
+  border: solid;
+}
+.Friendlist-fragment {
+  background-color: orange;
+  margin-top: 10px;
+  /* overflow: auto; */
+}
+input {
+  width: 100%;
+}

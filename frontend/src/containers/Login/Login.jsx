@@ -6,7 +6,7 @@ function Login() {
     let navigate = useNavigate();
     return (
         <div className="login-page">
-            <div className="row w-100 mx-0"><h1>Login!</h1>
+            <div className="row w-100 mx-0"><h1>Friends@HK</h1>
                 <div className="col-lg-8 mx-auto login-icon-fragment">
                     <h2>Welcome!</h2>
                     <p>Add icon here</p>

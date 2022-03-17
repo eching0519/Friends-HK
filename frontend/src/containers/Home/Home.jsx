@@ -12,17 +12,19 @@ function Home(props) {
     }
     return (
         <>
-            <h1>This is home page!</h1>
-            <div className="row w-100 mx-0">
-                <div className="col-lg-3 mx-auto sidebar-fragment">
-                    <Sidebar />
-                    <Link className="btn btn-primary" to ='/' onClick={
+            <h1>Chat</h1>
+            <Link className="btn btn-primary" to ='/' onClick={
                         () => {
                            console.log('logout!');
                         }
                     }>Logout</Link>
+            <div className="row w-100 mx-0">
+                {/* <div className="col-md-3 mx-0"> */}
+                <div className="col-md-3 mx-0 sidebar-fragment">
+                    <Sidebar />
+                    
                 </div>
-                <div className="col-lg-9 mx-auto chatbox-fragment">
+                <div className="col-md-9 mx-0 chatbox-fragment">
                     <Chatbox />
                 </div>
 

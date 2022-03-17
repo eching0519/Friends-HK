@@ -1,7 +1,14 @@
 .sidebar-fragment {
-    background-color: antiquewhite;
+  background-color: pink;
+  overflow-y: auto;
+  /* position: absolute;
+  width: 100%;
+  height: 100%; */
 }
 
 .chatbox-fragment {
-    background-color: aquamarine;
+  background-color: aquamarine;
+  /* position: absolute;
+  width: 100%;
+  height: 100%; */
 }
