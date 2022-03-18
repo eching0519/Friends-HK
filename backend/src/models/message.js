@@ -1,5 +1,6 @@
 class Message {
-    constructor(text) {
+    constructor(sender, text) {
+        this.sender = sender
         this.text = text
         this.createdAt = new Date().getTime()
     }
