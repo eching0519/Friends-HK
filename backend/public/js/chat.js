@@ -14,9 +14,9 @@ const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true }
 
 // -- Receive Message --
 socket.on('message', (message) => {
-    console.log(message)
 
     const html = Mustache.render(messageTemplate, {
+        sender: message.sender,
         message: message.text,
         date: moment(message.createdAt).format('DD-MMM-YY'),
         time: moment(message.createdAt).format('hh:mm:ss')
@@ -33,7 +33,7 @@ $messageForm.addEventListener('submit', (e) => {
     
     const message = e.target.elements.message.value
 
-    socket.emit('sendMessage', message, (msg) => {
+    socket.emit('sendMessage', room, username, message, (msg) => {
         // enable
         $messageFormButton.removeAttribute('disabled')
         $messageFormInput.value = ''
@@ -43,4 +43,4 @@ $messageForm.addEventListener('submit', (e) => {
     })
 })
 
-socket.emit('join', { username, room })
+socket.emit('join', { room, username })
