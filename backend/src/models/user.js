@@ -1,3 +1,5 @@
+const { ObjectID } = require('mongodb');
+
 const getDatabase = require('../util/database').getDatabase;
 
 class User {
@@ -5,6 +7,32 @@ class User {
         const db = getDatabase();
         const result = await db.collection('user').find();
         return result.toArray();
+    }
+
+    static findById = async (id, usage) => {
+        const db = getDatabase();
+        return await db
+            .collection('user')
+            .find({ '_id': ObjectID(id) })
+            .next()
+            .then(data => {
+                switch (usage) {
+                    case 'update':
+                        var user = new User(data.email, data.name);
+                        user.id = data._id;
+                        user.preferences = data.preferences
+                        return user;
+                    case 'query':
+                        return data;
+
+                    default:
+                        return data;
+                }
+                
+            })
+            .catch(err => {
+                throw err; 
+            });
     }
 
     static findByEmail = async (email, usage) => {
@@ -15,11 +43,17 @@ class User {
             .next()
             .then(data => {
                 switch (usage) {
-                    case 'login':
-                        const user = new User(data.email, data.name);
-                        user.id = data._id
+                    case 'register', 'login':
+                        var user = new User(data.email, data.name);
+                        user.id = data._id;
+                        user.status = data.status;
                         return user;
-
+                    case 'all':
+                        var user = new User(data.email, data.name);
+                        user.id = data._id;
+                        user.status = data.status;
+                        user.preferences = data.preferences
+                        return user;
                     default:
                         return data;
                 }
@@ -29,9 +63,32 @@ class User {
             });
     }
 
+    static findByEmailAndPassword = async (email, password) => {
+        const db = getDatabase();
+        return await db
+            .collection('user')
+            .find({ 'email': email, 'password': password })
+            .next()
+            .then(data => {
+                const user = new User(data.email, data.name);
+                user.id = data._id;
+                user.status = data.status
+                return user;
+            })
+            .catch(err => {
+                throw err; 
+            });
+    }
+
     constructor(email, name) {
         this.email = email;
         this.name = name;
+        // for personal self introduction
+        // example:
+        // reputation
+        // interest
+        // age....
+
     }
 
     async create() {
@@ -45,6 +102,51 @@ class User {
                                                 { $set: this },
                                                 { upsert: false })
     }
+
+    updatePreferences() {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: this.id },
+                                                { $set: {
+                                                    'preferences': this.preferences
+                                                } },
+                                                { upsert: false })
+    }
+
+    updateProfilePicture() {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: this.id },
+                                                { $set: {
+                                                    'picture': this.picture
+                                                } },
+                                                { upsert: false })
+    }
+
+    updateName() {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: this.id },
+                                                { $set: {
+                                                    'name': this.name
+                                                } },
+                                                { upsert: false })
+    }
+
+    updatePassword() {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: this.id },
+                                                { $set: {
+                                                    'password': this.password
+                                                } },
+                                                { upsert: false })
+    }
+
+
+    //get the list of blocklist
+    //for compare , if block=>can't login
+    //else, can log in
+    getBlocklist(id){
+        
+    } 
+
 }
 
 module.exports = User;

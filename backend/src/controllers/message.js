@@ -1,0 +1,1 @@
+const getDatabase = require('../util/database').getDatabase;
