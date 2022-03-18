@@ -12,6 +12,7 @@ const fileEngine = require('../util/fileEngine');
 adminRouter.post('/block',adminController.adminBlockUser);
 adminRouter.post('/login', adminController.adminLogin);
 
+adminRouter.post('/profile/changePassword', adminController.adminChangePassword);
 
 
 
