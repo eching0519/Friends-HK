@@ -20,7 +20,7 @@ const LoginVerify = props => {
 
         setDisableInput(false);
         if (data.success) {
-            console.log('finally!!!!')
+            //console.log('finally!!!!')
             props.setloginState('success');
         }
 

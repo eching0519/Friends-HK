@@ -3,11 +3,26 @@ import React from "react";
 function Sidebar(props) {
     return (
         <>
-            <h1>Sidebar!</h1>
-            <button className="btn btn-primary" onClick={() => {
-                props.clickHandle('50');
-                console.log('clicked!');
-            }}>click</button>
+            <h1>Contacts:</h1>
+            <div className="row">
+                <h4>Peter</h4>
+                <button className="btn btn-primary" onClick={() => {
+                    props.setRoom('Peter1');
+                    props.setName('Peter');
+                    console.log('clicked!');
+                }}
+                >click</button>
+            </div>
+            <div className="row">
+                <h4>Mary</h4>
+                <button className="btn btn-primary" onClick={() => {
+                    props.setRoom('Mary1');
+                    props.setName('Mary');
+                    console.log('clicked!');
+                }}
+                >click</button>
+            </div>
+
         </>
 
 

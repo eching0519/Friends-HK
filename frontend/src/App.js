@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { Login, Home, Setting } from './components'
+import io from 'socket.io-client';
 
 function App() {
   return (
