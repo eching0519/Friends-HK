@@ -4,6 +4,8 @@ import LoginBox from "../component/login/LoginBox";
 import LoginByPassword from "../component/login/LoginByPassword";
 import LoginVerify from "../component/login/LoginVerify";
 import AlertMessage from '../component/common/AlertMessage';
+import ForgotPassword from '../component/login/ForgotPassword';
+import ResetPasswordSuccess from '../component/login/ResetPasswordSuccess';
 
 const Login = () => {
     const [loginState, setloginState] = useState('login');
@@ -88,6 +90,14 @@ const Login = () => {
         loginplaceholder = <LoginVerify userName={userName} setloginState={setloginState} sendVerifyEmail={sendVerifyEmail} setAlert={setAlert} alreadyLoggedin={alreadyLoggedin} />;
     }
 
+    if (loginState === 'forgot') {
+      loginplaceholder = <ForgotPassword userName={userName} setloginState={setloginState} sendVerifyEmail={sendVerifyEmail} setAlert={setAlert} alreadyLoggedin={alreadyLoggedin} />;
+    }
+
+    if (loginState === 'resetPwAlready') {
+      loginplaceholder = <ResetPasswordSuccess setloginState={setloginState} setAlert={setAlert} />;
+    }
+
     return (
       <div>
         <div className='d-flex align-items-center auth p-5 make-friends-background'>
@@ -106,22 +116,10 @@ const Login = () => {
               {alert.visible === true && <AlertMessage strongMsg={alert.strongMsg} msg={alert.msg} />}
               <div className="card">
                 <div className="card-body">
-                  <h4 className="card-title">Hello! let's get started</h4>
                   {loginplaceholder}
-
-                  <div className="my-2 d-flex justify-content-between align-items-center">
-                      <div className="form-check">
-                          <label className="form-check-label text-muted">
-                              <input type="checkbox" className="form-check-input" />
-                              <i className="input-helper"></i>
-                              Keep me signed in
-                          </label>
-                      </div>
-                      <a href="!#" className="auth-link text-black">Forgot password?</a>
-                  </div>
                   <div className="text-center mt-4 font-weight-light">
-                      Don't have an account? <a href='/register' type="button" className="btn btn-link text-primary">Create</a>
-                  </div>
+                    Don't have an account? <a href='/register' type="button" className="btn btn-link text-primary">Create</a>
+                </div>
                 </div>
               </div>
               </div>

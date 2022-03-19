@@ -51,7 +51,7 @@ function RegisterBox(props) {
                 <h4>New here?</h4>
                 <h6 className="font-weight-light">Signing up is easy. It only takes a few steps</h6>
                 <form className="pt-3" onSubmit={(e) => {
-                        e.preventDefault(); 
+                        e.preventDefault();
                         userRegistration(); 
                         return false;
                     }}>
