@@ -54,7 +54,9 @@ class App extends Component {
       i18n.changeLanguage('en');
     }
     window.scrollTo(0, 0);
-    const fullPageLayoutRoutes = ['/login', '/user/register', '/user-pages/lockscreen', '/error-pages/error-404', '/error-pages/error-500', '/general-pages/landing-page'];
+    const fullPageLayoutRoutes = ['/login', '/register', '/verify']
+    fullPageLayoutRoutes.push('/user-pages/lockscreen', '/error-pages/error-404', '/error-pages/error-500', '/general-pages/landing-page');
+    
     for ( let i = 0; i < fullPageLayoutRoutes.length; i++ ) {
       if (this.props.location.pathname === fullPageLayoutRoutes[i]) {
         this.setState({

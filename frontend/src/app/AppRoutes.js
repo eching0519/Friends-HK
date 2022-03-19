@@ -25,15 +25,14 @@ const ChartJs = lazy(() => import('./_sample/charts/ChartJs'));
 
 const Error404 = lazy(() => import('./_sample/error-pages/Error404'));
 const Error500 = lazy(() => import('./_sample/error-pages/Error500'));
-
-// const Login = lazy(() => import('./_sample/login'));
-const Login = lazy(() => import('./user-pages/Login'));
-// const Register1 = lazy(() => import('./_sample/user-pages/Register'));
-const Register = lazy(() => import('./user-pages/Register'));
 const Lockscreen = lazy(() => import('./_sample/user-pages/Lockscreen'));
 
 const BlankPage = lazy(() => import('./_sample/general-pages/BlankPage'));
 
+// Our page
+const Login = lazy(() => import('./user-pages/Login'));
+const Register = lazy(() => import('./user-pages/Register'));
+const Verify = lazy(() => import('./user-pages/Verify'))
 
 
 
@@ -60,9 +59,6 @@ class AppRoutes extends Component {
 
           <Route path="/charts/chart-js" component={ ChartJs } />
 
-
-          <Route path="/login" component={ Login } />
-          <Route path="/user/register" component={ Register } />
           <Route path="/user-pages/lockscreen" component={ Lockscreen } />
 
           <Route path="/error-pages/error-404" component={ Error404 } />
@@ -70,7 +66,13 @@ class AppRoutes extends Component {
 
           <Route path="/general-pages/blank-page" component={ BlankPage } />
 
+          {/* Our UI */}
+          <Route path="/login" component={ Login } />
+          <Route path="/register" component={ Register } />
+          <Route path="/verify" component={ Verify } />
 
+
+          {/* Root page */}
           <Redirect to="/login" />
         </Switch>
       </Suspense>

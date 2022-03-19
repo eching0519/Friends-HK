@@ -1,0 +1,23 @@
+.alert {
+    height: 53.64px;
+    position: relative;
+}
+.alert-danger {
+    background-color: rgba(248, 215, 218, 0.8);
+}
+.alert div {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.make-friends-background {
+	background-image: url("../images/making-friends-in-college.jpg");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
