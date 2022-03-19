@@ -6,6 +6,7 @@ import LoginVerify from "../component/login/LoginVerify";
 import AlertMessage from '../component/common/AlertMessage';
 import ForgotPassword from '../component/login/ForgotPassword';
 import ResetPasswordSuccess from '../component/login/ResetPasswordSuccess';
+const querystring = require('querystring');
 
 const Login = () => {
     const [loginState, setloginState] = useState('login');
@@ -28,12 +29,23 @@ const Login = () => {
       let res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `email=${userName}`,
+          body: querystring.stringify({
+            email: userName
+          })
       });
 
-      console.log(`email=${userName}`);
-
-      let data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (error) {
+        setAlert({
+          visible: true,
+          strongMsg: 'Error!',
+          msg: `Unexpected error. (${error.message})`
+        })
+        return;
+      }
+      
       console.log(data)
 
       if (!data.success) {
@@ -61,7 +73,7 @@ const Login = () => {
           setAlert({
               visible: true,
               strongMsg: 'Error!',
-              msg: 'Please try again later. (' + error.message + ')'
+              msg: `Unexpected error. (${error.message})`
           })
           return false
       }

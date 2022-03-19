@@ -22,7 +22,7 @@ const LoginVerify = props => {
             props.setAlert({
                 visible: true,
                 strongMsg: 'Error!',
-                msg: 'Please try again later. (' + error.message + ')'
+                msg: `Unexpected error. (${error.message})`
             })
             return;
         }
