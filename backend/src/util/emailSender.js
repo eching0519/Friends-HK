@@ -162,7 +162,7 @@ const emailTemplate = {
         
         <div>
         <div class='container'>
-        <h2>Reset your account password</h2>
+        <h2>Reset your password</h2>
         <p>Hi user,</p>
         <p>Thank you for using Friends@HK.<br>
         Please enter the following verification code to reset your password.</p>
