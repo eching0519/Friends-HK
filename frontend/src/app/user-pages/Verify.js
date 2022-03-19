@@ -38,7 +38,7 @@ const Verify = () => {
     }
 
     return (
-        <div onLoadStart={verifyUser()}>
+        <div onLoad={()=>verifyUser()}>
           <div className="d-flex align-items-center auth px-0 make-friends-background">
             <div className="row w-100 mx-0">
               <div className="col-lg-4 mx-auto">

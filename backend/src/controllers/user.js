@@ -240,7 +240,7 @@ exports.loginVerify = async (req, res, next) => {
             "message": "The verification code is incorrect."
         }, null, "\t"));
         res.end();
-        console.log(pendingLogin[email].code)
+        console.log("The verification code is incorrect." + pendingLogin[email].code)
         return;
     }
     delete pendingLogin[email]
@@ -255,7 +255,7 @@ exports.loginVerify = async (req, res, next) => {
             "message": "Unknown error. Please try again later. " + e.message
         }, null, "\t"));
         res.end();
-        console.log(pendingLogin[email].code)
+        console.log("Unknown error."+pendingLogin[email].code)
         return;
     }
     

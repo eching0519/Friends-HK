@@ -52,11 +52,7 @@ const LoginByPassword = props => {
             </div>
 
             <div className="mt-3">
-                <button type="button" className="btn btn-gradient-primary mr-2 w-100 mb-2" onClick={
-                    () => {
-                        sendLoginRequest();
-                    }
-                }>Confirm</button>
+                <button type="button" className="btn btn-gradient-primary mr-2 w-100 mb-2" onClick={() => sendLoginRequest()}>Confirm</button>
                 <button type="button" className="btn btn-light w-100" onClick={
                     () => {
                         props.setloginState('verify');
