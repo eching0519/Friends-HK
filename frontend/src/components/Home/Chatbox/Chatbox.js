@@ -24,7 +24,7 @@ function Chatbox(props, { socket }) {
     useEffect(() => {
         if (props.name !== '' && props.room !== '') {
             props.socket.on("message", message => {
-                setMessages([...messages, message]);
+                setMessages([...messages, message]);    //To be update
             });
         }
     }, [messages]);
