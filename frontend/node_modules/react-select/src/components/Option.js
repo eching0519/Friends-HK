@@ -6,9 +6,9 @@ import { jsx } from '@emotion/core';
 import type { CommonProps, PropsWithStyles, InnerRef } from '../types';
 
 type State = {
-  /** Whether the option is disabled. */
+  /** Wether the option is disabled. */
   isDisabled: boolean,
-  /** Whether the option is focused. */
+  /** Wether the option is focused. */
   isFocused: boolean,
   /** Whether the option is selected. */
   isSelected: boolean,

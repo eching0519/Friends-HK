@@ -58,8 +58,3 @@ export const OPTIONS_BOOLEAN_VALUE = [
   { label: 'true', value: true },
   { label: 'false', value: false },
 ];
-
-export const OPTIONS_ACCENTED = [
-  { label: 'school', value: 'en' },
-  { label: 'école', value: 'fr' },
-];

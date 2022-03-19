@@ -1,3 +1,7 @@
+// import { Manager } from "socket.io-client";
+// const manager = new Manager("http://localhost:8080");
+
+// const socket = manager.socket('/chatroom')
 const socket = io()
 
 // Element
