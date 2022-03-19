@@ -8,6 +8,7 @@ const { type } = require('os');
 const emailSender = new EmailSender("http://localhost:3000/verify?m=%email%&id=%id%")
 const pendingAccount = {};
 const pendingLogin = {};
+const pendingResetPassword = {};
 
 exports.createNewAccount = async (req, res, next) => {
     const email = req.body.email
@@ -278,6 +279,116 @@ exports.logout = (req, res, next) => {
     const loginSession = req.session.verification;
     if (loginSession) 
         delete req.session.verification
+
+    res.write(JSON.stringify({
+        "success": true
+    }, null, "\t"));
+    res.end();
+}
+
+exports.forgotPasswordEmail = async (req, res, next) => {
+    const email = req.body.email
+
+    var user;
+    try {
+        user = await User.findByEmail(email, 'login')
+    } catch {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Account is not exist."
+        }, null, "\t"));
+        res.end();
+        return
+    }
+
+    if (user.status != 'active') {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Your account status is '" + user.status + "'. Contact us for more information."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    pendingResetPassword[email] = { 'email': email, 'code': verificationCode };
+
+    // Set expire
+    setTimeout((email, verificationCode) => {
+        if (!(email in pendingResetPassword)) return;
+        if (pendingResetPassword[email].code == verificationCode)
+            delete pendingResetPassword[email]
+    }, 5 * 60 * 1000, email, verificationCode);
+
+    emailSender.sendForgotPassword(email, verificationCode, function(error, info) {
+        if (error) {
+            res.write(JSON.stringify({
+                "success": false,
+                "message": "Unknown error. Please try again later."
+            }, null, "\t"));
+            res.end();
+            console.log(error);
+            return;
+        } else       
+            console.log(info.response);
+    });
+
+    // Add session
+    req.session.verification = {
+        'email': email,
+        'verified': false
+    };
+
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "Email is sent"
+    }, null, "\t"));
+    res.end();
+
+    console.log('verificationCode', verificationCode);
+}
+
+exports.resetForgottenPassword = async (req, res, next) => {
+    const email = req.body.email
+    const code = req.body.code
+    const password = req.body.password
+
+    // Get user information
+    var user;
+    try {
+        user = await User.findByEmail(email, 'login')
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Account is not exist. "
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    if (!(email in pendingResetPassword)) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "The verification code is expired."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    if (code !== pendingResetPassword[email].code) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "The verification code is incorrect."
+        }, null, "\t"));
+        res.end();
+        console.log("The verification code is incorrect." + pendingResetPassword[email].code)
+        return;
+    }
+    delete pendingResetPassword[email]
+    
+    // Update session
+    user.password = password;
+    user.updatePassword();
 
     res.write(JSON.stringify({
         "success": true

@@ -124,6 +124,62 @@ const emailTemplate = {
         
         </body>
         </html>`
+    },
+    forgotPassword: {
+        subject: "Reset your Friends@HK password",
+        content: `<!DOCTYPE html>
+        <html>
+        <head>
+        <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+        div {
+            background-color: #f2edf3;
+            padding: 30px 0px;
+            border-radius: 5px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 5px;
+            margin: auto;
+            padding: 20px;
+            width: 80%;
+        }
+        h2 {
+            text-align: center;
+        }
+        .text-primary {
+            color: #b66dff;
+            font-weight: 500;
+            font-size: 1.125rem;
+            letter-spacing: 1px;
+        }
+        
+        </style>
+        </head>
+        <body>
+        
+        <div>
+        <div class='container'>
+        <h2>Reset your account password</h2>
+        <p>Hi user,</p>
+        <p>Thank you for using Friends@HK.<br>
+        Please enter the following verification code to reset your password.</p>
+        
+        Verification code:<br>
+        <span class="text-primary">%code%</span>
+        
+        <p>The code only works for 5 minutes, enter it in the application before it expires.</p>
+
+        <br>
+        <p>Best regards,</p>
+        Friends@HK Team<br>
+        </div>
+        </div>
+        
+        </body>
+        </html>`
     }
 }
 
@@ -161,6 +217,20 @@ class EmailSender {
     sendLoginVerification(receiverEmail, verificationCode, callback) {
         const subject = emailTemplate.verify.subject;
         const content = emailTemplate.verify.content.replace("%code%", verificationCode);
+
+        var mailOptions = {
+            from: this.auth.user,
+            to: receiverEmail,
+            subject: subject,
+            html: content
+        };
+
+        this.transporter.sendMail(mailOptions, callback);
+    }
+
+    sendForgotPassword(receiverEmail, verificationCode, callback) {
+        const subject = emailTemplate.forgotPassword.subject;
+        const content = emailTemplate.forgotPassword.content.replace("%code%", verificationCode);
 
         var mailOptions = {
             from: this.auth.user,
