@@ -57,9 +57,6 @@ function LoginBox(props) {
                 return false;
                 }}>Forgot password?</a>
             </div>
-            <div className="text-center mt-4 font-weight-light">
-                Don't have an account? <a href='/register' type="button" className="btn btn-link text-primary">Create</a>
-            </div>
         </>
 
     )
