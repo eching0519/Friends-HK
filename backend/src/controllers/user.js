@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const path = require("path");
 const { type } = require('os');
 
-const emailSender = new EmailSender("http://localhost:8080/user/activate?m=%email%&id=%id%")
+const emailSender = new EmailSender("http://localhost:3000/verify?m=%email%&id=%id%")
 const pendingAccount = {};
 const pendingLogin = {};
 
