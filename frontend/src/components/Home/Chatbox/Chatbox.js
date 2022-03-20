@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { io } from 'socket.io-client';
+//import { io } from 'socket.io-client';
 
 import StatusBar from './StatusBar/StatusBar';
 import Messagesbox from './MessagesBox/MessagesBox';
@@ -7,8 +7,8 @@ import InputBar from './InputBar/InputBar';
 
 function Chatbox(props, { socket }) {
 
-    const [message, setMessage] = useState(''); //store message in the input bar.
-    const [messages, setMessages] = useState(['hello', 'test1','test2']);   //store chat history.
+    const [message, setMessage] = useState(''); //store message from the input box.
+    const [messages, setMessages] = useState(['hello', 'test1', 'test2']);   //store all message.
 
     useEffect(() => {
         //socket.connect();
@@ -22,6 +22,7 @@ function Chatbox(props, { socket }) {
     }, [props.name, props.room]);
 
     useEffect(() => {
+        const { name, room } = { name: props.name, room: props.room }
         if (props.name !== '' && props.room !== '') {
             props.socket.on("message", message => {
                 setMessages([...messages, message]);    //To be update
