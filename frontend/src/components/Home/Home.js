@@ -37,7 +37,7 @@ function Home(props) {
             <UserContext.Provider value={'username_test'}>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="container-fluid">
-                    <a className="navbar-brand">username:{useContext(UserContext)}</a>
+                        <a className="navbar-brand">username:{useContext(UserContext)}</a>
                         <Link className="btn btn-primary" to='/' onClick={
                             () => {
                                 socket.disconnect();
@@ -54,7 +54,12 @@ function Home(props) {
                         <Sidebar setRoom={setRoom} setName={setName} />
                     </div>
                     <div className="vh-100 col-md-9 mx-auto chatbox-fragment">
-                        <Chatbox name={name} room={room} socket={socket} />
+                        {name !== '' && room !== '' ?
+                            <div>
+                                <Chatbox name={name} room={room} socket={socket} />
+                            </div>
+                            : <h1>Select a group to get start.</h1>}
+
                     </div>
                 </div>
             </UserContext.Provider>

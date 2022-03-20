@@ -50,26 +50,26 @@ io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
     socket.on("join", ({ name, room }, callback) => {
-        console.log(name, room);
-
-        const { error, user } = addUser({ id: socket.id, name, room });
-
+        //const { error, user } = addUser({ id: socket.id, name, room });
         socket.join(room);
+        console.log(`user: ${name} assign to ${room}`);
 
-        //socket.emit("message", { user: 'admin', text: `${name}, welcome to room ${room}.` });
-        io.to(room).emit('message', {  text: `You are now in room: ${room}` });
+        socket.emit('message', { text: `You are now in room: ${room}` });
+        socket.broadcast.to(room).emit('message', { text: `From system: ${name} has joined!` })
 
-        //io.to(room).emit('message', { name: name, message: "from admin: hello"});
-
-        //callback()
     })
 
-    socket.on('sendMessage', (room, message, callback) => {
+    socket.on("sendMessage", (room, message, callback) => {
         //const user = getUser(socket.id);
+        console.log('in room:', room)
+        socket.join(room);
+        
+        socket.emit('message', { text: message.text });
+        socket.broadcast.to(room).emit('message', { text: message.text });
+        io.emit('message', { text: message.text }); //only this work...
+        io.to(room).emit('message', { text: message.text });
 
-        io.to(room).emit('message', { text: message });
-
-        //callback();
+        callback(message);
     });
 
     socket.on('connect', () => {
@@ -80,8 +80,8 @@ io.on('connection', (socket) => {
         //const user = removeUser(socket.id);
 
         //if (user) {
-            //io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
-            //io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
+        //io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
+        //io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
         //}
     })
 })
