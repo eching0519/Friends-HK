@@ -62,15 +62,15 @@ app.use('/user/profile/picture', express.static(path.join(__dirname, '..', '_fil
 app.use('/user',userRoute)
 app.use('/admin',adminRoute)
 
-//set-up of body parser
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(function (req, res) {
-    res.setHeader('Content-Type', 'text/plain')
-    res.write('you posted:\n')
-    res.end(JSON.stringify(req.body, null, 2))
-  })
-//
+// //set-up of body parser
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(function (req, res) {
+//     res.setHeader('Content-Type', 'text/plain')
+//     res.write('you posted:\n')
+//     res.end(JSON.stringify(req.body, null, 2))
+//   })
+// //
 
 // Route for testing
 app.get('/checkSession', (req, res, next) => {

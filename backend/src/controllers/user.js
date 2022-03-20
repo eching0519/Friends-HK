@@ -287,7 +287,7 @@ exports.logout = (req, res, next) => {
 
 function userIsVerified(req, res) {
     const loginSession = req.session.verification;
-    if (loginSession)   return true
+    if (loginSession && loginSession.verified)   return true
 
     res.write(JSON.stringify({
         "success": false,

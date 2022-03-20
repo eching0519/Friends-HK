@@ -21,33 +21,45 @@ class Admin {
     }
     //problem still return null for finding admin
     static findByIdAndPassword = async (id, password) => {
-        //const db = getDatabase();
-        let return_value;
-        const MongoClient = require('mongodb').MongoClient;
-        const url = 'mongodb+srv://1155148699:hcdD0iGk6ZiLefr7@cityplanner.r2ndl.mongodb.net/CSCI3100Project?retryWrites=true&w=majority'
-        const client = await MongoClient.connect(url, { useNewUrlParser: true })
-            .catch(err => { console.log(err); });
-        if (!client) {
-            return;
-        }
+        const db = getDatabase();
+        return await db.collection('admin')
+                       .find({ '_id': id, 'password': password })
+                       .next()
+                        .then(data => {
+                            const admin = new Admin(id, data.email, data.name)
+                            return admin;
+                        })
+                        .catch(err => {
+                            throw err; 
+                        });
 
-        try {
 
-            const db = client.db("CSCI3100Project");
-            let collection = db.collection('admin');
-            let query = {}
-            let res = await collection.findOne(query);
-            //console.log(res);
-            return_value = res;
+        // let return_value;
+        // const MongoClient = require('mongodb').MongoClient;
+        // const url = 'mongodb+srv://1155148699:hcdD0iGk6ZiLefr7@cityplanner.r2ndl.mongodb.net/CSCI3100Project?retryWrites=true&w=majority'
+        // const client = await MongoClient.connect(url, { useNewUrlParser: true })
+        //     .catch(err => { console.log(err); });
+        // if (!client) {
+        //     return;
+        // }
 
-        } catch (err) {
+        // try {
 
-            console.log(err);
-        } finally {
+        //     const db = client.db("CSCI3100Project");
+        //     let collection = db.collection('admin');
+        //     let query = {}
+        //     let res = await collection.findOne(query);
+        //     //console.log(res);
+        //     return_value = res;
 
-            client.close();
-            return return_value;
-        }
+        // } catch (err) {
+
+        //     console.log(err);
+        // } finally {
+
+        //     client.close();
+        //     return return_value;
+        // }
 
         /*return await db
             .collection('admin')
@@ -91,7 +103,7 @@ class Admin {
             return;
         }
 
-        try {
+        // try {
 
             const db = client.db("CSCI3100Project");
             let collection = db.collection('admin');
@@ -115,14 +127,14 @@ class Admin {
                 });
             }
 
-        } catch (err) {
+        // } catch (err) {
 
-            console.log(err);
-        } finally {
+        //     console.log(err);
+        // } finally {
 
-            client.close();
-            return return_value;
-        }
+        //     client.close();
+        //     return return_value;
+        // }
     }
 
     constructor(id, email, name) {
