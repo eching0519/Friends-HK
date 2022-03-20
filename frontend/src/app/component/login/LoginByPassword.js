@@ -27,8 +27,10 @@ const LoginByPassword = props => {
         }
         
         if (data.success) {
-            props.setAlert({visible: false})
-            props.setloginState('success');
+            props.setAlert({visible: false});
+            // props.setUser(data.user);
+            sessionStorage.setItem('UserProfile', JSON.stringify(data.user));
+            props.loginSuccess();
         } else {
         props.setAlert({
             visible: true,

@@ -14,15 +14,12 @@ const Login = () => {
     const [userPassword, setUserPassword] = useState('');
 
     const [alert, setAlert] = useState('');
+    const [user, setUser] = useState(null);
 
-    let navigate = useHistory();
-
-    useEffect(() => {
-        console.log(`changed to ${loginState}`)
-        if (loginState === 'success') {
-            navigate("/home");
-        }
-    }, [loginState]);
+    const loginSuccess = () => {
+      console.log("UserProfile:"+JSON.stringify(user))
+      window.location.pathname = "/home";
+    };
 
     const sendVerifyEmail = async () => {
       let url = '/user/login/email';
@@ -81,6 +78,8 @@ const Login = () => {
       const loginVerification = data.verification;
       if (loginVerification) {
           if (loginVerification.email === userName && loginVerification.verified) {
+              // setUser(loginVerification)
+              sessionStorage.setItem('UserProfile', JSON.stringify(loginVerification));
               return true
           }
       }
@@ -90,16 +89,16 @@ const Login = () => {
 
     let loginplaceholder = 0;
     if (loginState === 'login') {
-        loginplaceholder = <LoginBox setUserName={setUserName} setloginState={setloginState} setAlert={setAlert} alreadyLoggedin={alreadyLoggedin} />;
+        loginplaceholder = <LoginBox setUserName={setUserName} setloginState={setloginState} setAlert={setAlert} setUser={setUser} alreadyLoggedin={alreadyLoggedin} loginSuccess={loginSuccess} />;
     }
 
     if (loginState === 'password') {
       console.log(userName)
-      loginplaceholder = <LoginByPassword userName={userName} userPassword={userPassword} setUserPassword={setUserPassword} setloginState={setloginState} sendVerifyEmail={sendVerifyEmail} setAlert={setAlert} alreadyLoggedin={alreadyLoggedin} />;
+      loginplaceholder = <LoginByPassword userName={userName} userPassword={userPassword} setUserPassword={setUserPassword} setloginState={setloginState} sendVerifyEmail={sendVerifyEmail} setAlert={setAlert} setUser={setUser} alreadyLoggedin={alreadyLoggedin} loginSuccess={loginSuccess} />;
     }
 
     if (loginState === 'verify') {
-        loginplaceholder = <LoginVerify userName={userName} setloginState={setloginState} sendVerifyEmail={sendVerifyEmail} setAlert={setAlert} alreadyLoggedin={alreadyLoggedin} />;
+        loginplaceholder = <LoginVerify userName={userName} setloginState={setloginState} sendVerifyEmail={sendVerifyEmail} setAlert={setAlert}setUser={setUser}  alreadyLoggedin={alreadyLoggedin} loginSuccess={loginSuccess} />;
     }
 
     if (loginState === 'forgot') {
@@ -125,7 +124,7 @@ const Login = () => {
             </div>
             <div className="col-md-5 grid-margin stretch-card">
               <div>
-              {alert.visible === true && <AlertMessage strongMsg={alert.strongMsg} msg={alert.msg} />}
+              {alert.visible === true && <AlertMessage alert={alert} setAlert={setAlert} />}
               <div className="card">
                 <div className="card-body">
                   {loginplaceholder}

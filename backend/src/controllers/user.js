@@ -93,10 +93,12 @@ function alreadyLogin(req, res, email) {
     const loginSession = req.session.verification;
     if (loginSession) 
         if (loginSession.email == email && loginSession.verified) {
+            var user = User.findById(loginSession.id)
+
             res.write(JSON.stringify({
                 "success": true,
                 "message": "You already login",
-                "user": { 'id': loginSession.id, 'email': email, 'name': loginSession.name }
+                "user": user
             }, null, "\t"));
             res.end();
             return true;
@@ -133,12 +135,8 @@ exports.login = async (req, res, next) => {
     }
 
     // Update session
-    req.session.verification = {
-        'id': user.id,
-        'email': email,
-        'name': user.name,
-        'verified': true
-    };
+    user.verified = true
+    req.session.verification = user;
 
     res.write(JSON.stringify({
         "success": true,
@@ -261,12 +259,8 @@ exports.loginVerify = async (req, res, next) => {
     }
     
     // Update session
-    req.session.verification = {
-        'id': user.id,
-        'email': email,
-        'name': user.name,
-        'verified': true
-    };
+    user.verified = true
+    req.session.verification = user;
 
     res.write(JSON.stringify({
         "success": true,
@@ -440,7 +434,6 @@ exports.getUserInfo = async (req, res, next) => {
 }
 
 exports.updateProfilePicture = async (req, res, next) => {
-    console.log(req.file)
     const picUrl = "http://localhost:8080/user/profile/picture/" + req.file.filename
 
     if (!userIsVerified(req, res)) return
@@ -462,7 +455,8 @@ exports.updateProfilePicture = async (req, res, next) => {
     user.updateProfilePicture()
 
     res.write(JSON.stringify({
-        "success": true
+        "success": true,
+        "user": user
     }, null, "\t"));
     res.end();
 }

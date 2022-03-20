@@ -1,7 +1,9 @@
-import React, { Component,Suspense, lazy } from 'react';
+import React, { Component,Suspense, lazy, useEffect, useState } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Spinner from '../app/shared/Spinner';
+
+import Settings from './user-panel/settings';
 
 const Dashboard = lazy(() => import('./dashboard/Dashboard'));
 
@@ -34,54 +36,55 @@ const Login = lazy(() => import('./user-pages/Login'));
 const Register = lazy(() => import('./user-pages/Register'));
 const Verify = lazy(() => import('./user-pages/Verify'))
 
-const Home = lazy(() => import('./home-panel/home'));
+const Home = lazy(() => import('./user-panel/home'));
+// const Settings = lazy(() => import('./user-panel/settings'));
 
 
 
-class AppRoutes extends Component {
-  render () {
-    return (
-      <Suspense fallback={<Spinner/>}>
-        <Switch>
-          <Route exact path="/dashboard" component={ Dashboard } />
+const AppRoutes = (props) => {
+  
+  return (
+    <Suspense fallback={<Spinner/>}>
+      <Switch>
+        <Route exact path="/dashboard" component={ Dashboard } />
 
 
-          <Route path="/basic-ui/buttons" component={ Buttons } />
-          <Route path="/basic-ui/dropdowns" component={ Dropdowns } />
-          <Route path="/basic-ui/typography" component={ Typography } />
+        <Route path="/basic-ui/buttons" component={ Buttons } />
+        <Route path="/basic-ui/dropdowns" component={ Dropdowns } />
+        <Route path="/basic-ui/typography" component={ Typography } />
 
 
-          <Route path="/form-Elements/basic-elements" component={ BasicElements } />
+        <Route path="/form-Elements/basic-elements" component={ BasicElements } />
 
-          <Route path="/tables/basic-table" component={ BasicTable } />
-
-
-          <Route path="/icons/mdi" component={ Mdi } />
+        <Route path="/tables/basic-table" component={ BasicTable } />
 
 
-          <Route path="/charts/chart-js" component={ ChartJs } />
-
-          <Route path="/user-pages/lockscreen" component={ Lockscreen } />
-
-          <Route path="/error-pages/error-404" component={ Error404 } />
-          <Route path="/error-pages/error-500" component={ Error500 } />
-
-          <Route path="/general-pages/blank-page" component={ BlankPage } />
-
-          {/* Our UI */}
-          <Route path="/home" component={ Home } />
-
-          <Route path="/login" component={ Login } />
-          <Route path="/register" component={ Register } />
-          <Route path="/verify" component={ Verify } />
+        <Route path="/icons/mdi" component={ Mdi } />
 
 
-          {/* Root page */}
-          <Redirect to="/login" />
-        </Switch>
-      </Suspense>
-    );
-  }
+        <Route path="/charts/chart-js" component={ ChartJs } />
+
+        <Route path="/user-pages/lockscreen" component={ Lockscreen } />
+
+        <Route path="/error-pages/error-404" component={ Error404 } />
+        <Route path="/error-pages/error-500" component={ Error500 } />
+
+        <Route path="/general-pages/blank-page" component={ BlankPage } />
+
+        {/* Our UI */}
+        <Route path="/home" component={ Home } />
+        <Route path="/settings"><Settings user={props.user} setUser={props.setUser} /></Route>
+
+        <Route path="/login" component={ Login } />
+        <Route path="/register" component={ Register } />
+        <Route path="/verify" component={ Verify } />
+
+
+        {/* Root page */}
+        <Redirect to="/settings" />
+      </Switch>
+    </Suspense>
+  );
 }
 
 export default AppRoutes;

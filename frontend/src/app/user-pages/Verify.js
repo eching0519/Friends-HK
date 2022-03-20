@@ -49,12 +49,12 @@ const Verify = () => {
                     </div>
                     <div className="text-center">
                         <h1>
-                            {errorMessage=='' && 'Welcome!'}
-                            {errorMessage!='' && 'Oops..'}
+                            {errorMessage === '' && 'Welcome!'}
+                            {errorMessage !== '' && 'Oops..'}
                         </h1>
                         <p>
-                            {errorMessage=='' && 'You can now login to Friends@HK.'}
-                            {errorMessage!='' && errorMessage}
+                            {errorMessage === '' && 'You can now login to Friends@HK.'}
+                            {errorMessage !== '' && errorMessage}
                         </p>
                         <div className="text-center mt-4 font-weight-light">
                             Back to <Link to="/login" className="text-primary">Login</Link> page

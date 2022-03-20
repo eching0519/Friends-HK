@@ -27,10 +27,12 @@ const LoginVerify = props => {
             return;
         }
 
-        setDisableInput(false);
+        // setDisableInput(false);
         if (data.success) {
-            props.setAlert({visible: false})
-            props.setloginState('success');
+            props.setAlert({visible: false});
+            sessionStorage.setItem('UserProfile', JSON.stringify(data.user));
+            // props.setUser(data.user);
+            props.loginSuccess();
         } else {
             props.setAlert({
                 visible: true,

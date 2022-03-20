@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function AlertMessage(props) {
+    const [alert, setAlert] = useState(props.alert);
+
     return (
-        // alert-dismissible 
         <>
-            <div className="alert alert-danger fade show" role="alert">
+            <div className="alert alert-danger fade show alert-dismissible " role="alert">
                 <div>
-                <strong>{props.strongMsg}</strong> {props.msg}
+                <strong>{alert.strongMsg}</strong> {alert.msg}
                 </div>
-                {/* <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                <button type="button" className="close" onClick={()=>props.setAlert({visible:false})}>
                     <span aria-hidden="true">×</span>
-                </button> */}
+                </button>
             </div>
         </>
     )

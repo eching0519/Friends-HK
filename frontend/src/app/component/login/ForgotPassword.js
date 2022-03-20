@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 const querystring = require('querystring');
 
 const ForgotPassword = props => {
@@ -116,7 +115,7 @@ const ForgotPassword = props => {
                 <button type="button" className="btn btn-light w-100" onClick={() => {
                     props.setAlert({visible: false});
                     props.setloginState('login');
-                }}><i class="mdi mdi-keyboard-backspace"></i>Back</button>
+                }}><i className="mdi mdi-keyboard-backspace"></i>Back</button>
             </div>
         </form>
         </>

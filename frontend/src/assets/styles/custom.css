@@ -20,3 +20,147 @@
     background-position: center;
     background-size: cover;
 }
+
+/* .nav-profile-text {
+    min-width: 100px;
+} */
+
+.bottonlist {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.bottonlist .dropdown-item {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    /* padding-left: auto;
+    padding-right: auto; */
+    text-align: center;
+    position: relative;
+}
+
+/* .bottonlist .dropdown-item span{
+    position: relative; 
+    left: 20%;
+} */
+
+.bottonlist .dropdown-item .mdi{
+    position: absolute;
+    left: 27px;
+    bottom: 1px;
+}
+
+.bottonlist .dropdown-divider {
+    margin: 0;
+}
+
+.button-subject {
+    margin: auto;
+}
+
+.modal-dialog {
+    margin: auto;
+}
+
+.modal-content {
+    min-width: 800px;
+}
+
+.image_area {
+    position: relative;
+  }
+
+  img {
+        display: block;
+        max-width: 100%;
+  }
+
+.preview {
+    overflow: hidden;
+    width: 160px; 
+    height: 160px;
+    /* margin: 10px; */
+    border: 1px solid red;
+    transform: translateX(70px);
+}
+
+  /* .modal-lg{
+        max-width: 1000px !important;
+  } */
+
+  /* .overlay {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    height: 0;
+    transition: .5s ease;
+    width: 100%;
+  }
+
+  .image_area:hover .overlay {
+    height: 50%;
+    cursor: pointer;
+  }
+
+  .text {
+    color: #333;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+  } */
+  
+  .upload_image_form {
+      position: relative;
+      height: 170px;
+  }
+
+#upload_image {
+    display: none;
+}
+
+  .image-wrapper:hover .overlay {
+    opacity: 1;
+  }
+  
+  .img-responsive {
+    /* display: block; */
+    width: 100%;
+    height: auto;
+    width: 150px;
+    height: 150px;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    width: 150px;
+    height: 150px;
+  }
+  
+  .overlay .text {
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }

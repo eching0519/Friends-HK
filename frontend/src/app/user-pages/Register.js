@@ -13,7 +13,7 @@ const Register = () => {
       <div className="d-flex align-items-center auth px-0 make-friends-background">
         <div className="row w-100 mx-0">
           <div className="col-lg-4 mx-auto">
-            {alert.visible === true && <AlertMessage strongMsg={alert.strongMsg} msg={alert.msg} />}
+            {alert.visible === true && <AlertMessage alert={alert} setAlert={setAlert} />}
             <div className="auth-form-light text-left py-5 px-4 px-sm-5">
               
               <div className="brand-logo">

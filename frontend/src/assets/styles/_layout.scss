@@ -76,7 +76,8 @@
     }
 
     .main-panel {
-      width: calc(100% - #{$sidebar-width-mini});
+      // width: calc(100% - #{$sidebar-width-mini});
+      width: 100%;
     }
     &:not(.sidebar-icon-only) {
       //Apply these styles only when sidebar-mini is not collapsed to icon-only mode
@@ -265,7 +266,8 @@
     }
 
     .main-panel {
-      width: calc(100% - #{$sidebar-width-icon});
+      // width: calc(100% - #{$sidebar-width-icon});
+      width: 100%;
     }
   }
 }
@@ -338,12 +340,12 @@
     }
 
     .main-panel {
-      margin-left: $sidebar-width-lg;
+      // margin-left: $sidebar-width-lg;
     }
 
     &.sidebar-icon-only {
       .main-panel {
-        margin-left: $sidebar-width-icon;
+        // margin-left: $sidebar-width-icon;
       }
     }
   }
