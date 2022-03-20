@@ -34,6 +34,8 @@ const Login = lazy(() => import('./user-pages/Login'));
 const Register = lazy(() => import('./user-pages/Register'));
 const Verify = lazy(() => import('./user-pages/Verify'))
 
+const Home = lazy(() => import('./home-panel/home'));
+
 
 
 class AppRoutes extends Component {
@@ -67,6 +69,8 @@ class AppRoutes extends Component {
           <Route path="/general-pages/blank-page" component={ BlankPage } />
 
           {/* Our UI */}
+          <Route path="/home" component={ Home } />
+
           <Route path="/login" component={ Login } />
           <Route path="/register" component={ Register } />
           <Route path="/verify" component={ Verify } />

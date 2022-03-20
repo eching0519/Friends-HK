@@ -15,10 +15,7 @@ class Navbar extends Component {
           <Link className="navbar-brand brand-logo-mini" to="/"><img src={require('../../assets/images/logo-mini.svg')} alt="logo" /></Link>
         </div>
         <div className="navbar-menu-wrapper d-flex align-items-stretch">
-          <button className="navbar-toggler navbar-toggler align-self-center" type="button" onClick={ () => document.body.classList.toggle('sidebar-icon-only') }>
-            <span className="mdi mdi-menu"></span>
-          </button>
-          <div className="search-field d-none d-md-block">
+          {/* <div className="search-field d-none d-md-block">
             <form className="d-flex align-items-center h-100" action="#">
               <div className="input-group">
                 <div className="input-group-prepend bg-transparent">
@@ -27,7 +24,7 @@ class Navbar extends Component {
                 <input type="text" className="form-control bg-transparent border-0" placeholder="Search projects"/>
               </div>
             </form>
-          </div>
+          </div> */}
           <ul className="navbar-nav navbar-nav-right">
             <li className="nav-item nav-profile">
               <Dropdown alignRight>
