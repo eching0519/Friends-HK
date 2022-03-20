@@ -20,13 +20,15 @@ class User {
                     case 'update':
                         var user = new User(data.email, data.name);
                         user.id = data._id;
-                        user.preferences = data.preferences
+                        user.status = data.status;
+                        user.preferences = data.preferences;
+                        user.picture = data.picture;
                         return user;
-                    case 'query':
-                        return data;
 
                     default:
-                        return data;
+                        let myData = JSON.parse(JSON.stringify(data));
+                        delete myData[password];
+                        return myData;
                 }
                 
             })
@@ -47,15 +49,13 @@ class User {
                         var user = new User(data.email, data.name);
                         user.id = data._id;
                         user.status = data.status;
-                        return user;
-                    case 'all':
-                        var user = new User(data.email, data.name);
-                        user.id = data._id;
-                        user.status = data.status;
-                        user.preferences = data.preferences
+                        user.preferences = data.preferences;
+                        user.picture = data.picture;
                         return user;
                     default:
-                        return data;
+                        let myData = JSON.parse(JSON.stringify(data));
+                        delete myData[password];
+                        return myData;
                 }
             })
             .catch(err => {
@@ -72,7 +72,9 @@ class User {
             .then(data => {
                 const user = new User(data.email, data.name);
                 user.id = data._id;
-                user.status = data.status
+                user.status = data.status;
+                user.preferences = data.preferences;
+                user.picture = data.picture;
                 return user;
             })
             .catch(err => {
