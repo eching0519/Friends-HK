@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
         socket.join(room);
 
         //socket.emit("message", { user: 'admin', text: `${name}, welcome to room ${room}.` });
-        io.to(room).emit('message', {  text: `${name} has joined!` });
+        io.to(room).emit('message', {  text: `You are now in room: ${room}` });
 
         //io.to(room).emit('message', { name: name, message: "from admin: hello"});
 
