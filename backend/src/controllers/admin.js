@@ -47,11 +47,6 @@ exports.adminLogin=async(req,res,next)=>{
             res.end();
             return;
     }
-
-    
-    
-
-
 }
 
 exports.adminChangePassword=async(req,res,next)=>{
@@ -97,6 +92,11 @@ exports.adminBlockUser=async(req,res,next)=>{
     const id=res.body.id;
 
 
+}
+
+exports.adminUnblockUser=async(req,res,next)=>{
+    const id=res.body.id;
+    
 }
 
 exports.adminGetUserById=async(req,res,next)=>{
