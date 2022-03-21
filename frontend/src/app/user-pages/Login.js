@@ -8,12 +8,18 @@ import ForgotPassword from '../component/login/ForgotPassword';
 import ResetPasswordSuccess from '../component/login/ResetPasswordSuccess';
 const querystring = require('querystring');
 
-const Login = () => {
+const Login = (props) => {
+  // get alert message
+  let urlData = window.location.search;
+  let queryData = new URLSearchParams(urlData);
+  let msg = queryData.get('msg');
+  let smsg = queryData.get('smsg');
+
     const [loginState, setloginState] = useState('login');
     const [userName, setUserName] = useState('');
     const [userPassword, setUserPassword] = useState('');
 
-    const [alert, setAlert] = useState('');
+    const [alert, setAlert] = useState(msg===null?{ visible: false }:{ visible: true, strongMsg: smsg, msg: msg});
     const [user, setUser] = useState(null);
 
     const loginSuccess = () => {
@@ -110,7 +116,7 @@ const Login = () => {
     }
 
     return (
-      <div>
+      <>
         <div className='d-flex align-items-center auth p-5 make-friends-background'>
           <div className="row w-100 mx-0">
             <div className="col-md-7 grid-margin">
@@ -137,7 +143,7 @@ const Login = () => {
             </div>
           </div>
         </div>
-      </div>
+      </>
     )
 }
 

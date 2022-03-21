@@ -1,25 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 const querystring = require('querystring');
 
 const UploadPicture = (props) => {
     const [user, setUser] = useState(props.user);
-    const [userPic, setUserPic] = useState(props.user.picture);
+    const [userPic, setUserPic] = useState(props.user===null?null:props.user.picture);
 
     const [image, setImage] = useState('');
     // const [cropData, setCropData] = useState("#");
     const [cropper, setCropper] = useState();
     const [oriFilename, setOriFilename] = useState('');
-
-
-    const showModal = () => {
-        // cropper = new Cropper(image, {
-        //     aspectRatio: 1,
-        //     viewMode: 3,
-        //     preview:'.preview'
-        // });
-    }
 
     const changeImage = (e) => {
         window.document.getElementById("showModalBtn").click();
@@ -172,7 +163,7 @@ const UploadPicture = (props) => {
 			    	</div>
 			  	</div>
 			</div>
-            <input id="showModalBtn" type="hidden" data-toggle="modal" data-target="#modal" onClick={()=>{showModal()}} />
+            <input id="showModalBtn" type="hidden" data-toggle="modal" data-target="#modal" />
         </>
     )
 }

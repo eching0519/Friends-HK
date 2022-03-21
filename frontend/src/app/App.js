@@ -86,17 +86,17 @@ const App = (props) => {
   const [isFullPageLayout, setIsFullPageLayout] = useState(true)
 
   useEffect(() => {
-    // console.log("ROUTE CHANGED");
-    // const { i18n } = props;
-    // const body = document.querySelector('body');
-    // if(props.location.pathname === '/layout/RtlLayout') {
-    //   body.classList.add('rtl');
-    //   i18n.changeLanguage('ar');
-    // }
-    // else {
-    //   body.classList.remove('rtl')
-    //   i18n.changeLanguage('en');
-    // }
+    console.log("ROUTE CHANGED");
+    const { i18n } = props;
+    const body = document.querySelector('body');
+    if(location.pathname === '/layout/RtlLayout') {
+      body.classList.add('rtl');
+      i18n.changeLanguage('ar');
+    }
+    else {
+      body.classList.remove('rtl')
+      i18n.changeLanguage('en');
+    }
     window.scrollTo(0, 0);
     const fullPageLayoutRoutes = ['/login', '/register', '/verify']
     fullPageLayoutRoutes.push('/user-pages/lockscreen', '/error-pages/error-404', '/error-pages/error-500', '/general-pages/landing-page');

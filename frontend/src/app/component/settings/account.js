@@ -52,11 +52,11 @@ const AccountSettings = (props) => {
                 </div> */}
                 <div className="form-group">
                     <label for="emailInput">Email Address</label>
-                    <input placeholder="Email Address" type="text" id="emailInput" className="form-control form-control-lg" readOnly value={user.email} />
+                    <input placeholder="Email Address" type="text" id="emailInput" className="form-control form-control-lg" readOnly value={user==null?'':user.email} />
                 </div>
                 <div className="form-group">
                     <label for="nameInput">Display Name</label>
-                    <input placeholder="Display Name" type="email" id="nameInput" className="form-control form-control" value={user.name} />
+                    <input placeholder="Display Name" type="email" id="nameInput" className="form-control form-control" value={user==null?'':user.name} />
                 </div>
                 <div className="form-group">
                     <label for="exampleInputEmail1">Email address</label>

@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Spinner from '../app/shared/Spinner';
 
-import Settings from './user-panel/settings';
+// import Settings from './user-panel/settings';
 
 const Dashboard = lazy(() => import('./dashboard/Dashboard'));
 
@@ -37,7 +37,7 @@ const Register = lazy(() => import('./user-pages/Register'));
 const Verify = lazy(() => import('./user-pages/Verify'))
 
 const Home = lazy(() => import('./user-panel/home'));
-// const Settings = lazy(() => import('./user-panel/settings'));
+const Settings = lazy(() => import('./user-panel/settings'));
 
 
 

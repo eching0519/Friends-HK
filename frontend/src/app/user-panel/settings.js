@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import LoginVerifier from '../component/common/LoginVerifier'
 import AccountSettings from '../component/settings/account';
 import PreferenceSettings from '../component/settings/preferences';
 import PrivacySettings from '../component/settings/privacy'
@@ -6,6 +7,8 @@ import AlertMessage from '../component/common/AlertMessage';
 import { Trans } from 'react-i18next';
 
 const Settings = (props) => {
+    LoginVerifier(props)
+    
     const [settingType, setType] = useState('account');
     const [alert, setAlert] = useState({visible:false});
 
@@ -45,21 +48,21 @@ const Settings = (props) => {
                 <div className="card">
                     <div className="bottonlist preview-list">
                         
-                        <a href="!#" className="dropdown-item" onClick={(e)=>{
+                        <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e)=>{
                             e.preventDefault();
                             setType('account');
                         }}>
                             <i className="mdi mdi-account-outline mr-2 text-danger h3"></i><span className={settingType!=='account'? '' : 'font-weight-bold'}><Trans>Account</Trans></span>
                         </a>
                         <div className="dropdown-divider"></div>
-                        <a href="!#" className="dropdown-item" onClick={(e)=>{
+                        <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e)=>{
                             e.preventDefault();
                             setType('preferences');
                         }}>
                             <i className="mdi mdi-settings mr-2 text-success h3"></i><span className={settingType!=='preferences'? '' : 'font-weight-bold'}><Trans>Preferences</Trans></span>
                         </a>
                         <div className="dropdown-divider"></div>
-                        <a href="!#" className="dropdown-item" onClick={(e)=>{
+                        <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e)=>{
                             e.preventDefault();
                             setType('privacy');
                         }}>

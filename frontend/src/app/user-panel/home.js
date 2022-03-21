@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import LoginVerifier from '../component/common/LoginVerifier'
 
-const Home = () => {
+const Home = (props) => {
+    LoginVerifier(props)
     return (
         <>
         </>

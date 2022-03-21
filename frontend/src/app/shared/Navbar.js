@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 
 const Navbar = (props) => {
+  const [user, setUser] = useState(props.user)
 
   return (
     <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -26,7 +27,7 @@ const Navbar = (props) => {
           <li className="nav-item nav-profile">
             <div className="nav-link">
               <div className="nav-profile-img">
-                <img src={(props.user==null||props.user.picture==null)? require("../../assets/images/emptyFace.png") : props.user.picture} alt="user"/>
+                <img src={(user==null||user.picture==null)? require("../../assets/images/emptyFace.png") : props.user.picture} alt="user"/>
                 <span className="availability-status online"></span>
               </div>
               <div className="nav-profile-text">
