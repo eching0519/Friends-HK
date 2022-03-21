@@ -493,42 +493,37 @@ exports.updatePreferences = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
     if (!userIsVerified(req, res)) return
 
-    const id = req.session.verification.id  // User Id
+    const id = req.session.verification.id;  // User Id
+    const newName = req.body.name;
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
     var user;
     try {
-        user = await User.findById(id, 'update')
+        user = await User.findByIdAndPassword(id, password)
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Unknown error."
+            "message": "Invalid password."
         }, null, "\t"));
         res.end();
         return;
     }
 
     // Password, Name...
-    const newName = req.body.name;
-    const newPassword = req.body.password;
     if (newName!=""){
         user.name = newName;
-        user.updateName();
-        res.write(JSON.stringify({
-            "success": true
-        }, null, "\t"));
-        res.end();
-        console.log("update name");
     }
 
     if (newPassword!=""){
         user.password = newPassword;
-        user.updatePassword();
-        res.write(JSON.stringify({
-            "success": true
-        }, null, "\t"));
-        res.end();
-        console.log("update password");
     }
 
+    user.update()
 
-    
+    res.write(JSON.stringify({
+        "success": true,
+        "user": user
+    }, null, "\t"));
+    res.end();
 }

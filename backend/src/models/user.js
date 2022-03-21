@@ -27,6 +27,7 @@ class User {
 
                     default:
                         let myData = JSON.parse(JSON.stringify(data));
+                        console.log(myData)
                         delete myData[password];
                         return myData;
                 }
@@ -68,6 +69,25 @@ class User {
         return await db
             .collection('user')
             .find({ 'email': email, 'password': password })
+            .next()
+            .then(data => {
+                const user = new User(data.email, data.name);
+                user.id = data._id;
+                user.status = data.status;
+                user.preferences = data.preferences;
+                user.picture = data.picture;
+                return user;
+            })
+            .catch(err => {
+                throw err; 
+            });
+    }
+
+    static findByIdAndPassword = async (id, password) => {
+        const db = getDatabase();
+        return await db
+            .collection('user')
+            .find({ '_id': ObjectID(id), 'password': password })
             .next()
             .then(data => {
                 const user = new User(data.email, data.name);

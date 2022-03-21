@@ -8,7 +8,6 @@ import { Trans } from 'react-i18next';
 
 const Settings = (props) => {
     LoginVerifier(props)
-    
     const [formChanged, setFormChanged] = useState(false)
     const [settingType, setType] = useState('account');
     const [alert, setAlert] = useState({visible:false});
@@ -27,6 +26,13 @@ const Settings = (props) => {
     useEffect(() => {
         setFormChanged(false);
     }, [settingType])
+
+    useEffect(() => {
+        sessionStorage.setItem('UserProfile', JSON.stringify(props.user));
+        setFormChanged(false);
+        console.log("User changed")
+        window.scrollTo(0, 0);
+    }, [props.user])
 
     return (
         <>

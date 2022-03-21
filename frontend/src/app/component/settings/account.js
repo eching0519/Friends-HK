@@ -8,22 +8,30 @@ const AccountSettings = (props) => {
     const [uname, setUName] = useState(props.user===null?'':props.user.name)
     const [password, setPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
-
+    const [isLoaded, setLoaded] = useState(false)   // Check if page is loaded
+    
+    // Run when form is changed
     useEffect(()=> {
-        props.setFormChanged(true)
+        if (!isLoaded) {
+            setLoaded(true);
+            return
+        }
+
         console.log("Form has changed")
+        props.setFormChanged(true)
+        document.getElementById('submitBtn').classList.remove('disabled')
     }, [email, uname, password, newPassword]);
 
     const sendResetPwRequest = async () => {
-        let url = '/user/forgotPassword/reset';
+        let url = '/user/profile/update';
 
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: querystring.stringify({
-                email: 'email',
-                code: 'verifyCode',
-                password: 'password'
+                name: uname,
+                password: password,
+                newPassword: newPassword
             })
         });
 
@@ -38,7 +46,30 @@ const AccountSettings = (props) => {
             })
             return;
         }
+
+        if (!data.success) {
+            props.setAlert({
+                visible: true,
+                strongMsg: 'Sorry!',
+                msg: `${data.message}`
+            })
+            return;
+        }
+
+        setUser(data.user)
+        props.setUser(data.user)
+        window.alert("Your information is updated")
+        resetForm()
     };
+
+    const resetForm = () => {
+        document.getElementById('submitBtn').classList.add('disabled')
+        document.getElementById('submitBtn').classList.add('disabled')
+        setEmail(user.email)
+        setUName(user.name)
+        setPassword('')
+        setNewPassword('')
+    }
 
     return (
         <>
@@ -46,9 +77,9 @@ const AccountSettings = (props) => {
 
             <UploadPicture user={user} setUser={props.setUser} setAlert={props.setAlert} />
 
-            <form className="forms-sample" onSubmit={(e)=>{
+            <form className="forms-sample" onSubmit={async (e)=>{
                 e.preventDefault();
-                props.setAlert({visible:true, strongMsg: "Testing", msg: "Message"});
+                sendResetPwRequest()
                 return false;
             }}> 
 
@@ -68,8 +99,11 @@ const AccountSettings = (props) => {
                     <label for="newPasswordInput">New Password</label>
                     <input placeholder="Password" type="password" id="newPasswordInput" className="form-control form-control" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
                 </div>
-                <button type="submit" className="btn btn-gradient-primary mr-2">Save Change</button>
-                <button className="btn btn-light">Reset</button>
+                <button type="submit" id="submitBtn" className="btn btn-gradient-primary mr-2 disabled" onClick={(e)=>{
+                    if (e.target.classList.contains('disabled'))
+                        e.preventDefault();
+                }}>Save Change</button>
+                <button type="reset" className="btn btn-light" onClick={(e)=>{e.preventDefault(); resetForm();}}>Reset</button>
             </form>
         </>
     )
