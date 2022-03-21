@@ -119,9 +119,60 @@ exports.adminUnblockUser=async(req,res,next)=>{
 }
 
 exports.adminGetUserById=async(req,res,next)=>{
+    var _id=req.body.id;
+    var admin;
+    try{
+        admin=await Admin.AdminShowUserById(id)
+    } catch{
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Fail in get user by id",
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    if(admin._id==id){
+        res.write(JSON.stringify({
+            "success": true,
+            "message": "success in find by id in admin!"
+        }, null, "\t"));
+        res.end();
+    } else{
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "success in db but fail to get correct data!"
+        }, null, "\t"));
+        res.end();
+    }
 
 }
 
 exports.adminGetAllUser=async(req,res,next)=>{
+    
+}
+
+exports.adminDeleteAccount=(req,res)=>{
+    var id=req.body.id;
+    var admin;
+    console.log(id);
+    try{
+        admin = Admin.AdminDelete(id);
+        
+    } catch(e){
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Fail in delete!",
+        }, null, "\t"));
+        res.end();
+        console.log(e);
+        return;
+    }
+    //console.log(admin);
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "success in delete!"
+    }, null, "\t"));
+    res.end();
 
 }

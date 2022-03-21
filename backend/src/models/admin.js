@@ -247,10 +247,29 @@ class Admin {
 
     //this is used to show data for specified id for admin
     static AdminShowUserById = async(id)=>{
-
+        const db = getDatabase();
+        return await db
+            .collection('user')
+            .find({ '_id': ObjectID(id) })
+            .next()
+            .then(data => {
+                
+                console.log(data);
+            })
+            .catch(err => {
+                throw err; 
+            });
     }
+    
 
-
+    
+    static AdminDelete(id){
+        const db = getDatabase();
+        return  db.collection('user').deleteOne({_id: ObjectID(id)}, (err, result) => {
+            if (err) return console.log(err)
+                       
+          })
+    }
 }
 
 module.exports = Admin;

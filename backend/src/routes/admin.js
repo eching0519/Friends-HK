@@ -14,6 +14,10 @@ adminRouter.post('/login', adminController.adminLogin);
 
 adminRouter.post('/profile/changePassword', adminController.adminChangePassword);
 
+adminRouter.post('/delete',adminController.adminDeleteAccount);
+
+adminRouter.post('/getuserbyid',adminController.adminGetUserById);
+
 
 
 module.exports = adminRouter;
