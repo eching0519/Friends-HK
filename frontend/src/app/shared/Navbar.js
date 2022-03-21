@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
+import Signout from '../component/common/Signout'
 
 const Navbar = (props) => {
   const [user, setUser] = useState(props.user)
@@ -177,7 +178,7 @@ const Navbar = (props) => {
                   <i className="mdi mdi-settings mr-2 text-success"></i>
                   <Trans>Settings</Trans>
                 </Dropdown.Item>
-                <Dropdown.Item href="!#" onClick={evt =>evt.preventDefault()}>
+                <Dropdown.Item href="!#" onClick={evt =>{evt.preventDefault(); Signout()}}>
                   <i className="mdi mdi-logout mr-2 text-primary"></i>
                   <Trans>Signout</Trans>
                 </Dropdown.Item>

@@ -81,7 +81,7 @@ const AppRoutes = (props) => {
 
 
         {/* Root page */}
-        <Redirect to="/settings" />
+        <Redirect to="/home" />
       </Switch>
     </Suspense>
   );

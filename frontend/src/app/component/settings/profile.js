@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 const querystring = require('querystring');
 
-const PreferenceSettings = (props) => {
+const ProfileSettings = (props) => {
 
     let user = props.user
 
@@ -33,7 +33,7 @@ const PreferenceSettings = (props) => {
 
     return (
         <>
-            <h4 className="card-title">Preferences</h4>
+            <h4 className="card-title">Profile</h4>
             <p className="card-description"> Basic form layout </p>
             <form className="forms-sample">
                 <div className="form-group">
@@ -61,4 +61,4 @@ const PreferenceSettings = (props) => {
     )
 }
 
-export default PreferenceSettings;
+export default ProfileSettings;

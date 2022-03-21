@@ -99,7 +99,6 @@ const Login = (props) => {
     }
 
     if (loginState === 'password') {
-      console.log(userName)
       loginplaceholder = <LoginByPassword userName={userName} userPassword={userPassword} setUserPassword={setUserPassword} setloginState={setloginState} sendVerifyEmail={sendVerifyEmail} setAlert={setAlert} setUser={setUser} alreadyLoggedin={alreadyLoggedin} loginSuccess={loginSuccess} />;
     }
 

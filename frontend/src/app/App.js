@@ -9,7 +9,6 @@ import Footer from './shared/Footer';
 import { withTranslation } from "react-i18next";
 
 
-
 // class App extends Component {
 //   state = {}
 //   componentDidMount() {
@@ -113,7 +112,6 @@ const App = (props) => {
     }
   }, [location]);
 
-
   let myUser = JSON.parse(sessionStorage.getItem('UserProfile'));
   const [user, setUser] = useState(myUser)
 
@@ -122,19 +120,21 @@ const App = (props) => {
   let SettingsPanelComponent = !isFullPageLayout ? <SettingsPanel/> : '';
   let footerComponent = !isFullPageLayout ? <Footer/> : '';
   return (
-    <div className="container-scroller">
-      { navbarComponent }
-      <div className="container-fluid page-body-wrapper">
-        {/* { sidebarComponent } */}
-        <div className="main-panel">
-          <div className="content-wrapper">
-            <AppRoutes user={user} setUser={setUser} />
-            { SettingsPanelComponent }
+    <>
+      <div className="container-scroller">
+        { navbarComponent }
+        <div className="container-fluid page-body-wrapper">
+          {/* { sidebarComponent } */}
+          <div className="main-panel">
+            <div className="content-wrapper">
+              <AppRoutes user={user} setUser={setUser} />
+              { SettingsPanelComponent }
+            </div>
+            {/* { footerComponent } */}
           </div>
-          {/* { footerComponent } */}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

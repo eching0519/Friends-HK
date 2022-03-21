@@ -167,3 +167,31 @@
     transform: translate(-50%, -50%);
     text-align: center;
   }
+
+/* .navbar { overflow: hidden !important } */
+
+.loader-wrapper {
+  /* z-index: 11000; */
+  /* background-color: rgba(0, 0, 0, 0.7); */
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  border: 1em solid transparent;
+  border-top: none;
+  box-sizing: border-box;
+}
+
+.loader-wrapper div[data-testid="audio-loading"] {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
