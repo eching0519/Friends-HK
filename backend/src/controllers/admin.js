@@ -119,32 +119,36 @@ exports.adminUnblockUser=async(req,res,next)=>{
 }
 
 exports.adminGetUserById=async(req,res,next)=>{
-    var _id=req.body.id;
+    var id=req.body.id;
     var admin;
     try{
         admin=await Admin.AdminShowUserById(id)
-    } catch{
+    } catch(e){
         res.write(JSON.stringify({
             "success": false,
             "message": "Fail in get user by id",
         }, null, "\t"));
         res.end();
+        console.log(e);
         return;
     }
 
-    if(admin._id==id){
+    if(admin!=null){
         res.write(JSON.stringify({
             "success": true,
-            "message": "success in find by id in admin!"
+            "message": "Success in get user by id",
         }, null, "\t"));
         res.end();
+        return admin;
     } else{
         res.write(JSON.stringify({
             "success": false,
-            "message": "success in db but fail to get correct data!"
+            "message": "No such data",
         }, null, "\t"));
         res.end();
+        return admin;
     }
+    
 
 }
 
