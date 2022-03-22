@@ -170,7 +170,26 @@ class Admin {
     // add user in to blocklist
     static add_Blocklist = async (id) => {
 
-        let return_value;
+        const db = getDatabase();
+        return await db
+            .collection('user')
+            .updateOne({ '_id': ObjectID(id) },
+            {
+                $set: {
+                    'status': 'unactive'
+                }
+            },
+            )
+            //.next()
+            //.then(data => {
+                
+            //})
+            .catch(err => {
+                throw err; 
+            });
+    
+
+        /*let return_value;
         const MongoClient = require('mongodb').MongoClient;
         const url = 'mongodb+srv://1155148699:hcdD0iGk6ZiLefr7@cityplanner.r2ndl.mongodb.net/CSCI3100Project?retryWrites=true&w=majority'
         const client = await MongoClient.connect(url, { useNewUrlParser: true })
@@ -199,15 +218,32 @@ class Admin {
 
             client.close();
             return return_value;
-        }
+        }*/
     }
 
 
 
     //remove user from the blocklist
-    remove_Blocklist = async (id) => {
+   static remove_Blocklist = async (id) => {
 
-        let return_value;
+        const db = getDatabase();
+        return await db
+            .collection('user')
+            .updateOne({ '_id': ObjectID(id) },
+            {
+                $set: {
+                    'status': 'active'
+                }
+            },
+            )
+            //.next()
+            //.then(data => {
+                
+            //})
+            .catch(err => {
+                throw err; 
+            });
+        /*let return_value;
         const MongoClient = require('mongodb').MongoClient;
         const url = 'mongodb+srv://1155148699:hcdD0iGk6ZiLefr7@cityplanner.r2ndl.mongodb.net/CSCI3100Project?retryWrites=true&w=majority'
         const client = await MongoClient.connect(url, { useNewUrlParser: true })
@@ -236,15 +272,14 @@ class Admin {
 
             client.close();
             return return_value;
-        }
+        }*/
 
     }
 
     //this is used to show all data for admin
-    static AdminShowAllUser = async()=>{
-
+    static AdminShowAllUser (){
+        
     }
-
     //this is used to show data for specified id for admin
     static AdminShowUserById = async(id)=>{
         const db = getDatabase();
@@ -254,7 +289,8 @@ class Admin {
             .next()
             .then(data => {
                 
-                console.log(data);
+                
+                return data;
             })
             .catch(err => {
                 throw err; 

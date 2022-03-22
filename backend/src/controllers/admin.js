@@ -108,14 +108,54 @@ exports.adminChangePassword = async (req, res, next) => {
 }
 
 exports.adminBlockUser=async(req,res,next)=>{
-    const id=res.body.id;
+    var id=req.body.id;
+    var admin;
+    try{
+       admin=await Admin.add_Blocklist(id);
+    }catch(e){
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Fail in block!",
+        }, null, "\t"));
+        res.end();
+        console.log(e);
+        return;
+    }
+    
+        res.write(JSON.stringify({
+            "success": true,
+            "message": "Success in block!",
+        }, null, "\t"));
+        res.end();
+        return;
 
 
 }
 
 exports.adminUnblockUser=async(req,res,next)=>{
-    const id=res.body.id;
     
+    var id=req.body.id;
+    var admin;
+    try{
+       admin=await Admin.remove_Blocklist(id);
+    }catch(e){
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Fail in unlock!",
+        }, null, "\t"));
+        res.end();
+        console.log(e);
+        return;
+    }
+    
+        res.write(JSON.stringify({
+            "success": true,
+            "message": "Success in unblock!",
+        }, null, "\t"));
+        res.end();
+        return;
+
+
 }
 
 exports.adminGetUserById=async(req,res,next)=>{
@@ -133,6 +173,8 @@ exports.adminGetUserById=async(req,res,next)=>{
         return;
     }
 
+    console.log(admin);
+    
     if(admin!=null){
         res.write(JSON.stringify({
             "success": true,
@@ -152,7 +194,9 @@ exports.adminGetUserById=async(req,res,next)=>{
 
 }
 
-exports.adminGetAllUser=async(req,res,next)=>{
+exports.adminGetAllUser=(req,res)=>{
+
+
     
 }
 
