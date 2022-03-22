@@ -7,9 +7,9 @@ import './MessageBox.css'
 function Messagesbox(props) {
     return (
         <ScrollToBottom className="messages">
-            {props.messages.map((message, i) => 
+            {props.messageList.map((message, i) => 
                 <div key={i}>
-                    <Message message={message} />
+                    <Message message={message} userName={props.userName}/>
                 </div>
             )}
         </ScrollToBottom>

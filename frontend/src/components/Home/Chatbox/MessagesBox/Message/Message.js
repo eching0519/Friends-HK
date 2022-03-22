@@ -13,17 +13,17 @@ const Message = (props) => {
     
     //const trimmedName = name.trim().toLowerCase();
 
-    /*
-    if (user === trimmedName) {
+    
+    if (props.message.name === props.userName) {
         isSentByCurrentUser = true;
     }
-    */
+    
 
     return (
         isSentByCurrentUser
             ? (
                 <div className="messageContainer justifyEnd">
-                    <p className="sentText pr-10">from me</p>
+                    <p className="sentText pr-10">{props.message.name}</p>
                     <div className="messageBox backgroundBlue">
                         <p className="messageText colorWhite">{props.message.text}</p>
                     </div>
@@ -34,7 +34,7 @@ const Message = (props) => {
                     <div className="messageBox backgroundLight">
                         <p className="messageText colorDark">{props.message.text}</p>
                     </div>
-                    <p className="sentText pl-10 ">admin</p>
+                    <p className="sentText pl-10 ">{props.message.name}</p>
                 </div>
             )
     );

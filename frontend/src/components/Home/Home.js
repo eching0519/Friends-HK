@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { io } from 'socket.io-client';
+//import { io } from 'socket.io-client';
 
 import Chatbox from "./Chatbox/Chatbox";
 import Sidebar from "./Sidebar/Sidebar";
@@ -15,12 +15,12 @@ function Home(props) {
     //const socket = io('/');
     const [username, setUsername] = useState('')
     const [room, setRoom] = useState('');
-    const [name, setName] = useState('');
+    const [userName, setUserName] = useState('');
     const [logout, setLogout] = useState(false);
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        setSocket(io()) //estiblish socket io connection
+        //setSocket(io()); //estiblish socket io connection
 
         console.log('home component just mount');
         if (!localStorage.token || !sessionStorage.token) {
@@ -40,23 +40,33 @@ function Home(props) {
                         <a className="navbar-brand">username:{useContext(UserContext)}</a>
                         <Link className="btn btn-primary" to='/' onClick={
                             () => {
-                                socket.disconnect();
-                                logoutRequest();
+                                //socket.disconnect();
+                                //logoutRequest();
                                 console.log('logout...');
                             }
                         }>Logout</Link>
+                        <button className="btn btn-primary" onClick={ () => {
+                            setUserName('Peter')
+                        }
+                            
+                        }>set name as Peter</button>
+                        <button className="btn btn-primary"  onClick={() => {
+                            setUserName('Mary')
+                        }
+                            
+                        }>set name as Mary</button>
                     </div>
 
                 </nav>
 
                 <div className="row w-100 mx-0">
                     <div className="col-md-3 mx-auto sidebar-fragment">
-                        <Sidebar setRoom={setRoom} setName={setName} />
+                        <Sidebar setRoom={setRoom} />
                     </div>
                     <div className="vh-100 col-md-9 mx-auto chatbox-fragment">
-                        {name !== '' && room !== '' ?
+                        {userName !== '' && room !== '' ?
                             <div>
-                                <Chatbox name={name} room={room} socket={socket} />
+                                <Chatbox userName={userName} room={room} />
                             </div>
                             : <h1>Select a group to get start.</h1>}
 

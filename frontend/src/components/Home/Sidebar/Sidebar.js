@@ -8,8 +8,8 @@ function Sidebar(props) {
                 <h4>Peter</h4>
                 <button className="btn btn-primary" onClick={() => {
                     props.setRoom('PeterRoom1');
-                    props.setName('Peter');
-                    console.log('clicked!');
+                    //props.setName('Peter');
+                    console.log('selected room: PeterRoom1');
                 }}
                 >click</button>
             </div>
@@ -17,8 +17,8 @@ function Sidebar(props) {
                 <h4>Mary</h4>
                 <button className="btn btn-primary" onClick={() => {
                     props.setRoom('MaryRoom1');
-                    props.setName('Mary');
-                    console.log('clicked!');
+                    //props.setName('Mary');
+                    console.log('selected room: MaryRoom1');
                 }}
                 >click</button>
             </div>
