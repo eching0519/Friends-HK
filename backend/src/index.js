@@ -120,8 +120,8 @@ io.on('connection', (socket) => {
         callback(message);
     });
 
-    socket.on("matchBySpecialTheme", (theme, user) => {
-        console.log(`recieve match request: theme: ${theme}, username: ${user}`);
+    socket.on("matchBySpecialTheme", (theme, user, callback) => {
+        console.log(`recieved match request: theme: ${theme}, username: ${user}`);
 
         socket.join(theme);
 
@@ -135,6 +135,8 @@ io.on('connection', (socket) => {
             });
             
         }
+        let numberofpeople = io.sockets.adapter.rooms.get(theme).size;
+        callback(numberofpeople);
 
     });
 

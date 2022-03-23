@@ -21,15 +21,18 @@ const FriendMatch = (props) => {
         setmatchStatus('success');
     });
 
-
+    //let waitingMessage = '';
     const sendSpecialThemeMatchRequest = (matchTheme) => {
-        socket.emit('matchBySpecialTheme', matchTheme, props.userName);
+        socket.emit('matchBySpecialTheme', matchTheme, props.userName, (numberofpeople) => {
+            console.log(`Still need ${3 - numberofpeople} people.`)
+            //waitingMessage = `Still need ${3 - numberofpeople} people.`;
+        });
     };
 
     let matchstatusplaceholder = <h3>not send</h3>;
 
     if (matchStatus === 'pending') {
-        matchstatusplaceholder = <h3>not yet find</h3>;
+        matchstatusplaceholder = <h3>not yet find, {}</h3>;
     }
 
     if (matchStatus === 'success') {
@@ -55,7 +58,8 @@ const FriendMatch = (props) => {
                     <h5 className="card-title">Hiking</h5>
                     <p className="card-text">you seek for fds for hiking.</p>
                     <button className="btn btn-light" onClick={() => {
-
+                        setmatchStatus('pending');
+                        sendSpecialThemeMatchRequest('hiking');
                     }}>Go</button>
                 </div>
             </div>
