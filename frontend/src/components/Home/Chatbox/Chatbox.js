@@ -5,7 +5,7 @@ import StatusBar from './StatusBar/StatusBar';
 import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
 
-const socket = io({
+const socket = io({ //no url: default to localhost:8080
     autoConnect: false
 });
 
@@ -16,11 +16,12 @@ function Chatbox(props) {
     const [messageList, setmessageList] = useState([]);   //store all message.
 
     useEffect(() => {
-        socket.connect();
+        socket.connect();   //estiblish socket io connection
         return () => {
-            socket.disconnect();
+            socket.removeAllListeners();    //clean up listener
+            socket.disconnect();    //disconnect socket io connection
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         //setSocket(io()) ; //estiblish socket io connection
@@ -35,7 +36,7 @@ function Chatbox(props) {
 
         // if both server and session storage are empty, create new message.
         //console.log('cannot fetch data from session storage');
-        setmessageList([{ text: 'welocome', name: 'admin'}]);    //if there is no chat history, initialize to empty array.
+        setmessageList([{ text: 'welcome', name: 'admin'}]);    //if there is no chat history, initialize the message list.
         //}
 
         const { userName, room } = { userName: props.userName, room: props.room }   //get names and room from Sidebar component.
@@ -60,8 +61,8 @@ function Chatbox(props) {
 
             });
             socket.removeAllListeners();
-            sessionStorage.setItem(`${props.room}`, JSON.stringify(messageList));
-            setmessageList([]);
+            //sessionStorage.setItem(`${props.room}`, JSON.stringify(messageList));
+            //setmessageList([]);
         }
     }, [socket, props.room]);   //trigger useEffect if room changed from sidebar
 
