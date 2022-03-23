@@ -122,7 +122,6 @@
   
   .upload_image_form {
       position: relative;
-      height: 170px;
   }
 
 #upload_image {
@@ -194,4 +193,8 @@
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+}
+
+.cursor-text {
+  cursor: text;
 }
