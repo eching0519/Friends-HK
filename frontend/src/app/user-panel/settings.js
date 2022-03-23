@@ -10,7 +10,7 @@ import $ from 'jquery';
 const Settings = (props) => {
     LoginVerifier(props)
     const [formChanged, setFormChanged] = useState(false)
-    const [settingType, setType] = useState('profile');
+    const [settingType, setType] = useState(props.type==null? 'account': props.type);
     const [alert, setAlert] = useState({visible:false});
 
     if (props.settingType != null)
