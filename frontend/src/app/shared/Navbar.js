@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
@@ -6,6 +6,14 @@ import Signout from '../component/common/Signout'
 
 const Navbar = (props) => {
   const [user, setUser] = useState(props.user)
+  const [userPic, setUserPic] = useState((user==null||user.picture==null)? require("../../assets/images/emptyFace.png") : props.user.picture)
+
+  useEffect(()=>{
+    setUser(props.user)
+    setUserPic((user==null||user.picture==null)? 
+                require("../../assets/images/emptyFace.png?" + new Date().getTime()) : 
+                props.user.picture +"?" + + new Date().getTime()) // Add time so that the image source must updated immediately
+  }, [props.user])
 
   return (
     <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -28,7 +36,7 @@ const Navbar = (props) => {
           <li className="nav-item nav-profile">
             <div className="nav-link">
               <div className="nav-profile-img">
-                <img src={(user==null||user.picture==null)? require("../../assets/images/emptyFace.png") : props.user.picture} alt="user"/>
+                <img src={userPic} alt="user"/>
                 <span className="availability-status online"></span>
               </div>
               <div className="nav-profile-text">

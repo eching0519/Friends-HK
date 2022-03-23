@@ -5,12 +5,12 @@ import ProfileSettings from '../component/settings/profile';
 import PrivacySettings from '../component/settings/privacy'
 import AlertMessage from '../component/common/AlertMessage';
 import { Trans } from 'react-i18next';
+import $ from 'jquery';
 
 const Settings = (props) => {
     LoginVerifier(props)
-    
     const [formChanged, setFormChanged] = useState(false)
-    const [settingType, setType] = useState('account');
+    const [settingType, setType] = useState(props.type==null? 'account': props.type);
     const [alert, setAlert] = useState({visible:false});
 
     if (props.settingType != null)
@@ -27,6 +27,13 @@ const Settings = (props) => {
     useEffect(() => {
         setFormChanged(false);
     }, [settingType])
+
+    useEffect(() => {
+        sessionStorage.setItem('UserProfile', JSON.stringify(props.user));
+        setFormChanged(false);
+        console.log("User changed")
+        window.scrollTo(0, 0);
+    }, [props.user])
 
     return (
         <>
@@ -59,6 +66,7 @@ const Settings = (props) => {
                         }}>
                             <i className="mdi mdi-account-outline mr-2 text-danger h3"></i><span className={settingType!=='account'? '' : 'font-weight-bold'}><Trans>Account</Trans></span>
                         </a>
+                        {/* ---- Profile Button ---- */}
                         <div className="dropdown-divider"></div>
                         <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e)=>{
                             e.preventDefault();
@@ -68,9 +76,10 @@ const Settings = (props) => {
                             }
                             setType('profile');
                         }}>
-                            <i className="mdi mdi-settings mr-2 text-success h3"></i><span className={settingType!=='profile'? '' : 'font-weight-bold'}><Trans>Profile</Trans></span>
+                            <i className="mdi mdi-heart-box-outline mr-2 text-success h3"></i><span className={settingType!=='profile'? '' : 'font-weight-bold'}><Trans>Profile</Trans></span>
                         </a>
-                        <div className="dropdown-divider"></div>
+                        {/* ---- Privacy Button ---- */}
+                        {/* <div className="dropdown-divider"></div>
                         <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e)=>{
                             e.preventDefault();
                             if (settingType!=='privacy' && formChanged) {
@@ -80,7 +89,7 @@ const Settings = (props) => {
                             setType('privacy');
                         }}>
                             <i className="mdi mdi-logout mr-2 text-primary h3"></i><span className={settingType!=='privacy'? '' : 'font-weight-bold'}><Trans>Privacy</Trans></span>
-                        </a>
+                        </a> */}
                     </div>
                 </div>
             </div>
@@ -89,11 +98,9 @@ const Settings = (props) => {
                 <div className='w-100'>
                     {alert.visible === true && <AlertMessage alert={alert} setAlert={setAlert}/>}
                     <div className="card">
-                        <div className="card-body">
-                            {settingType==='account' && <AccountSettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />}
-                            {settingType==='profile' && <ProfileSettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />}
-                            {settingType==='privacy' && <PrivacySettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />}
-                        </div>
+                        {settingType==='account' && <AccountSettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />}
+                        {settingType==='profile' && <ProfileSettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />}
+                        {/* {settingType==='privacy' && <PrivacySettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />} */}
                     </div>
                 </div>
             </div>

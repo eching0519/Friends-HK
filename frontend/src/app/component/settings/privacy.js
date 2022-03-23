@@ -35,6 +35,7 @@ const PrivacySettings = (props) => {
 
     return (
         <>
+            <div className="card-body">
             <h4 className="card-title">Privacy</h4>
             <p className="card-description"> Basic form layout </p>
             <form className="forms-sample">
@@ -59,6 +60,7 @@ const PrivacySettings = (props) => {
                 <button type="submit" className="btn btn-gradient-primary mr-2">Submit</button>
                 <button className="btn btn-light">Cancel</button>
             </form>
+            </div>
         </>
     )
 }

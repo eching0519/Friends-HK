@@ -476,16 +476,34 @@ exports.updatePreferences = async (req, res, next) => {
         res.end();
         return;
     }
-    // Please update value in user.preferences
-    // ...
-    // console.log(typeof(req.body.language));
-    // console.log(req.body.language);
-    const language = new Array(req.body.language);
-    const hobbies = new Array(req.body.hobbies);
-    user.preferences = language.concat(hobbies);
-    user.updatePreferences();
+
+    if (req.body.lang != '')
+        user.lang = req.body.lang;
+    if (req.body.co != '')
+        user.co = req.body.co;
+    if (req.body.gender != '')
+        user.gender = req.body.gender;
+    if (req.body.dob != '')
+        user.dob = req.body.dob;
+    if (req.body.hobbies != '')
+        user.hobbies = (typeof(req.body.hobbies) === 'string')? [req.body.hobbies]: req.body.hobbies;
+    if (req.body.bio != '')
+        user.bio = req.body.bio;
+    if (req.body.hashtags != '')
+        user.hashtags = (typeof(req.body.hashtags) === 'string')? [req.body.hashtags]: req.body.hashtags;
+
+    user.preferences = {
+        lang: (typeof(req.body.plang) === 'string')? [req.body.plang]: req.body.plang,
+        gender: (typeof(req.body.pgender) === 'string')? [req.body.pgender]: req.body.pgender,
+        ageFrom: req.body.ageFrom,
+        ageTo: req.body.ageTo
+    }
+
+    user.update()
+
     res.write(JSON.stringify({
-        "success": true
+        "success": true,
+        "user": user
     }, null, "\t"));
     res.end();
 }
@@ -493,42 +511,37 @@ exports.updatePreferences = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
     if (!userIsVerified(req, res)) return
 
-    const id = req.session.verification.id  // User Id
+    const id = req.session.verification.id;  // User Id
+    const newName = req.body.name;
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
     var user;
     try {
-        user = await User.findById(id, 'update')
+        user = await User.findByIdAndPassword(id, password)
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Unknown error."
+            "message": "Invalid password."
         }, null, "\t"));
         res.end();
         return;
     }
 
     // Password, Name...
-    const newName = req.body.name;
-    const newPassword = req.body.password;
     if (newName!=""){
         user.name = newName;
-        user.updateName();
-        res.write(JSON.stringify({
-            "success": true
-        }, null, "\t"));
-        res.end();
-        console.log("update name");
     }
 
     if (newPassword!=""){
         user.password = newPassword;
-        user.updatePassword();
-        res.write(JSON.stringify({
-            "success": true
-        }, null, "\t"));
-        res.end();
-        console.log("update password");
     }
 
+    user.update()
 
-    
+    res.write(JSON.stringify({
+        "success": true,
+        "user": user
+    }, null, "\t"));
+    res.end();
 }
