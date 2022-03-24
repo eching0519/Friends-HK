@@ -10,8 +10,9 @@ const Navbar = (props) => {
 
   useEffect(()=>{
     setUser(props.user)
+    console.log(user)
     setUserPic((user==null||user.picture==null)? 
-                require("../../assets/images/emptyFace.png?" + new Date().getTime()) : 
+                require("../../assets/images/emptyFace.png") : 
                 props.user.picture +"?" + + new Date().getTime()) // Add time so that the image source must updated immediately
   }, [props.user])
 
