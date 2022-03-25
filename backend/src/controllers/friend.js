@@ -15,6 +15,48 @@ exports.SendFriendRequest = async (req, res, next) =>{
 
     const friend = new Friend(to, from, status);
 
+    var user_to, user_from;
+
+    try {
+        user_to = await User.findById(to, 'query')
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "No such user."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+    user_from = await User.findById(from, 'query')
+    friendlist = user_from.friendlist
+    for(let i=0;i <friendlist.length; i++){
+        if (friendlist[i]==to){
+            res.write(JSON.stringify({
+                "success": false,
+                "message": "Already in friendlist."
+            }, null, "\t"));
+            res.end();
+            return;
+
+        }
+    }
+
+    var request;
+    try {
+        request = await await Friend.findById(to, from)
+    } catch(e) {
+    }
+
+    if (request) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Request is pending."
+        }, null, "\t"));
+        res.end();
+        return
+    }
+
+
     try {
         await friend.create();
     } catch (e) {
@@ -46,9 +88,12 @@ exports.RejectRequest = async(req, res, next)=>{
         return;
     }
 
-    friend.rejectRequest();
+    currentStatus = friend.status
+
+    friend.deleteRequest();
     res.write(JSON.stringify({
-        "success": true
+        "success": true,
+        "message": "Request rejected"
     }, null, "\t"));
     res.end();
 
