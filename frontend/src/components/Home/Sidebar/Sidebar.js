@@ -1,19 +1,31 @@
 import React from "react";
+import {useEffect, useState, useContext} from 'react';
+import FriendMatch from "../../FriendMatch/FriendMatch";
+
+function ChatName(props){
+    return <chatname>
+        <div className="row">
+        <h4>{props.chatroomname}</h4>
+        <button className="btn btn-primary" onClick={event=>{
+            event.preventDefault();
+            props.item.setRoom(props.chatroomname);
+            console.log("selected room:"+props.chatroomname);
+        }}
+        >ClICK</button>
+        </div>
+    </chatname>
+}
 
 function Sidebar(props) {
     return (
         <>
-            <h1>Contacts:</h1>
-            <div className="row">
-                <h4>Peter</h4>
-                <button className="btn btn-primary" onClick={() => {
-                    props.setRoom('PeterRoom1');
-                    //props.setName('Peter');
-                    console.log('selected room: PeterRoom1');
-                }}
-                >click</button>
-            </div>
-            <div className="row">
+            <h1>Chat list</h1>
+            
+            {/* 챗 상단바 누르면 바로 채팅으로 가지는데 그러지 말고 그냥 빈 채팅만 보이게 하기 */}
+            {/* Using Loop to keep creating new chatroom */}
+            <ChatName item={props} chatroomname="LoveTamjjai"></ChatName>
+            <ChatName item={props} chatroomname="Fiveguyslover"></ChatName>
+            {/* <div className="row">
                 <h4>Mary</h4>
                 <button className="btn btn-primary" onClick={() => {
                     props.setRoom('MaryRoom1');
@@ -21,7 +33,7 @@ function Sidebar(props) {
                     console.log('selected room: MaryRoom1');
                 }}
                 >click</button>
-            </div>
+            </div> */}
 
         </>
 
