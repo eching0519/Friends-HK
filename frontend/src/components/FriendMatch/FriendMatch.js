@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { io } from 'socket.io-client';
 
+//import Cardlist from "./CardList";
+
 const socket = io({ //no url: default to localhost:8080
     autoConnect: false
 });
@@ -38,9 +40,9 @@ const FriendMatch = (props) => {
 
 
 
-    function Cardlist (props) {
+    function Cardlist(props) {
         return <cardlist>
-          <div className="card" >
+            <div className="card" >
                 <div className="card-body">
                     <h5 className="card-title">{props.cardtitle}</h5>
                     <p className="card-text">{props.cardtext}</p>
@@ -52,38 +54,38 @@ const FriendMatch = (props) => {
                 </div>
             </div>
         </cardlist>
-      }
-    
-    function Matchlist(props){
+    }
+
+    function Matchlist(props) {
         return <matchlist>
             <h5>title</h5>
             description
         </matchlist>
     }
 
-    function Create(props){
-    return <matchlist>
-        <h2>Create</h2>
-        <form onSubmit={event=>{
-        event.preventDefault();
-        const title = event.target.title.value;
-        const body = event.target.body.value;
-        props.onCreate(title, body);
-        }}>
-        <p><input type="text" name="title" placeholder="Title of the chatroom"/></p>
-        <p><textarea name="body" placeholder="Description of chatroom"></textarea></p>
-        <p><input type="submit" value="Create"></input></p>
-        </form>
-    </matchlist>
+    function Create(props) {
+        return <matchlist>
+            <h2>Create</h2>
+            <form onSubmit={event => {
+                event.preventDefault();
+                const title = event.target.title.value;
+                const body = event.target.body.value;
+                props.onCreate(title, body);
+            }}>
+                <p><input type="text" name="title" placeholder="Title of the chatroom" /></p>
+                <p><textarea name="body" placeholder="Description of chatroom"></textarea></p>
+                <p><input type="submit" value="Create"></input></p>
+            </form>
+        </matchlist>
     }
 
     const [mode, setMode] = useState('okay');
-    function Mainfriend(){
+    function Mainfriend() {
         let content = null;
-        
-        if(mode === "CREATE"){
-            content = <Create onCreate={(title, body)=>{    
-            
+
+        if (mode === "CREATE") {
+            content = <Create onCreate={(title, body) => {
+
             }}></Create>
         }
 
@@ -92,9 +94,9 @@ const FriendMatch = (props) => {
     return (
         <div>
             <h1>match friends</h1>
-            
-            <Cardlist item={props} cardtitle="Dining" cardtext="Love eating bro and sis"></Cardlist>
-            
+
+            <Cardlist item={props} cardtitle="Dining" cardtext="Love eating bro and sis" />
+
 
 
             {/* <div className="card" >
@@ -109,7 +111,7 @@ const FriendMatch = (props) => {
 
             <div>
                 {matchstatusplaceholder}
-                {}
+                { }
             </div>
 
         </div>
