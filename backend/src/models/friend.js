@@ -50,6 +50,12 @@ class Friend {
                                                 { upsert: false })
     }
 
+    deleteRequest() {
+        const db = getDatabase();
+        return db.collection('friendRequest').deleteOne( { _id: this.id },
+                                                { upsert: false })
+    }
+
 
 
 
