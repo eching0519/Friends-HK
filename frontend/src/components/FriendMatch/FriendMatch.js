@@ -66,25 +66,25 @@ function Create(props) {
 const FriendMatch = (props) => {
     const [matchTheme, setMatchTheme] = useState('default');
     const [matchStatus, setmatchStatus] = useState('wait');
-    const [mode, setMode] = useState('WELCOME');
+    const [mode, setMode] = useState();
     const [topics, setTopics] = useState();
     const [context, setContext] = useState(null);
-    const [nextId, setNextId] = useState(1);
+    // const [nextId, setNextId] = useState(1);
     let content = null;
-    if (mode==='WELCOME'){
-        content =  <Matchlist title="Chikcen and Corn" description="Love the song in the youtube" />
-    } else if (mode === "READ"){
-        content =  <Matchlist title="Rabit Bunny" description="Kkangchong Kkangchong" />
-    } else if(mode ==='CREATE'){
+    // if (mode==='WELCOME'){
+    //     content =  <Matchlist title="Chikcen and Corn" description="Love the song in the youtube" />
+    // } else if (mode === "READ"){
+    //     content =  <Matchlist title="Rabit Bunny" description="Kkangchong Kkangchong" />
+    if(mode ==='CREATE'){
         content = <Create onCreate={(_title, _description)=>{
 // 목록이 추가되도록 해야한다
-            const newTopic = {id:nextId, title:_title, description:_description}
+            const newTopic = {title:_title, description:_description}
             const newTopics = [...topics]
             newTopic.push(newTopic)
             setTopics(newTopics);
         }}></Create>
     }
-    const cardlist = ['Boong Boong Boong', 'Yoga fire']
+    const cardlist = ['Boong Boong Boong', 'Yoga fire', 'Hello']
     console.log(cardlist)
     let cardlistplaceholder = []
     cardlistplaceholder= cardlist.map((title, description, index)=>{
@@ -128,25 +128,12 @@ const FriendMatch = (props) => {
                 <Cardlist item={props} cardtitle={title} cardtext={description}></Cardlist>
             </div>
             )}
-            <h3 onChnageMode={(_context)=>{
-                setMode("Welcome");
-                setContext(_context);
-            }}></h3>
-            <Cardlist item={props} cardtitle="Dining" cardtext="Love eating bro and sis" />
+            {/* <Cardlist item={props} cardtitle="Dining" cardtext="Love eating bro and sis" /> */}
             {content}
             <a href='/create' onClick={event=>{
                 event.preventDefault();
                 setMode('CREATE');
             }}>Create</a>
-            {/* <div className="card" >
-                <div className="card-body">
-                    <h5 className="card-title">Hiking</h5>
-                    <p className="card-text">you seek for fds for hiking.</p>
-                    <button className="btn btn-light" onClick={() => {
-
-                    }}>Go</button>
-                </div>
-            </div> */}
 
             <div>
                 {matchstatusplaceholder}
