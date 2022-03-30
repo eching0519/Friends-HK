@@ -34,6 +34,10 @@ exports.adminLogin = async (req, res, next) => {
     // console.log(admin);
 
     if ((admin._id == id) && (admin.password == password)) {
+        req.session.adminVerification={
+            'id': id,
+            'verified': true
+        };
         res.write(JSON.stringify({
             "success": true,
             "user": Admin
@@ -109,6 +113,11 @@ exports.adminChangePassword = async (req, res, next) => {
 }
 
 exports.adminBlockUser = async (req, res, next) => {
+
+    //check reqsession
+    if (!adminIsVerified(req, res)) return;
+
+    //the following id is userid(want to block that one)
     var id = req.body.id;
     var admin;
     try {
@@ -134,7 +143,10 @@ exports.adminBlockUser = async (req, res, next) => {
 }
 
 exports.adminUnblockUser = async (req, res, next) => {
+    //check reqsession
+    if (!adminIsVerified(req, res)) return;
 
+    //the following id is userid(want to unblock that one)
     var id = req.body.id;
     var admin;
     try {
@@ -160,6 +172,9 @@ exports.adminUnblockUser = async (req, res, next) => {
 }
 
 exports.adminGetUserById = async (req, res, next) => {
+    if (!adminIsVerified(req, res)) return;
+
+    //the following is get user by id 
     var id = req.body.id;
     var admin;
     try {
@@ -196,6 +211,7 @@ exports.adminGetUserById = async (req, res, next) => {
 }
 
 exports.adminGetAllUser = async(req, res) => {
+    if (!adminIsVerified(req, res)) return;
     
     try {
 
@@ -227,6 +243,9 @@ exports.adminGetAllUser = async(req, res) => {
 }
 
 exports.adminDeleteAccount = (req, res) => {
+    if (!adminIsVerified(req, res)) return;
+
+    //the following the user id
     var id = req.body.id;
     var admin;
     console.log(id);
