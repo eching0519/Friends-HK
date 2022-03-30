@@ -278,10 +278,10 @@ class Admin {
 
     //this is used to show all data for admin
     static AdminShowAllUser =async()=>{
-        var MongoClient = require('mongodb').MongoClient;
-        var url = "mongodb+srv://1155148699:hcdD0iGk6ZiLefr7@cityplanner.r2ndl.mongodb.net/CSCI3100Project?retryWrites=true&w=majority";
-
-        MongoClient.connect(url, function (err, db) {
+        const db = getDatabase();
+        const result = await db.collection('user').find();
+        return await result.toArray();
+        /*MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("CSCI3100Project");
             dbo.collection("user").find({}).toArray(function (err, result) {
@@ -291,7 +291,7 @@ class Admin {
                 db.close();
                 return result;
             });
-        });
+        });*/
     }
     //this is used to show data for specified id for admin
     static AdminShowUserById = async(id)=>{

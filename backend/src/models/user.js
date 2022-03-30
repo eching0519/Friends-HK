@@ -6,7 +6,7 @@ class User {
     static findAllAsync = async () => {
         const db = getDatabase();
         const result = await db.collection('user').find();
-        return result.toArray();
+        return await result.toArray();
     }
 
     static findById = async (id, usage) => {

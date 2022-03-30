@@ -199,9 +199,14 @@ exports.adminGetAllUser = async(req, res) => {
     
     try {
 
-        return_value =await Admin.AdminShowAllUser();
-        console.log("\n\n");
-        
+       var _structureTypePromise = await User.findAllAsync();
+       var _structureTypeList= await _structureTypePromise;
+
+       var structureType;
+       await _structureTypeList.forEach(element=>{
+           structureType = new User(element._id,element.email,element.name,element.status);
+       });
+        console.log(_structureTypeList);
         res.write(JSON.stringify({
             "success": true,
             "message": "Success in show all!",
@@ -214,7 +219,7 @@ exports.adminGetAllUser = async(req, res) => {
             "message": "Fail in show all!",
         }, null, "\t"));
         res.end();
-        console(e);
+        console.log(e);
         return;
     }
 
