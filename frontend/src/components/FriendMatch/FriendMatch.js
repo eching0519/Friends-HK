@@ -66,8 +66,12 @@ function Create(props) {
 const FriendMatch = (props) => {
     const [matchTheme, setMatchTheme] = useState('default');
     const [matchStatus, setmatchStatus] = useState('wait');
-    const [mode, setMode] = useState();
-    const [topics, setTopics] = useState();
+    const [mode, setMode] = useState(null);
+    const [topics, setTopics] = useState([
+        {id:1, title:'xxxx', description:'xxxx is ...'},
+        {id:2, title:'aaaa', description:'aaaa is ...'},
+        {id:3, title:'bbbb', description:'bbbb is ...'}
+    ]);
     const [context, setContext] = useState(null);
     // const [nextId, setNextId] = useState(1);
     let content = null;
