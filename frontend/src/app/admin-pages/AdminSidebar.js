@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Collapse } from 'react-bootstrap';
 import { Trans } from 'react-i18next';
 
-class Sidebar extends Component {
+class AdminSidebar extends Component {
 
   state = {};
 
@@ -202,4 +202,4 @@ class Sidebar extends Component {
 
 }
 
-export default withRouter(Sidebar);
+export default withRouter(AdminSidebar);
