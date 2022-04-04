@@ -87,7 +87,7 @@ const AppRoutes = (props) => {
         <Route path="/admin" component={ AdminHome } />
 
         {/* Root page */}
-        <Redirect to="/home" />
+        <Redirect to="/admin" />
       </Switch>
     </Suspense>
   );
