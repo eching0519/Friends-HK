@@ -18,7 +18,7 @@ adminRouter.post('/profile/changePassword', adminController.adminChangePassword)
 adminRouter.post('/delete',adminController.adminDeleteAccount);
 
 adminRouter.post('/getuserbyid',adminController.adminGetUserById);
-adminRouter.post('/getallid',adminController.adminGetAllUser);
+adminRouter.post('/userList',adminController.adminGetAllUser);
 
 
 

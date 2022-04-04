@@ -5,8 +5,10 @@ const getDatabase = require('../util/database').getDatabase;
 class User {
     static findAllAsync = async () => {
         const db = getDatabase();
-        const result = await db.collection('user').find();
-        return await result.toArray();
+        let result = await db.collection('user').find();
+        result = await result.toArray();
+        await result.forEach(x => delete x['password']);
+        return result;
     }
 
     static findById = async (id, usage) => {
@@ -130,15 +132,19 @@ class User {
             });
     }
 
+    static changeStatus(id, status) {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: id },
+                                                { $set: {
+                                                    'status': status
+                                                } },
+                                                { upsert: false })
+    }
+
     constructor(email, name) {
         this.email = email;
         this.name = name;
-        // for personal self introduction
-        // example:
-        // reputation
-        // interest
-        // age....
-
+        this.status = 'active';
     }
 
     async create() {

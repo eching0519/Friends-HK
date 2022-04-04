@@ -27,6 +27,7 @@ const AccountSettings = (props) => {
     }, [email, uname, password, newPassword]);
 
     const sendResetPwRequest = async () => {
+        // Preparing data to send POST request
         let url = '/user/profile/update';
 
         let res = await fetch(url, {
@@ -39,6 +40,7 @@ const AccountSettings = (props) => {
             })
         });
 
+        // Get server response's data
         let data
         try {
             data = await res.json();
@@ -51,6 +53,7 @@ const AccountSettings = (props) => {
             return;
         }
 
+        // Use the data to process
         if (!data.success) {
             props.setAlert({
                 visible: true,

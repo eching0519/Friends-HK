@@ -180,10 +180,6 @@ class Admin {
                 }
             },
             )
-            //.next()
-            //.then(data => {
-                
-            //})
             .catch(err => {
                 throw err; 
             });
