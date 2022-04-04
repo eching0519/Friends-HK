@@ -39,6 +39,9 @@ const Verify = lazy(() => import('./user-pages/Verify'))
 const Home = lazy(() => import('./user-panel/home'));
 const Settings = lazy(() => import('./user-panel/settings'));
 
+// Admin
+const AdminLogin = lazy(() => import('./admin-pages/AdminLogin'));
+const AdminHome = lazy(() => import('./admin-pages/AdminHome'));
 
 
 const AppRoutes = (props) => {
@@ -79,6 +82,9 @@ const AppRoutes = (props) => {
         <Route path="/register" component={ Register } />
         <Route path="/verify" component={ Verify } />
 
+        {/* Admin page */}
+        <Route path="/admin/login" component={ AdminLogin } />
+        <Route path="/admin" component={ AdminHome } />
 
         {/* Root page */}
         <Redirect to="/home" />
