@@ -4,7 +4,7 @@ import './App.scss';
 import AppRoutes from './AppRoutes';
 import AdminNavbar from './admin-pages/AdminNavbar';
 import Navbar from './shared/Navbar';
-// import Sidebar from './shared/Sidebar';
+import Sidebar from './shared/Sidebar';
 import SettingsPanel from './shared/SettingsPanel';
 import Footer from './shared/Footer';
 import { withTranslation } from "react-i18next";
@@ -56,7 +56,7 @@ const App = (props) => {
   const [user, setUser] = useState(myUser)
   
   let navbarComponent = !isFullPageLayout ? (!isAdminPageLayout ? <Navbar user={user}/> : <AdminNavbar />) : '';
-  // let sidebarComponent = !this.state.isFullPageLayout ? <Sidebar/> : '';
+  let sidebarComponent = (!isFullPageLayout && isAdminPageLayout) ? <Sidebar/> : '';
   let SettingsPanelComponent = !isFullPageLayout ? <SettingsPanel/> : '';
   // let footerComponent = !isFullPageLayout ? <Footer/> : '';
 
@@ -65,7 +65,7 @@ const App = (props) => {
       <div className="container-scroller">
         { navbarComponent }
         <div className="container-fluid page-body-wrapper">
-          {/* { sidebarComponent } */}
+          { sidebarComponent }
           <div className="main-panel">
             <div className="content-wrapper">
               <AppRoutes user={user} setUser={setUser} />
