@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { XHR } from \"./polling-xhr.js\";\nimport { WS } from \"./websocket.js\";\nexport const transports = {\n  websocket: WS,\n  polling: XHR\n};","map":null,"metadata":{},"sourceType":"module"}
