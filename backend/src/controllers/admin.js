@@ -201,7 +201,7 @@ exports.adminGetUserById = async (req, res, next) => {
 }
 
 exports.adminGetAllUser = async(req, res) => {
-    // if (!adminIsVerified(req, res)) return;
+    if (!adminIsVerified(req, res)) return;
     
     var userList;
     try {
