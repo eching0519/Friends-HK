@@ -59,13 +59,31 @@ class AdminSidebar extends Component {
     return (
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
         <ul className="nav">
-          <li className={ this.isPathActive('/dashboard') ? 'nav-item active' : 'nav-item' }>
+          {/* <li className={ this.isPathActive('/dashboard') ? 'nav-item active' : 'nav-item' }>
             <Link className="nav-link" to="/dashboard">
               <span className="menu-title"><Trans>Dashboard</Trans></span>
               <i className="mdi mdi-home menu-icon"></i>
             </Link>
+          </li> */}
+          <li className={ this.isPathActive('/userlist') ? 'nav-item active' : 'nav-item' }>
+            <Link className="nav-link" to="/userlist">
+              <span className="menu-title"><Trans>User List</Trans></span>
+              <i className="mdi mdi-home menu-icon"></i>
+            </Link>
           </li>
-          <li className={ this.isPathActive('/basic-ui') ? 'nav-item active' : 'nav-item' }>
+          <li className={ this.isPathActive('/blockuser') ? 'nav-item active' : 'nav-item' }>
+            <Link className="nav-link" to="/blockuser">
+              <span className="menu-title"><Trans>Block User</Trans></span>
+              <i className="mdi mdi-home menu-icon"></i>
+            </Link>
+          </li>
+          <li className={ this.isPathActive('/changepassword') ? 'nav-item active' : 'nav-item' }>
+            <Link className="nav-link" to="/changepassword">
+              <span className="menu-title"><Trans>Change Password</Trans></span>
+              <i className="mdi mdi-home menu-icon"></i>
+            </Link>
+          </li>
+          {/* <li className={ this.isPathActive('/basic-ui') ? 'nav-item active' : 'nav-item' }>
             <div className={ this.state.basicUiMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('basicUiMenuOpen') } data-toggle="collapse">
               <span className="menu-title"><Trans>Basic UI Elements</Trans></span>
               <i className="menu-arrow"></i>
@@ -171,7 +189,7 @@ class AdminSidebar extends Component {
               <span className="menu-title"><Trans>Documentation</Trans></span>
               <i className="mdi mdi-file-document-box menu-icon"></i>
             </a>
-          </li>
+          </li> */}
         </ul>
       </nav>
     );

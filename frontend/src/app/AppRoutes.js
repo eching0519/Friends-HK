@@ -6,8 +6,9 @@ import Spinner from '../app/shared/Spinner';
 // import Settings from './user-panel/settings';
 
 const Dashboard = lazy(() => import('./dashboard/Dashboard'));
-
-
+const Changepassword = lazy(() => import('./dashboard/Chagepassword'));
+const Blockuser = lazy(() => import('./dashboard/Blockuser'));
+const Userlist = lazy(() => import('./dashboard/Userlist'));
 
 const Buttons = lazy(() => import('./_sample/basic-ui/Buttons'));
 const Dropdowns = lazy(() => import('./_sample/basic-ui/Dropdowns'));
@@ -50,6 +51,7 @@ const AppRoutes = (props) => {
     <Suspense fallback={<Spinner/>}>
       <Switch>
         <Route exact path="/dashboard" component={ Dashboard } />
+        
 
 
         <Route path="/basic-ui/buttons" component={ Buttons } />
@@ -86,6 +88,9 @@ const AppRoutes = (props) => {
         <Route path="/admin/login" component={ AdminLogin } />
         <Route path="/admin" component={ AdminHome } />
 
+        <Route exact path="/changepassword" component={ Changepassword } />
+        <Route exact path="/blockuser" component={ Blockuser } />
+        <Route exact path="/userlist" component={ Userlist } />
         {/* Root page */}
         <Redirect to="/admin" />
       </Switch>
