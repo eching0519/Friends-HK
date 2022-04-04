@@ -12,7 +12,7 @@ import { withTranslation } from "react-i18next";
 const App = (props) => {
   const [location, setLocation] = useState(props.location)
   const [isFullPageLayout, setIsFullPageLayout] = useState(true)
-  const [isAdminPageLayout, setIsAdminPageLayout] = useState(false)
+  const [isAdminPageLayout, setIsAdminPageLayout] = useState(location.pathname.substring(0, 6)==="/admin" ? true : false)
 
   useEffect(() => {
     console.log("ROUTE CHANGED");
@@ -29,16 +29,6 @@ const App = (props) => {
     window.scrollTo(0, 0);
     const fullPageLayoutRoutes = ['/login', '/register', '/verify', '/admin/login']
     fullPageLayoutRoutes.push('/user-pages/lockscreen', '/error-pages/error-404', '/error-pages/error-500', '/general-pages/landing-page');
-    const adminPageLayoutRoutes = ['/admin', '/admin/login']
-
-    for ( let i = 0; i < adminPageLayoutRoutes.length; i++ ) {
-      if (props.location.pathname === adminPageLayoutRoutes[i]) {
-        // Admin page
-        setIsAdminPageLayout(true);
-      } else {
-        setIsAdminPageLayout(false);
-      }
-    }
 
     for ( let i = 0; i < fullPageLayoutRoutes.length; i++ ) {
       if (props.location.pathname === fullPageLayoutRoutes[i]) {
