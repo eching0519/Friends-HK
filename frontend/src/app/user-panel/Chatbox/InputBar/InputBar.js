@@ -7,10 +7,10 @@ function InputBar(props) {
     return (
         <Form className="form-sample">
             <Form.Group>
-            <div class="form-row align-items-center">
+            <div className="row align-items-center">
                 <Form.Control
                     type="text"
-                    className="form-control col-auto m-1"
+                    className="input-box form-control col-sm-8 col-10"
                     placeholder="Type a message..."
                     aria-label="Type a message..."
                     aria-describedby="basic-addon2"
@@ -19,7 +19,7 @@ function InputBar(props) {
                     onKeyPress={event => event.key === 'Enter' ? props.sendMessage(event) : null}
                 />
 
-                <button className="btn btn-rounded btn-gradient-danger col-1 m-1 float-right" onClick={e => {
+                <button className="btn btn-rounded btn-gradient-danger col-sm-2 col-auto" onClick={e => {
                     //props.setMessages([...messages, message])
                     props.sendMessage(e);
                 }}>Send</button>

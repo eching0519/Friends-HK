@@ -1,34 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import LoginVerifier from '../component/common/LoginVerifier'
+import LoginVerifier from '../component/common/LoginVerifier';
 import Chatbox from './Chatbox/Chatbox';
 import Sidebar from './Sidebar/Sidebar';
 import FriendMatch from './FriendMatch/FriendMatch';
 
 const Home = (props) => {
-    LoginVerifier(props)
+    LoginVerifier(props);
 
-    const [room, setRoom] = useState('');
-    const [userName, setUserName] = useState('Peter');
+    const [roomName, setRoomName] = useState('');
+    const [roomId, setRoomId] = useState('');
+    const [userName, setUserName] = useState('');
     const [logout, setLogout] = useState(false);
     const [currentPage, setCurrentPage] = useState('matchFriends');
 
     useEffect(() => {
-        //setSocket(io()); //estiblish socket io connection
-
         console.log('home component just mount');
-        //if (!localStorage.token || !sessionStorage.token) {
-            //navigate("/");  // back to login page if there is no valid session token
-        //}
+        setUserName(JSON.parse(sessionStorage.getItem('UserProfile')).name);
     }, []);
 
     let pageplaceholder;
 
     if (currentPage === 'chat') {
-        pageplaceholder = <Chatbox userName={userName} room={room} />;
+        pageplaceholder = <Chatbox userName={userName} roomId={roomId} roomName={roomName} />;
     }
 
     if (currentPage === 'matchFriends') {
-        pageplaceholder = <FriendMatch userName={userName} />;
+        pageplaceholder = <FriendMatch userName={userName} setCurrentPage={setCurrentPage}/>;
     }
 
 
@@ -38,22 +35,18 @@ const Home = (props) => {
                 <div className="card">
                     <div className="bottonlist preview-list">
                         <button className="btn btn-light" onClick={() => {setCurrentPage('matchFriends')}}>Find new friends</button>
-                        <Sidebar setRoom={setRoom} setCurrentPage={setCurrentPage}/>
+                        <Sidebar setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage}/>
                     </div>
                 </div>
             </div>
 
             <div className="col-md-9 grid-margin stretch-card">
                 <div className='w-100'>
-                    <div className="card">
-                        <div className="card-body">
-                            {pageplaceholder}
-                        </div>
-                    </div>
+                    {pageplaceholder}
                 </div>
             </div>
         </div>
     );
 }
 
-export default Home
+export default Home;

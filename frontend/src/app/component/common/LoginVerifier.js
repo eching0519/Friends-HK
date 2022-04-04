@@ -2,6 +2,7 @@ const querystring = require('querystring');
 
 const LoginVerifier = async (props) => {
     if (props.user === null) {
+        console.log("props user null");
         window.location.replace("/login");
         return
     }
@@ -9,6 +10,7 @@ const LoginVerifier = async (props) => {
     // Check client session
     let myUser = JSON.parse(sessionStorage.getItem('UserProfile'));
     if (myUser === null) {
+        console.log("session storage null");
         window.location.replace("/login");
         return
     }
@@ -32,6 +34,9 @@ const LoginVerifier = async (props) => {
     const loginVerification = data.verification;
     if (loginVerification) {
         if (loginVerification.email !== myUser.email && loginVerification.verified) {
+            console.log("loginVerification.email:",loginVerification.email);
+            console.log("myUser.email: ", myUser.email);
+            console.log("loginVerification.verified", loginVerification.verified);
             msgUrl = querystring.encode({smsg:'Sorry!', msg: `Session is invalid. Please login again.`})
             window.location.replace("/login?" + msgUrl);
             return

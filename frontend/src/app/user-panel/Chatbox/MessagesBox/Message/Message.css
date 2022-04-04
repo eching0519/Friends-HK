@@ -10,7 +10,7 @@
   width: 100%;
   letter-spacing: 0;
   float: left;
-  font-size: 1.1em;
+  font-size: 1.25em;
   word-wrap: break-word;
 }
 
@@ -21,7 +21,6 @@
 .messageContainer {
   display: flex;
   justify-content: flex-end;
-  padding: 0 5%;
   margin-top: 3px;
 }
 
