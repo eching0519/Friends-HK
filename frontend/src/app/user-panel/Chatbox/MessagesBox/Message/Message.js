@@ -31,7 +31,7 @@ const Message = (props) => {
             )
             : (
                 <div className="messageContainer justifyStart">
-                    <div className="messageBox bg-gradient-danger">
+                    <div className="messageBox bg-light">
                         <p className="messageText colorDark">{props.message.text}</p>
                     </div>
                     <p className="sentText pl-10">{props.message.name}</p>

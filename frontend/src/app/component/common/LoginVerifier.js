@@ -34,9 +34,6 @@ const LoginVerifier = async (props) => {
     const loginVerification = data.verification;
     if (loginVerification) {
         if (loginVerification.email !== myUser.email && loginVerification.verified) {
-            console.log("loginVerification.email:",loginVerification.email);
-            console.log("myUser.email: ", myUser.email);
-            console.log("loginVerification.verified", loginVerification.verified);
             msgUrl = querystring.encode({smsg:'Sorry!', msg: `Session is invalid. Please login again.`})
             window.location.replace("/login?" + msgUrl);
             return

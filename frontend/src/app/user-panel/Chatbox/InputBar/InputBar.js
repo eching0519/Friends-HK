@@ -19,7 +19,7 @@ function InputBar(props) {
                     onKeyPress={event => event.key === 'Enter' ? props.sendMessage(event) : null}
                 />
 
-                <button className="btn btn-rounded btn-gradient-danger col-sm-2 col-auto" onClick={e => {
+                <button className="btn btn-rounded btn-gradient-primary col-sm-2 col-auto" onClick={e => {
                     //props.setMessages([...messages, message])
                     props.sendMessage(e);
                 }}>Send</button>
