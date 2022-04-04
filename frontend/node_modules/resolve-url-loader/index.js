@@ -50,7 +50,7 @@ function resolveUrlLoader(content, sourceMap) {
       silent   : false,
       absolute : false,
       keepQuery: false,
-      removeCR : false,
+      removeCR : true,
       root     : false,
       debug    : false,
       join     : joinFn.defaultJoin

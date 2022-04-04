@@ -4,7 +4,7 @@ const path = require('path');
 const storage = multer.diskStorage({
     destination: path.join(__dirname, '..', '..', '_file/profilePicture'),
     filename: function (req, file, cb) {
-        if(!file.originalname.match(/\.(png|jpg|jpeg|pdf|gif)$/)) {
+        if(!file.originalname.toLowerCase().match(/\.(png|jpg|jpeg|pdf|gif)$/)) {
             var err = new Error();
             err.code = 'filetype'; // to check on file type
             return cb(err);

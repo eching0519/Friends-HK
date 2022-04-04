@@ -5,9 +5,10 @@ const crypto = require("crypto");
 const path = require("path");
 const { type } = require('os');
 
-const emailSender = new EmailSender("http://localhost:8080/user/activate?m=%email%&id=%id%")
+const emailSender = new EmailSender("http://localhost:3000/verify?m=%email%&id=%id%")
 const pendingAccount = {};
 const pendingLogin = {};
+const pendingResetPassword = {};
 
 exports.createNewAccount = async (req, res, next) => {
     const email = req.body.email
@@ -92,10 +93,12 @@ function alreadyLogin(req, res, email) {
     const loginSession = req.session.verification;
     if (loginSession) 
         if (loginSession.email == email && loginSession.verified) {
+            var user = User.findById(loginSession.id)
+
             res.write(JSON.stringify({
                 "success": true,
                 "message": "You already login",
-                "user": { 'id': loginSession.id, 'email': email, 'name': loginSession.name }
+                "user": user
             }, null, "\t"));
             res.end();
             return true;
@@ -132,12 +135,8 @@ exports.login = async (req, res, next) => {
     }
 
     // Update session
-    req.session.verification = {
-        'id': user.id,
-        'email': email,
-        'name': user.name,
-        'verified': true
-    };
+    user.verified = true
+    req.session.verification = user;
 
     res.write(JSON.stringify({
         "success": true,
@@ -240,7 +239,7 @@ exports.loginVerify = async (req, res, next) => {
             "message": "The verification code is incorrect."
         }, null, "\t"));
         res.end();
-        console.log(pendingLogin[email].code)
+        console.log("The verification code is incorrect." + pendingLogin[email].code)
         return;
     }
     delete pendingLogin[email]
@@ -255,17 +254,13 @@ exports.loginVerify = async (req, res, next) => {
             "message": "Unknown error. Please try again later. " + e.message
         }, null, "\t"));
         res.end();
-        console.log(pendingLogin[email].code)
+        console.log("Unknown error."+pendingLogin[email].code)
         return;
     }
     
     // Update session
-    req.session.verification = {
-        'id': user.id,
-        'email': email,
-        'name': user.name,
-        'verified': true
-    };
+    user.verified = true
+    req.session.verification = user;
 
     res.write(JSON.stringify({
         "success": true,
@@ -278,6 +273,116 @@ exports.logout = (req, res, next) => {
     const loginSession = req.session.verification;
     if (loginSession) 
         delete req.session.verification
+
+    res.write(JSON.stringify({
+        "success": true
+    }, null, "\t"));
+    res.end();
+}
+
+exports.forgotPasswordEmail = async (req, res, next) => {
+    const email = req.body.email
+
+    var user;
+    try {
+        user = await User.findByEmail(email, 'login')
+    } catch {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Account is not exist."
+        }, null, "\t"));
+        res.end();
+        return
+    }
+
+    if (user.status != 'active') {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Your account status is '" + user.status + "'. Contact us for more information."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    pendingResetPassword[email] = { 'email': email, 'code': verificationCode };
+
+    // Set expire
+    setTimeout((email, verificationCode) => {
+        if (!(email in pendingResetPassword)) return;
+        if (pendingResetPassword[email].code == verificationCode)
+            delete pendingResetPassword[email]
+    }, 5 * 60 * 1000, email, verificationCode);
+
+    emailSender.sendForgotPassword(email, verificationCode, function(error, info) {
+        if (error) {
+            res.write(JSON.stringify({
+                "success": false,
+                "message": "Unknown error. Please try again later."
+            }, null, "\t"));
+            res.end();
+            console.log(error);
+            return;
+        } else       
+            console.log(info.response);
+    });
+
+    // Add session
+    req.session.verification = {
+        'email': email,
+        'verified': false
+    };
+
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "Email is sent"
+    }, null, "\t"));
+    res.end();
+
+    console.log('verificationCode', verificationCode);
+}
+
+exports.resetForgottenPassword = async (req, res, next) => {
+    const email = req.body.email
+    const code = req.body.code
+    const password = req.body.password
+
+    // Get user information
+    var user;
+    try {
+        user = await User.findByEmail(email, 'login')
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Account is not exist. "
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    if (!(email in pendingResetPassword)) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "The verification code is expired."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    if (code !== pendingResetPassword[email].code) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "The verification code is incorrect."
+        }, null, "\t"));
+        res.end();
+        console.log("The verification code is incorrect." + pendingResetPassword[email].code)
+        return;
+    }
+    delete pendingResetPassword[email]
+    
+    // Update session
+    user.password = password;
+    user.updatePassword();
 
     res.write(JSON.stringify({
         "success": true
@@ -329,7 +434,6 @@ exports.getUserInfo = async (req, res, next) => {
 }
 
 exports.updateProfilePicture = async (req, res, next) => {
-    console.log(req.file)
     const picUrl = "http://localhost:8080/user/profile/picture/" + req.file.filename
 
     if (!userIsVerified(req, res)) return
@@ -351,7 +455,8 @@ exports.updateProfilePicture = async (req, res, next) => {
     user.updateProfilePicture()
 
     res.write(JSON.stringify({
-        "success": true
+        "success": true,
+        "user": user
     }, null, "\t"));
     res.end();
 }
@@ -371,16 +476,34 @@ exports.updatePreferences = async (req, res, next) => {
         res.end();
         return;
     }
-    // Please update value in user.preferences
-    // ...
-    // console.log(typeof(req.body.language));
-    // console.log(req.body.language);
-    const language = new Array(req.body.language);
-    const hobbies = new Array(req.body.hobbies);
-    user.preferences = language.concat(hobbies);
-    user.updatePreferences();
+
+    if (req.body.lang != '')
+        user.lang = req.body.lang;
+    if (req.body.co != '')
+        user.co = req.body.co;
+    if (req.body.gender != '')
+        user.gender = req.body.gender;
+    if (req.body.dob != '')
+        user.dob = req.body.dob;
+    if (req.body.hobbies != '')
+        user.hobbies = (typeof(req.body.hobbies) === 'string')? [req.body.hobbies]: req.body.hobbies;
+    if (req.body.bio != '')
+        user.bio = req.body.bio;
+    if (req.body.hashtags != '')
+        user.hashtags = (typeof(req.body.hashtags) === 'string')? [req.body.hashtags]: req.body.hashtags;
+
+    user.preferences = {
+        lang: (typeof(req.body.plang) === 'string')? [req.body.plang]: req.body.plang,
+        gender: (typeof(req.body.pgender) === 'string')? [req.body.pgender]: req.body.pgender,
+        ageFrom: req.body.ageFrom,
+        ageTo: req.body.ageTo
+    }
+
+    user.update()
+
     res.write(JSON.stringify({
-        "success": true
+        "success": true,
+        "user": user
     }, null, "\t"));
     res.end();
 }
@@ -388,42 +511,37 @@ exports.updatePreferences = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
     if (!userIsVerified(req, res)) return
 
-    const id = req.session.verification.id  // User Id
+    const id = req.session.verification.id;  // User Id
+    const newName = req.body.name;
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
     var user;
     try {
-        user = await User.findById(id, 'update')
+        user = await User.findByIdAndPassword(id, password)
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Unknown error."
+            "message": "Invalid password."
         }, null, "\t"));
         res.end();
         return;
     }
 
     // Password, Name...
-    const newName = req.body.name;
-    const newPassword = req.body.password;
     if (newName!=""){
         user.name = newName;
-        user.updateName();
-        res.write(JSON.stringify({
-            "success": true
-        }, null, "\t"));
-        res.end();
-        console.log("update name");
     }
 
     if (newPassword!=""){
         user.password = newPassword;
-        user.updatePassword();
-        res.write(JSON.stringify({
-            "success": true
-        }, null, "\t"));
-        res.end();
-        console.log("update password");
     }
 
+    user.update()
 
-    
+    res.write(JSON.stringify({
+        "success": true,
+        "user": user
+    }, null, "\t"));
+    res.end();
 }

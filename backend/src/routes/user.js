@@ -21,6 +21,9 @@ userRouter.get('/activate', userController.activateAccount)
 userRouter.get('/logout', userController.logout)
 userRouter.get('/profile', userController.getUserInfo)
 
+userRouter.post('/forgotPassword/mail', userController.forgotPasswordEmail)
+userRouter.post('/forgotPassword/reset', userController.resetForgottenPassword)
+
 userRouter.post('/profile/picture/update', fileEngine.single('picture'), userController.updateProfilePicture)
 userRouter.post('/profile/preferences/update', userController.updatePreferences)
 userRouter.post('/profile/update', userController.updateProfile)

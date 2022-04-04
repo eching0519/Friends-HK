@@ -6,3 +6,6 @@ jobs:
   my-job:
     name: My Job
     runs-on: ubuntu-latest
+    steps:
+    - name: My step
+      run: echo 'Push'

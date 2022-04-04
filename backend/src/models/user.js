@@ -5,8 +5,10 @@ const getDatabase = require('../util/database').getDatabase;
 class User {
     static findAllAsync = async () => {
         const db = getDatabase();
-        const result = await db.collection('user').find();
-        return await result.toArray();
+        let result = await db.collection('user').find();
+        result = await result.toArray();
+        await result.forEach(x => delete x['password']);
+        return result;
     }
 
     static findById = async (id, usage) => {
@@ -20,14 +22,23 @@ class User {
                     case 'update':
                         var user = new User(data.email, data.name);
                         user.id = data._id;
-                        user.preferences = data.preferences
-                        user.friendlist = data.friendlist
+                        user.status = data.status;
+                        user.picture = data.picture;
+                        if (data.lang != null) user.lang = data.lang;
+                        if (data.co != null) user.co = data.co;
+                        if (data.dob != null) user.dob = data.dob;
+                        if (data.hobbies != null) user.hobbies = data.hobbies;
+                        if (data.bio != null) user.bio = data.bio;
+                        if (data.hashtags != null) user.hashtags = data.hashtags;
+                        if (data.preferences != null) user.preferences = data.preferences;
+                        if (data.friendlist != null) user.friendlist = data.friendlist;
                         return user;
-                    case 'query':
-                        return data;
 
                     default:
-                        return data;
+                        let myData = JSON.parse(JSON.stringify(data));
+                        console.log(myData)
+                        delete myData[password];
+                        return myData;
                 }
                 
             })
@@ -48,15 +59,20 @@ class User {
                         var user = new User(data.email, data.name);
                         user.id = data._id;
                         user.status = data.status;
-                        return user;
-                    case 'all':
-                        var user = new User(data.email, data.name);
-                        user.id = data._id;
-                        user.status = data.status;
-                        user.preferences = data.preferences
+                        user.picture = data.picture;
+                        if (data.lang != null) user.lang = data.lang;
+                        if (data.co != null) user.co = data.co;
+                        if (data.dob != null) user.dob = data.dob;
+                        if (data.hobbies != null) user.hobbies = data.hobbies;
+                        if (data.bio != null) user.bio = data.bio;
+                        if (data.hashtags != null) user.hashtags = data.hashtags;
+                        if (data.preferences != null) user.preferences = data.preferences;
+                        if (data.friendlist != null) user.friendlist = data.friendlist;
                         return user;
                     default:
-                        return data;
+                        let myData = JSON.parse(JSON.stringify(data));
+                        delete myData[password];
+                        return myData;
                 }
             })
             .catch(err => {
@@ -73,7 +89,16 @@ class User {
             .then(data => {
                 const user = new User(data.email, data.name);
                 user.id = data._id;
-                user.status = data.status
+                user.status = data.status;
+                user.picture = data.picture;
+                if (data.lang != null) user.lang = data.lang;
+                if (data.co != null) user.co = data.co;
+                if (data.dob != null) user.dob = data.dob;
+                if (data.hobbies != null) user.hobbies = data.hobbies;
+                if (data.bio != null) user.bio = data.bio;
+                if (data.hashtags != null) user.hashtags = data.hashtags;
+                if (data.preferences != null) user.preferences = data.preferences;
+                if (data.friendlist != null) user.friendlist = data.friendlist;
                 return user;
             })
             .catch(err => {
@@ -81,15 +106,45 @@ class User {
             });
     }
 
+    static findByIdAndPassword = async (id, password) => {
+        const db = getDatabase();
+        return await db
+            .collection('user')
+            .find({ '_id': ObjectID(id), 'password': password })
+            .next()
+            .then(data => {
+                const user = new User(data.email, data.name);
+                user.id = data._id;
+                user.status = data.status;
+                user.picture = data.picture;
+                if (data.lang != null) user.lang = data.lang;
+                if (data.co != null) user.co = data.co;
+                if (data.dob != null) user.dob = data.dob;
+                if (data.hobbies != null) user.hobbies = data.hobbies;
+                if (data.bio != null) user.bio = data.bio;
+                if (data.hashtags != null) user.hashtags = data.hashtags;
+                if (data.preferences != null) user.preferences = data.preferences;
+                if (data.friendlist != null) user.friendlist = data.friendlist;
+                return user;
+            })
+            .catch(err => {
+                throw err; 
+            });
+    }
+
+    static changeStatus(id, status) {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: id },
+                                                { $set: {
+                                                    'status': status
+                                                } },
+                                                { upsert: false })
+    }
+
     constructor(email, name) {
         this.email = email;
         this.name = name;
-        // for personal self introduction
-        // example:
-        // reputation
-        // interest
-        // age....
-
+        this.status = 'active';
     }
 
     async create() {
@@ -99,8 +154,11 @@ class User {
 
     update() {
         const db = getDatabase();
+        let cloned = JSON.parse(JSON.stringify(this))
+        if ('id' in cloned)
+            delete cloned['id']
         return db.collection('user').updateOne( { _id: this.id },
-                                                { $set: this },
+                                                { $set: cloned },
                                                 { upsert: false })
     }
 

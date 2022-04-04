@@ -29,29 +29,17 @@ exports.adminLogin = async (req, res, next) => {
         console.log(e)
         return;
     }
-    // console.log(id);
-    // console.log(password);
-    // console.log(admin);
 
-    if ((admin._id == id) && (admin.password == password)) {
-        req.session.adminVerification={
-            'id': id,
-            'verified': true
-        };
-        res.write(JSON.stringify({
-            "success": true,
-            "user": Admin
-        }, null, "\t"));
-        res.end();
-        return;
-    } else {
-        res.write(JSON.stringify({
-            "success": false,
-            "message": "Wrong password or id"
-        }, null, "\t"));
-        res.end();
-        return;
-    }
+    req.session.adminVerification = {
+        'id': id,
+        'verified': true
+    };
+
+    res.write(JSON.stringify({
+        "success": true
+    }, null, "\t"));
+    res.end();
+    return;
 }
 
 function adminIsVerified(req, res) {
@@ -119,13 +107,14 @@ exports.adminBlockUser = async (req, res, next) => {
 
     //the following id is userid(want to block that one)
     var id = req.body.id;
-    var admin;
+    // var admin;
     try {
-        admin = await Admin.add_Blocklist(id);
+        // admin = await Admin.add_Blocklist(id);
+        await User.changeStatus(id, 'block');
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Fail in block!",
+            "message": "Fail to block!",
         }, null, "\t"));
         res.end();
         console.log(e);
@@ -134,7 +123,7 @@ exports.adminBlockUser = async (req, res, next) => {
 
     res.write(JSON.stringify({
         "success": true,
-        "message": "Success in block!",
+        "message": "User is blocked!",
     }, null, "\t"));
     res.end();
     return;
@@ -148,13 +137,14 @@ exports.adminUnblockUser = async (req, res, next) => {
 
     //the following id is userid(want to unblock that one)
     var id = req.body.id;
-    var admin;
+    // var admin;
     try {
-        admin = await Admin.remove_Blocklist(id);
+        // admin = await Admin.remove_Blocklist(id);
+        await User.changeStatus(id, 'active');
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Fail in unlock!",
+            "message": "Fail to unblock!",
         }, null, "\t"));
         res.end();
         console.log(e);
@@ -163,7 +153,7 @@ exports.adminUnblockUser = async (req, res, next) => {
 
     res.write(JSON.stringify({
         "success": true,
-        "message": "Success in unblock!",
+        "message": "User is unblock!",
     }, null, "\t"));
     res.end();
     return;
@@ -213,33 +203,24 @@ exports.adminGetUserById = async (req, res, next) => {
 exports.adminGetAllUser = async(req, res) => {
     if (!adminIsVerified(req, res)) return;
     
+    var userList;
     try {
-
-       var _structureTypePromise = await User.findAllAsync();
-       var _structureTypeList= await _structureTypePromise;
-
-       var structureType;
-       await _structureTypeList.forEach(element=>{
-           structureType = new User(element._id,element.email,element.name,element.status);
-       });
-        console.log(_structureTypeList);
-        res.write(JSON.stringify({
-            "success": true,
-            "message": "Success in show all!",
-            //"data": return_value
-        }, null, "\t"));
-        res.end();
+       userList = await User.findAllAsync();
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Fail in show all!",
+            "message": "Fail to get users information.",
         }, null, "\t"));
         res.end();
         console.log(e);
         return;
     }
 
-
+    res.write(JSON.stringify({
+        "success": true,
+        "userList": userList
+    }, null, "\t"));
+    res.end();
 }
 
 exports.adminDeleteAccount = (req, res) => {

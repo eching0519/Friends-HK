@@ -66,7 +66,7 @@ class Sidebar extends Component {
                 <span className="login-status online"></span> {/* change to offline or busy as needed */}
               </div>
               <div className="nav-profile-text">
-                <span className="font-weight-bold mb-2"><Trans>David Grey. H</Trans></span>
+                <span className="font-weight-bold mb-2">David Grey. H</span>
                 <span className="text-secondary text-small"><Trans>Project Manager</Trans></span>
               </div>
               <i className="mdi mdi-bookmark-check text-success nav-profile-badge"></i>

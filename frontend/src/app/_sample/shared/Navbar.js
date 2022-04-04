@@ -40,7 +40,7 @@ class Navbar extends Component {
                     <span className="availability-status online"></span>
                   </div>
                   <div className="nav-profile-text">
-                    <p className="mb-1 text-black"><Trans>David Greymaax</Trans></p>
+                    <p className="mb-1 text-black">David Greymaax</p>
                   </div>
                 </Dropdown.Toggle>
 
