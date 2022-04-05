@@ -207,6 +207,16 @@ class User {
                                                 { upsert: false })
     }
 
+    updateBlacklist() {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: this.id },
+                                                { $push: {
+                                                    'blacklist': this.blacklist
+                                                } },
+                                                { upsert: false })
+    }
+    
+
 
 
     //get the list of blocklist
