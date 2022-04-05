@@ -63,8 +63,6 @@ class Changepassword extends Component {
           </form>
         </div>
 
-
-
         <form className="my-form">
           <div className="form-row">
             <div className="col-md-12 mb-3">
@@ -95,7 +93,7 @@ class Changepassword extends Component {
             event.preventDefault();
           }
           }>
-            Submit
+            Change
           </button>
         </form>
       </div>
