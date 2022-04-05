@@ -19,7 +19,7 @@ adminRouter.post('/delete',adminController.adminDeleteAccount);
 
 adminRouter.post('/getuserbyid',adminController.adminGetUserById);
 adminRouter.post('/userList',adminController.adminGetAllUser);
-
+adminRouter.post('/resetUserPassword', adminController.setUserPassword);
 
 
 module.exports = adminRouter;

@@ -250,3 +250,30 @@ exports.adminDeleteAccount = (req, res) => {
     res.end();
 
 }
+
+exports.setUserPassword = async (req, res, next) => {
+    const email = req.body.email
+    const password = req.body.password
+
+    // Get user information
+    var user;
+    try {
+        user = await User.findByEmail(email, 'login')
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Account is not exist. "
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+    
+    // Update session
+    user.password = password;
+    user.updatePassword();
+
+    res.write(JSON.stringify({
+        "success": true
+    }, null, "\t"));
+    res.end();
+}
