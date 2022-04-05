@@ -262,16 +262,29 @@ export class Changepassword extends Component {
         <div className="page-header">
           <h3 className="page-title">
             <span className="page-title-icon bg-gradient-primary text-white mr-2">
-              <i className="mdi mdi-home"></i>
-            </span> Dashboard </h3>
-          <nav aria-label="breadcrumb">
-            <ul className="breadcrumb">
-              <li className="breadcrumb-item active" aria-current="page">
-                <span></span>Overview <i className="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
-              </li>
-            </ul>
-          </nav>
+              <i className="mdi mdi-key"></i>
+            </span> Change Password </h3>
         </div>
+        <form  className="add-items d-flex" onSubmit={(event)=>{
+          event.preventDefault();
+        }}>
+          <input 
+              className="form-control h-auto" 
+              placeholder="Type User name" 
+              required />
+          <button type="submit" className="btn btn-gradient-primary font-weight-bold px-lg-4 px-3">Verify</button>
+        </form>
+
+        <input 
+            type='password'
+            className="form-control h-auto" 
+            id="passwordInput"
+            placeholder="Type Password"
+            onChange={e=>
+              this.handleOnConfirmPasswordInput(e.target.value)
+            } 
+        />
+        
         <div className="row">
           <div className="col-md-4 stretch-card grid-margin">
             <div className="card bg-gradient-danger card-img-holder text-white">
