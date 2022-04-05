@@ -1,6 +1,7 @@
 const getDatabase = require('../util/database').getDatabase;
 const User = require('../models/user')
 const EmailSender = require('../util/emailSender')
+const UserChatrooms = require('../models/user-chatrooms');
 const crypto = require("crypto");
 const path = require("path");
 const { type } = require('os');
@@ -76,6 +77,9 @@ exports.activateAccount = async (req, res, next) => {
 
     try {
         await user.create();
+        var user_chatroom = new UserChatrooms(user)
+        await user_chatroom.create()
+
     } catch (e) {
         res.write(JSON.stringify(e, null, "\t"))
         res.end()
