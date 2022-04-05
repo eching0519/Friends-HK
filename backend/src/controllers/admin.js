@@ -1,24 +1,25 @@
 const getDatabase = require('../util/database').getDatabase;
-const mongoConnect=require('../util/database').mongoConnect;
+const mongoConnect = require('../util/database').mongoConnect;
 const Admin = require('../models/admin')
-const User=require('../models/user')
+const User = require('../models/user')
 
 
 const crypto = require("crypto");
-const path = require("path")
+const path = require("path");
+const { Console } = require('console');
 
 const pendingAccount = {};
 const pendingLogin = {};
 
 
 
-exports.adminLogin= async (req,res,next)=>{
+exports.adminLogin = async (req, res, next) => {
 
     var id = req.body.id;
     var password = req.body.pw;
     var admin;
-    try{
-        admin = await Admin.findByIdAndPassword(id,password);
+    try {
+        admin = await Admin.findByIdAndPassword(id, password);
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
@@ -28,31 +29,9 @@ exports.adminLogin= async (req,res,next)=>{
         console.log(e)
         return;
     }
-    // console.log(id);
-    // console.log(password);
-    // console.log(admin);
 
-    // if((admin._id==id)&&(admin.password==password)){
-    //     res.write(JSON.stringify({
-    //     "success": true,
-    //     "user": Admin
-    //     }, null, "\t"));
-    //     res.end();
-    //     return;
-    // } else{
-    //     res.write(JSON.stringify({
-    //         "success": false,
-    //         "message": "Wrong password or id"
-    //         }, null, "\t"));
-    //         res.end();
-    //         return;
-    // }
-
-
-    // Update session
     req.session.adminVerification = {
-        'id': admin.id,
-        'name': admin.name,
+        'id': id,
         'verified': true
     };
 
@@ -60,12 +39,12 @@ exports.adminLogin= async (req,res,next)=>{
         "success": true
     }, null, "\t"));
     res.end();
-
+    return;
 }
 
 function adminIsVerified(req, res) {
     const loginSession = req.session.adminVerification;
-    if (loginSession && loginSession.verified)   return true
+    if (loginSession && loginSession.verified) return true
 
     res.write(JSON.stringify({
         "success": false,
@@ -83,10 +62,10 @@ exports.adminChangePassword = async (req, res, next) => {
     var newPassword = req.body.newPassword;
     var admin;
     /////////////////////////////
-    try{
+    try {
         admin = await Admin.adminChangePassword(id, oldPassword, newPassword);
-        
-    } catch{
+
+    } catch {
         res.write(JSON.stringify({
             "success": false,
             "message": "Wrong current password.",
@@ -99,7 +78,7 @@ exports.adminChangePassword = async (req, res, next) => {
         "success": true
     }, null, "\t"));
     res.end();
-    
+
     // console.log(admin);
 
     // if((admin._id==id)&&(admin.password==newPassword)){
@@ -121,16 +100,153 @@ exports.adminChangePassword = async (req, res, next) => {
 
 }
 
-exports.adminBlockUser=async(req,res,next)=>{
-    const id=res.body.id;
+exports.adminBlockUser = async (req, res, next) => {
+
+    //check reqsession
+    if (!adminIsVerified(req, res)) return;
+
+    //the following id is userid(want to block that one)
+    var id = req.body.id;
+    // var admin;
+    try {
+        // admin = await Admin.add_Blocklist(id);
+        await User.changeStatus(id, 'block');
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Fail to block!",
+        }, null, "\t"));
+        res.end();
+        console.log(e);
+        return;
+    }
+
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "User is blocked!",
+    }, null, "\t"));
+    res.end();
+    return;
 
 
 }
 
-exports.adminGetUserById=async(req,res,next)=>{
+exports.adminUnblockUser = async (req, res, next) => {
+    //check reqsession
+    if (!adminIsVerified(req, res)) return;
+
+    //the following id is userid(want to unblock that one)
+    var id = req.body.id;
+    // var admin;
+    try {
+        // admin = await Admin.remove_Blocklist(id);
+        await User.changeStatus(id, 'active');
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Fail to unblock!",
+        }, null, "\t"));
+        res.end();
+        console.log(e);
+        return;
+    }
+
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "User is unblock!",
+    }, null, "\t"));
+    res.end();
+    return;
+
 
 }
 
-exports.adminGetAllUser=async(req,res,next)=>{
+exports.adminGetUserById = async (req, res, next) => {
+    if (!adminIsVerified(req, res)) return;
+
+    //the following is get user by id 
+    var id = req.body.id;
+    var admin;
+    try {
+        admin = await Admin.AdminShowUserById(id)
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Fail in get user by id",
+        }, null, "\t"));
+        res.end();
+        console.log(e);
+        return;
+    }
+
+    console.log(admin);
+
+    if (admin != null) {
+        res.write(JSON.stringify({
+            "success": true,
+            "message": "Success in get user by id",
+        }, null, "\t"));
+        res.end();
+        return admin;
+    } else {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "No such data",
+        }, null, "\t"));
+        res.end();
+        return admin;
+    }
+
+
+}
+
+exports.adminGetAllUser = async(req, res) => {
+    if (!adminIsVerified(req, res)) return;
+    
+    var userList;
+    try {
+       userList = await User.findAllAsync();
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Fail to get users information.",
+        }, null, "\t"));
+        res.end();
+        console.log(e);
+        return;
+    }
+
+    res.write(JSON.stringify({
+        "success": true,
+        "userList": userList
+    }, null, "\t"));
+    res.end();
+}
+
+exports.adminDeleteAccount = (req, res) => {
+    if (!adminIsVerified(req, res)) return;
+
+    //the following the user id
+    var id = req.body.id;
+    var admin;
+    console.log(id);
+    try {
+        admin = Admin.AdminDelete(id);
+
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "Fail in delete!",
+        }, null, "\t"));
+        res.end();
+        console.log(e);
+        return;
+    }
+    //console.log(admin);
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "success in delete!"
+    }, null, "\t"));
+    res.end();
 
 }

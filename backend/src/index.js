@@ -30,11 +30,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Route
 const userRoute = require('./routes/user')
 const adminRoute = require('./routes/admin')
+const friendRoute = require('./routes/friend')
 // const chatroomRoute = require('./routes/chatroom')
 const { Session } = require('inspector')
 app.use('/user/profile/picture', express.static(path.join(__dirname, '..', '_file/profilePicture')))
 app.use('/user', userRoute)
 app.use('/admin', adminRoute)
+app.use('/friend', friendRoute)
 // app.set('socketio', io)
 // app.use('/', chatroomRoute)
 
