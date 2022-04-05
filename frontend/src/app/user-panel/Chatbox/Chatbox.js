@@ -37,7 +37,7 @@ const Chatbox = (props) => {
 
         // if both server and session storage are empty, create new message.
         //console.log('cannot fetch data from session storage');
-        setmessageList([{ text: 'welcome', name: 'admin' }]);    //if there is no chat history, initialize the message list.
+        setmessageList([{ text: 'welcome', name: 'admin' , time: Date.UTC(1994, 9, 25)}]);    //if there is no chat history, initialize the message list.
         //}
 
         const { userName, roomId } = { userName: props.userName, roomId: props.roomId }   //get names and room id from Sidebar component.
@@ -84,7 +84,7 @@ const Chatbox = (props) => {
         if (message) {
             //console.log(message)
             //setmessageList([...messageList, { text: message }])
-            socket.emit('sendMessage', { roomId: roomId }, { text: message, name: props.userName }, (message) => {
+            socket.emit('sendMessage', { roomId: roomId }, { text: message, name: props.userName, time: Date.now() }, (message) => {
                 console.log('message delivered:', message);
                 setMessage('')  //clear message input box
             });

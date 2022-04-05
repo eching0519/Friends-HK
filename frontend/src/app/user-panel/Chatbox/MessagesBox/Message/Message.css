@@ -24,6 +24,15 @@
   margin-top: 3px;
 }
 
+.nameText {
+  display: flex;
+  align-items: center;
+  font-family: Helvetica;
+  color: #828282;
+  font-size: 1.4em;
+  letter-spacing: 0.3px;
+}
+
 .sentText {
   display: flex;
   align-items: center;
