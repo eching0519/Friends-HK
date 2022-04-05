@@ -27,7 +27,7 @@ class User {
 
                     default:
                         let myData = JSON.parse(JSON.stringify(data));
-                        delete myData[password];
+                        delete myData.password;
                         return myData;
                 }
                 

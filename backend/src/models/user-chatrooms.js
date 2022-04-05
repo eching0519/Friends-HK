@@ -1,13 +1,32 @@
 const { ObjectID } = require('mongodb');
 
 const getDatabase = require('../util/database').getDatabase;
+const Chatroom = require('./chatroom')
 
 class UserChatrooms {
-    // static findAllAsync = async () => {
-    //     const db = getDatabase();
-    //     const result = await db.collection('user').find();
-    //     return result.toArray();
-    // }
+    static findAllChatroomsByUserId = async (id) => {
+        const db = getDatabase();
+        var result = {};
+        var chatroom;
+        return await db.collection('user-chatrooms')
+                        .find({ '_id': ObjectID(id) })
+                        .next()
+                        .then(async (data) => {
+                            result._id = data._id;
+                            result.chatroom = [];
+
+                            for (let i = 0; i < data.chatroom.length; i++) {
+                                chatroom = await Chatroom.findById(data.chatroom[i])
+                                result.chatroom.push(chatroom);
+                            }
+                            return result;
+                        })
+                        .catch(err => {
+                            throw err;
+                        });
+
+        
+    }
 
     constructor(user) {
         this._id = user._id;
