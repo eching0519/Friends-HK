@@ -40,11 +40,10 @@ class Changepassword extends Component {
     }
   }
 
-
-  render () {
+  render() {
     return (
-      <div>
-        <div className="page-header">
+      <div className="App">
+           <div className="page-header">
           <h3 className="page-title">
             <span className="page-title-icon bg-gradient-primary text-white mr-2">
               <i className="mdi mdi-key"></i>
@@ -63,44 +62,96 @@ class Changepassword extends Component {
             <button type="submit" className="btn btn-gradient-primary font-weight-bold px-lg-4 px-3">Verify</button>
           </form>
         </div>
-        <div>
-          <form>
-            <div>
-              <div>
-              <label htmlFor="passwordInput">New Password</label>
-              <input 
-                type='password'
-                className="form-control h-auto" 
-                id="passwordInput"
-                placeholder="Type Password"
-                onChange={e=>
-                  this.handleOnConfirmPasswordInput(e.target.value)} 
-              />
-              </div>
-              <div>
-              <label htmlFor="confirmPasswordInput">Confirm New Password</label>
-              <form  className="add-items d-flex" onSubmit={(event)=>{
-            event.preventDefault();
-              }}>
+
+
+
+        <form className="my-form">
+          <div className="form-row">
+            <div className="col-md-12 mb-3">
+              <label htmlFor="passwordInput">Password</label>
               <input
                 type="password"
-                className={'form-control h-auto ${this.confirmPasswordClassName()}'}
+                className="form-control"
+                id="passwordInput"
+                placeholder="Type Password"
+                onChange={e => this.handleOnPasswordInput(e.target.value)}
+              />
+            </div>
+            <div className="col-md-12 mb-3">
+              <label htmlFor="confirmPasswordInput">Confirm Password</label>
+              <input
+                type="password"
+                className={`form-control ${this.confirmPasswordClassName()}`}
                 id="confirmPasswordInput"
-                placeholder="Type Password Again" 
-                onChange={e=>
-                  this.handleOnConfirmPasswordInput(e.target.value)}
+                placeholder="Type Password Again"
+                onChange={e =>
+                  this.handleOnConfirmPasswordInput(e.target.value)
+                }
               />
               {this.renderFeedbackMessage()}
-              <button type="submit" className="btn btn-gradient-primary font-weight-bold px-lg-4 px-3">Change</button>
-              </form>
-              </div>  
             </div>
-            
-          </form>  
-        </div> 
+          </div>
+          <button type="submit" className="btn btn-primary btn-block" onClick={(event)=>{
+            event.preventDefault();
+          }
+          }>
+            Submit
+          </button>
+        </form>
       </div>
     );
-    }
   }
-                
+}
+
 export default Changepassword;
+
+//   render () {
+//     return (
+//       <div>
+
+
+     
+
+
+
+//         <div>
+//           <form>
+//             <div>
+//               <div>
+//               <label htmlFor="passwordInput">New Password</label>
+//               <input 
+//                 type='password'
+//                 className="form-control h-auto" 
+//                 id="passwordInput"
+//                 placeholder="Type Password"
+//                 onChange={e=>
+//                   this.handleOnConfirmPasswordInput(e.target.value)} 
+//               />
+//               </div>
+//               <div>
+//               <label htmlFor="confirmPasswordInput">Confirm New Password</label>
+//               <form  className="add-items d-flex" onSubmit={(event)=>{
+//             event.preventDefault();
+//               }}>
+//               <input
+//                 type="password"
+//                 className={'form-control h-auto ${this.confirmPasswordClassName()}'}
+//                 id="confirmPasswordInput"
+//                 placeholder="Type Password Again" 
+//                 onChange={e=>
+//                   this.handleOnConfirmPasswordInput(e.target.value)}
+//               />
+//               {this.renderFeedbackMessage()}
+//               <button type="submit" className="btn btn-gradient-primary font-weight-bold px-lg-4 px-3">Change</button>
+//               </form>
+//               </div>  
+//             </div>
+            
+//           </form>  
+//         </div> 
+//       </div>
+//     );
+//     }
+//   }
+                
+// export default Changepassword;
