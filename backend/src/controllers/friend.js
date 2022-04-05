@@ -29,17 +29,19 @@ exports.SendFriendRequest = async (req, res, next) =>{
     }
     user_from = await User.findById(from, 'query')
     friendlist = user_from.friendlist
-    for(let i=0;i <friendlist.length; i++){
-        if (friendlist[i]==to){
-            res.write(JSON.stringify({
-                "success": false,
-                "message": "Already in friendlist."
-            }, null, "\t"));
-            res.end();
-            return;
+    if (friendlist!=null){
+        for(let i=0;i <friendlist.length; i++){
+            if (friendlist[i]==to){
+                res.write(JSON.stringify({
+                    "success": false,
+                    "message": "Already in friendlist."
+                }, null, "\t"));
+                res.end();
+                return;
 
+            }
         }
-    }
+    }   
 
     var request;
     try {
@@ -155,7 +157,7 @@ exports.AcceptRequest = async(req, res, next)=>{
     // }, null, "\t"));
     // res.end();
 
-    friend.acceptRequest();
+    friend.deleteRequest();
     res.write(JSON.stringify({
         "success": true,
         "message": "Request accepted"
@@ -164,3 +166,47 @@ exports.AcceptRequest = async(req, res, next)=>{
 
 
 }
+
+exports.BlackList = async(req, res, next)=>{
+    const to = req.body.to
+    const from = req.body.from
+    var user_to, user_from;
+    try {
+        user_to = await User.findById(to, 'query')
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "No such user."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    user_from = await User.findById(from, 'update')
+    blacklist = user_from.blacklist
+    if (blacklist!=null){
+        for(let i=0;i <blacklist.length; i++){
+            if (blacklist[i]==to){
+                res.write(JSON.stringify({
+                    "success": false,
+                    "message": "Already in blacklist."
+                }, null, "\t"));
+                res.end();
+                return;
+
+            }
+        }
+    }
+
+    user_from.blacklist = to
+    user_from.updateBlacklist();
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "blacklist updated"
+    }, null, "\t"));
+    res.end();
+
+
+
+}
+
