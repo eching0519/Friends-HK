@@ -6,11 +6,11 @@ import './InputBar.css';
 function InputBar(props) {
     return (
         <Form className="form-sample">
-            <Form.Group>
-            <div className="row align-items-center">
+            <Form.Group className="m-2">
+            <div className="row justfiy">
                 <Form.Control
                     type="text"
-                    className="input-box form-control col-sm-8 col-10"
+                    className="input-box form-control col mr-3"
                     placeholder="Type a message..."
                     aria-label="Type a message..."
                     aria-describedby="basic-addon2"
@@ -19,7 +19,7 @@ function InputBar(props) {
                     onKeyPress={event => event.key === 'Enter' ? props.sendMessage(event) : null}
                 />
 
-                <button className="btn btn-rounded btn-gradient-primary col-sm-2 col-auto" onClick={e => {
+                <button className="btn btn-rounded btn-gradient-primary col-auto" onClick={e => {
                     //props.setMessages([...messages, message])
                     props.sendMessage(e);
                 }}>Send</button>

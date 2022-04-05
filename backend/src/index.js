@@ -63,17 +63,12 @@ io.on('connection', (socket) => {
     console.log('New WebSocket connection, id:', socket.id);
     //match by special theme
     socket.on("joinRoom", ({ name, roomId }, callback) => {
-        //const { error, user } = addUser({ id: socket.id, name, room });
-        //add user to specific room:
-        //room1.push(socket);
-        //console.log(room1.length);
-
-        socket.join(roomId);
+        socket.join(roomId);    //add user to romm by room id.
         console.log(`user: ${name} assign to ${roomId}`);
-        console.log(io.in(roomId).allSockets());
-        socket.emit('message', { text: `You are now in room: ${roomId}`, name: 'admin' });
-        socket.broadcast.to(roomId).emit('message', { text: `From system: ${name} has joined!`, name: 'admin' });
-        //io.to(room).emit('message', { text: `From system: ${name} has joined! + from io.to(room).emit`, name: 'admin'  });
+        console.log(io.in(roomId).allSockets());    //log all socket in room
+
+        socket.emit('message', { text: `You are now in room: ${roomId}`, name: 'admin', time: Date.now() });
+        socket.broadcast.to(roomId).emit('message', { text: `From system: ${name} has joined!`, name: 'admin', time: Date.now() });
 
     });
 
@@ -82,7 +77,7 @@ io.on('connection', (socket) => {
         console.log(io.in(roomId).allSockets());  //log sockets remain in room
         console.log(`user: ${name} leave room: ${roomId}`);
 
-        io.to(roomId).emit('message', { text: `From system: ${name} left.` });
+        io.to(roomId).emit('message', { text: `From system: ${name} left.`, name: 'admin', time: Date.now() });
     });
 
     socket.on("pingRoom", ({ name, roomId }, callback) => {
@@ -95,7 +90,7 @@ io.on('connection', (socket) => {
     socket.on("sendMessage", ({ roomId }, message, callback) => {
         //console.log('sockets in room before force join:', io.in(room).allSockets());
 
-        io.to(roomId).emit('message', { text: message.text, name: message.name });
+        io.to(roomId).emit('message', { text: message.text, name: message.name, time: message.time });
 
         callback(message);
     });
@@ -110,10 +105,10 @@ io.on('connection', (socket) => {
             //console.log(io.sockets.adapter.rooms.get(theme));
             io.sockets.adapter.rooms.get(theme).forEach(element => {
                 console.log(element);
-                
+
                 io.sockets.sockets.get(element).emit("waitMatch");
             });
-            
+
         }
         let numberofpeople = io.sockets.adapter.rooms.get(theme).size;
         callback(numberofpeople);
