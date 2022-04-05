@@ -5,8 +5,6 @@ import Sidebar from './Sidebar/Sidebar';
 import FriendMatch from './FriendMatch/FriendMatch';
 
 const Home = (props) => {
-    LoginVerifier(props);
-
     const [roomName, setRoomName] = useState('');
     const [roomId, setRoomId] = useState('');
     const [userName, setUserName] = useState('');
@@ -14,18 +12,22 @@ const Home = (props) => {
     const [currentPage, setCurrentPage] = useState('matchFriends');
 
     useEffect(() => {
+        LoginVerifier(props);   //verify user session when Home component rendered
+    }, [props.name]);
+
+    useEffect(() => {
         console.log('home component just mount');
-        setUserName(JSON.parse(sessionStorage.getItem('UserProfile')).name);
+        setUserName(JSON.parse(sessionStorage.getItem('UserProfile')).name);    //get user profile name.
     }, []);
 
-    let pageplaceholder;
+    let pageplaceholder;    //placeholder for chatbox or friend match
 
     if (currentPage === 'chat') {
         pageplaceholder = <Chatbox userName={userName} roomId={roomId} roomName={roomName} />;
     }
 
     if (currentPage === 'matchFriends') {
-        pageplaceholder = <FriendMatch userName={userName} setCurrentPage={setCurrentPage}/>;
+        pageplaceholder = <FriendMatch userName={userName} setCurrentPage={setCurrentPage} />;
     }
 
 
@@ -33,10 +35,7 @@ const Home = (props) => {
         <div className="row">
             <div className="col-md-3 grid-margin">
                 <div className="card">
-                    <div className="bottonlist preview-list">
-                        <button className="btn btn-light" onClick={() => {setCurrentPage('matchFriends')}}>Find new friends</button>
-                        <Sidebar setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage}/>
-                    </div>
+                    <Sidebar setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage} />
                 </div>
             </div>
 
