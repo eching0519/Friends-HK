@@ -1,11 +1,28 @@
-// var user1 = "6235ec5b43c0614834b29d68";
-// var user2 = "6235eccc43c0614834b29d69";
-// var cr = new Chatroom([user1, user2]);  // Create chatroom by array of user id
+// // --- Get All user's chatrooms ---
+// var user1Id = "6235ec5b43c0614834b29d68";
+// let chatrooms = await UserChatrooms.findAllChatroomsByUserId(user1Id)
+// console.log("Chat", JSON.stringify(chatrooms, null, "\t"))
+
+// // --- Get user information ---
+// var user1Id = "6235ec5b43c0614834b29d68";
+// var user2Id = "6235eccc43c0614834b29d69";
+// var user1Obj = await User.findById(user1Id)
+// var user2Obj = await User.findById(user2Id)
+// console.log("User1's name", user1Obj.name)
+// console.log("User1's picture", user1Obj.picture)    // User's picture can be undefined
+// console.log("User2's name", user2Obj.name)
+// console.log("User1's picture", user2Obj.picture)
+
+// // --- Create New Chatroom ---
+// var user1Id = "6235ec5b43c0614834b29d68";
+// var user2Id = "6235eccc43c0614834b29d69";
+// var cr = new Chatroom([user1Id, user2Id]);  // Create chatroom by array of user id
 // await cr.create();                      // Save chatroom to database
-// console.log(cr._id.toString());         // Get chatroom Id
-// var cb = new Chatbox(user1, 'Hi', Date.now());      // Create new chatbox. timeElapse is default to be Date.now(), so that it is obtional parameter
-// cr.addChatBox(cb);                                  // Save chatbox to chatroom in database
-// cb = new Chatbox(user2, 'Hi');
+// console.log("Chatroom Id", cr._id.toString());         // Get chatroom Id
+// var cb = new Chatbox(user1Id, 'Hi', Date.now());      // Create new chatbox. timeElapse is default to be Date.now(), so that it is obtional parameter
+// await cr.addChatBox(cb);                                  // Save chatbox to chatroom in database
+// cb = new Chatbox(user2Id, 'Hi');
+// await cr.addChatBox(cb);
 
 const { ObjectID } = require('mongodb');
 
