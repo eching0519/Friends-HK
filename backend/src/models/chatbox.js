@@ -1,7 +1,7 @@
 
 class Chatbox {
-    constructor(sender, message, timeElapse = Date.now()) {
-        this.sender = sender;
+    constructor(senderId, message, timeElapse = Date.now()) {
+        this.senderId = senderId;
         this.message = message;
         this.timeElapse = timeElapse;
     }

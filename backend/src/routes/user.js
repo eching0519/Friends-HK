@@ -28,6 +28,13 @@ userRouter.post('/profile/picture/update', fileEngine.single('picture'), userCon
 userRouter.post('/profile/preferences/update', userController.updatePreferences)
 userRouter.post('/profile/update', userController.updateProfile)
 
+const Chatroom = require('../models/chatroom')
+const Chatbox = require('../models/chatbox')
+
+// userRouter.get('/test', async (req, res, next) => {
+
+// })
+
 // userRouter.post('/profile/picture/upload', upload.single('picture'), (req, res, next)=> {
 //     res.write(JSON.stringify({
 //         "success": true
