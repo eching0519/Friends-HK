@@ -52,6 +52,7 @@ class AdminNavbar extends Component {
                   <Dropdown.Item href="!#" onClick={evt =>evt.preventDefault()}>
                     <i className="mdi mdi-logout mr-2 text-primary"></i>
                     <Trans>Signout</Trans>
+                    {/* <Link className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" to="/admin/home ">SIGN IN</Link> */}
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

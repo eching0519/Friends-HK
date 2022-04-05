@@ -5,7 +5,7 @@ import Spinner from '../app/shared/Spinner';
 
 // import Settings from './user-panel/settings';
 
-const Dashboard = lazy(() => import('./dashboard/Dashboard'));
+// const Dashboard = lazy(() => import('./dashboard/Dashboard'));
 const Changepassword = lazy(() => import('./dashboard/Chagepassword'));
 const Blockuser = lazy(() => import('./dashboard/Blockuser'));
 const Userlist = lazy(() => import('./dashboard/Userlist'));
@@ -50,7 +50,7 @@ const AppRoutes = (props) => {
   return (
     <Suspense fallback={<Spinner/>}>
       <Switch>
-        <Route exact path="/dashboard" component={ Dashboard } />
+        {/* <Route exact path="/dashboard" component={ Dashboard } /> */}
         
 
 
@@ -85,14 +85,14 @@ const AppRoutes = (props) => {
         <Route path="/verify" component={ Verify } />
 
         {/* Admin page */}
-        <Route path="/admin/login" component={ AdminLogin } />
-        <Route path="/admin" component={ AdminHome } />
-
+        <Route exact path="/admin/login" component={ AdminLogin } />
+        <Route exact path="/admin" component={ AdminHome } /> {/*/admin to /admin/home */}
+{/* Once the API success we have to change this */}
         <Route exact path="/changepassword" component={ Changepassword } />
         <Route exact path="/blockuser" component={ Blockuser } />
         <Route exact path="/userlist" component={ Userlist } />
         {/* Root page */}
-        <Redirect to="/admin" />
+        <Redirect to="/admin" /> {/*/admin to /admin/home */}
       </Switch>
     </Suspense>
   );
