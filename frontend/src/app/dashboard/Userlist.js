@@ -12,27 +12,16 @@ const querystring = require('querystring');
 
 // import "react-datepicker/dist/react-datepicker.css";
 
-
-
 const Userlist = (props) => {
 	const [userName, setUserName] = useState('');
 	const [userPassword, setUserPassword] = useState('');
-	const [trigger, setTrigger] = useState(1);
+	//const [trigger, setTrigger] = useState(1);
 	const [datatable, setDatatable] = useState('');
 
-	/**
+
 	useEffect(() => {
-		console.log(datatable);
-		console.log('first render');
-		setDatatable(sendGetAllUserRequest());
-		console.log(datatable.rows);
+		sendGetAllUserRequest();	//fetch user list from server when component first rendered.
 	}, []);
-	*/
-
-
-	useEffect(() => {
-		console.log('use effect');
-	}, [datatable.rows]);
 
 	//console.log('render once');
 	//console.log(datatable);
@@ -125,10 +114,10 @@ const Userlist = (props) => {
 
 		};
 
-		console.log(data.userList);
-		console.log(tableObject.rows);
+		//console.log(data.userList);
+		//console.log(tableObject.rows);
 
-		if (data.success) {
+		if (data.success) {	// if data retreive success
 			data.userList.forEach((element) => {
 				console.log(element);
 				tableObject.rows.push(element);
@@ -137,73 +126,13 @@ const Userlist = (props) => {
 
 		//console.log(tableObject);
 		//setDatatable(tableObject);
-		console.log(tableObject.rows);
-		console.log(tableObject);
+		//console.log(tableObject.rows);
+		//console.log(tableObject);
 		setDatatable(tableObject);
-		setTrigger(30);
-		return tableObject;
+		//setTrigger(30);
+		//return tableObject;
 	};
 
-	const test = () => {
-		console.log()
-		let data = datatable;
-		/* data.rows.push({
-			_id: 1234,
-			email: 'abc@abc.com',
-			name: 'test',
-			status: 'active',
-		}); */
-		console.log(data.rows[0]);
-		//setDatatable(data);
-		let data2 = {
-			columns: [
-				{
-					label: 'user id',
-					field: '_id',
-					width: 150,
-					sort: 'asc',
-					attributes: {
-						'aria-controls': 'DataTable',
-						'aria-label': 'Name',
-					},
-				},
-				{
-					label: 'email',
-					field: 'email',
-					width: 270,
-				},
-				{
-					label: 'name',
-					field: 'name',
-					width: 200,
-				},
-				{
-					label: 'status',
-					field: 'status',
-					width: 100,
-				},
-			],
-			rows: [
-				{
-					_id: 1234,
-					email: 'abc@abc.com',
-					name: 'test',
-					status: 'active',
-
-				},
-				{
-					_id: 123423423423,
-					email: 'abcsssssss@abcfdgdfg.com',
-					name: 'test',
-					status: 'active',
-
-				},
-			],
-
-		};
-		setDatatable(data);
-		console.log(datatable);
-	}
 
 	return (
 		<>
@@ -214,12 +143,8 @@ const Userlist = (props) => {
 				</span> Users </h3>
 			</div>
 			<button type="button" className="btn btn-gradient-primary mr-2 mb-2" onClick={() => {
-				//test();
 				sendGetAllUserRequest();
-				//console.log(data);
-				//setDatatable(data);
-				//setTrigger(trigger + 1);
-			}}>{trigger}</button>
+			}}>refresh</button>
 			<MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={datatable} searchTop searchBottom={false} />
 		</>
 
