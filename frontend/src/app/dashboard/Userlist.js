@@ -18,44 +18,7 @@ const Userlist = (props) => {
 	const [userName, setUserName] = useState('');
 	const [userPassword, setUserPassword] = useState('');
 	const [trigger, setTrigger] = useState(1);
-	const [datatable, setDatatable] = useState({
-		columns: [
-			{
-				label: 'user id',
-				field: '_id',
-				width: 150,
-				sort: 'asc',
-				attributes: {
-					'aria-controls': 'DataTable',
-					'aria-label': 'Name',
-				},
-			},
-			{
-				label: 'email',
-				field: 'email',
-				width: 270,
-			},
-			{
-				label: 'name',
-				field: 'name',
-				width: 200,
-			},
-			{
-				label: 'status',
-				field: 'status',
-				width: 100,
-			},
-		],
-		rows: [
-			{
-				_id: 1234,
-				email: 'abc@abc.com',
-				name: 'test',
-				status: 'active',
-
-			},
-		],
-	});
+	const [datatable, setDatatable] = useState('');
 
 	/**
 	useEffect(() => {
@@ -133,7 +96,7 @@ const Userlist = (props) => {
 				{
 					label: 'user id',
 					field: '_id',
-					width: 150,
+					width: 100,
 					sort: 'asc',
 					attributes: {
 						'aria-controls': 'DataTable',
@@ -143,17 +106,17 @@ const Userlist = (props) => {
 				{
 					label: 'email',
 					field: 'email',
-					width: 270,
+					width: 150,
 				},
 				{
 					label: 'name',
 					field: 'name',
-					width: 200,
+					width: 150,
 				},
 				{
 					label: 'status',
 					field: 'status',
-					width: 100,
+					width: 150,
 				},
 			],
 			rows: [
