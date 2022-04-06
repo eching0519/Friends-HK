@@ -207,7 +207,12 @@ const Userlist = (props) => {
 
 	return (
 		<>
-			<h1>List all user</h1>
+			<div className="page-header">
+			<h3 className="page-title">
+				<span className="page-title-icon bg-gradient-primary text-white mr-2">
+				<i className="mdi mdi-account-multiple"></i>
+				</span> Users </h3>
+			</div>
 			<button type="button" className="btn btn-gradient-primary mr-2 mb-2" onClick={() => {
 				//test();
 				sendGetAllUserRequest();

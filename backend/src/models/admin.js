@@ -311,7 +311,7 @@ class Admin {
     static AdminDelete(id){
         const db = getDatabase();
         return  db.collection('user').deleteOne({_id: ObjectID(id)}, (err, result) => {
-            if (err) return console.log(err)
+            if (err) throw err
                        
           })
     }
