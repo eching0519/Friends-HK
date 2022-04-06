@@ -36,7 +36,8 @@ exports.adminLogin = async (req, res, next) => {
     };
 
     res.write(JSON.stringify({
-        "success": true
+        "success": true,
+        'admin': admin
     }, null, "\t"));
     res.end();
     return;
