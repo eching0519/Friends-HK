@@ -8,6 +8,7 @@ import { Form } from 'react-bootstrap';
 import { MDBDataTableV5 } from 'mdbreact';
 import { useEffect } from 'react';
 import { type } from 'os';
+import $ from 'jquery';
 const querystring = require('querystring');
 
 // import "react-datepicker/dist/react-datepicker.css";
@@ -22,47 +23,6 @@ const Userlist = (props) => {
 	useEffect(() => {
 		sendGetAllUserRequest();	//fetch user list from server when component first rendered.
 	}, []);
-
-	//console.log('render once');
-	//console.log(datatable);
-	/**
-	const sendAdminLoginRequest = async () => {
-		let url = '/admin/userList';
-
-		let res = await fetch(url, {
-			method: 'GET', //GET or remain it as POST?
-			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			body: querystring.stringify({
-				id: { userName },
-				pw: { userPassword }
-			})
-		});
-
-		let data
-		try {
-			data = await res.json();
-		} catch (error) {
-			props.setAlert({
-				visible: true,
-				strongMsg: 'Error!',
-				msg: `Unexpected error. (${error.message})`
-			})
-			return;
-		}
-
-		if (!data.success) {
-			props.setAlert({
-				visible: true,
-				strongMsg: 'Sorry!',
-				msg: '${data.message}'
-			})
-			return;
-		}
-		else {
-			window.location.replace("/admin");
-		}
-	}
-	 */
 
 
 	const sendGetAllUserRequest = async () => {
@@ -114,29 +74,27 @@ const Userlist = (props) => {
 
 		};
 
-		//console.log(data.userList);
-		//console.log(tableObject.rows);
-
 		if (data.success) {	// if data retreive success
 			data.userList.forEach((element) => {
-				console.log(element);
+				// console.log(element);
 				tableObject.rows.push(element);
 			})
 		}
 
-		//console.log(tableObject);
-		//setDatatable(tableObject);
-		//console.log(tableObject.rows);
-		//console.log(tableObject);
 		setDatatable(tableObject);
-		//setTrigger(30);
-		//return tableObject;
+		// Add link to table
+		$('tbody').children('tr').on('click', (event) => {
+			let userId = $(event.target).parent().children(0).prop("innerText");
+			console.log(userId);
+			window.location.pathname = '/admin/userinfo/' + userId
+		})
 	};
-
 
 	return (
 		<>
-			<div className="page-header">
+			<div className="page-header" onLoad={() => {
+				
+			}}>
 			<h3 className="page-title">
 				<span className="page-title-icon bg-gradient-primary text-white mr-2">
 				<i className="mdi mdi-account-multiple"></i>
