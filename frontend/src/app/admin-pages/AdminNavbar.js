@@ -4,8 +4,15 @@ import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 
 const AdminNavbar = (props) => {
+  let admin = JSON.parse(sessionStorage.getItem('AdminProfile'));
+
   const toggleOffcanvas = () => {
     document.querySelector('.sidebar-offcanvas').classList.toggle('active');
+  }
+
+  const Signout = () => {
+    sessionStorage.removeItem('AdminProfile');
+    window.location.pathname = "/admin/login";
   }
 
   return (
@@ -26,12 +33,12 @@ const AdminNavbar = (props) => {
                   <img src={require("../../assets/images/emptyFace.png")} alt="user"/>
                 </div>
                 <div className="nav-profile-text">
-                  <p className="mb-1 text-black">David Greymaax</p>
+                  <p className="mb-1 text-black">{admin===null? "N/A" : admin.name}</p>
                 </div>
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="navbar-dropdown">
-                <Dropdown.Item href="!#" onClick={evt =>evt.preventDefault()}>
+                <Dropdown.Item href="!#" onClick={evt =>{ evt.preventDefault(); Signout(); }}>
                   <i className="mdi mdi-logout mr-2 text-primary"></i>
                   <Trans>Signout</Trans>
                   {/* <Link className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" to="/admin/home ">SIGN IN</Link> */}
@@ -40,7 +47,7 @@ const AdminNavbar = (props) => {
             </Dropdown>
           </li>
         </ul>
-        <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" onClick={this.toggleOffcanvas}>
+        <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" onClick={toggleOffcanvas}>
           <span className="mdi mdi-menu"></span>
         </button>
       </div>
