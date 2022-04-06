@@ -6,8 +6,8 @@ import Spinner from '../app/shared/Spinner';
 // import Settings from './user-panel/settings';
 
 const Dashboard = lazy(() => import('./dashboard/Dashboard'));
-const Changepassword = lazy(() => import('./dashboard/Chagepassword'));
-const Blockuser = lazy(() => import('./dashboard/Blockuser'));
+// const Changepassword = lazy(() => import('./dashboard/Chagepassword'));
+// const Blockuser = lazy(() => import('./dashboard/Blockuser'));
 const Userlist = lazy(() => import('./dashboard/Userlist'));
 
 const Buttons = lazy(() => import('./_sample/basic-ui/Buttons'));
@@ -88,8 +88,8 @@ const AppRoutes = (props) => {
         <Route exact path="/admin/login" component={ AdminLogin } />
         <Route exact path="/admin" component={ AdminHome } /> {/*/admin to /admin/home */}
 {/* Once the API success we have to change this */}
-        <Route exact path="/admin/changepassword" component={ Changepassword } />
-        <Route exact path="/admin/blockuser" component={ Blockuser } />
+        {/* <Route exact path="/admin/changepassword" component={ Changepassword } /> */}
+        {/* <Route exact path="/admin/blockuser" component={ Blockuser } /> */}
         <Route exact path="/admin/userlist" component={ Userlist } />
         {/* Root page */}
         <Redirect to="/admin" /> {/*/admin to /admin/home */}

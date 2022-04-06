@@ -15,8 +15,21 @@ class Dashboard extends Component {
       status: "active",
       button: "block"
     }
+    this.specificinfo = {
+      photo: "",
+      name: "",
+      userid: "",
+      email: "",
+      password: "",
+      is_block: ""
+    }
+    this.changepassword = {
+      newpassword: ""
+    }
   }
   
+  
+
   changeMessage() {
     this.setState({
       status: "blocked",
@@ -138,12 +151,12 @@ class Dashboard extends Component {
         <form className="my-form">
           <div className="form-row">
             <div className="col-md-12 mb-3">
-              <label htmlFor="passwordInput">Password</label>
+              <label htmlFor="passwordInput">New Password</label>
               <input
                 type="password"
                 className="form-control"
                 id="passwordInput"
-                placeholder="Type Password"
+                placeholder="Type New Password"
                 onChange={e => this.handleOnPasswordInput(e.target.value)}
               />
             </div>
