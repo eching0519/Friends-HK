@@ -163,13 +163,13 @@ exports.adminUnblockUser = async (req, res, next) => {
 }
 
 exports.adminGetUserById = async (req, res, next) => {
-    if (!adminIsVerified(req, res)) return;
+    //if (!adminIsVerified(req, res)) return;
 
     //the following is get user by id 
     var id = req.body.id;
-    var admin;
+    var user;
     try {
-        admin = await Admin.AdminShowUserById(id)
+        user = await Admin.AdminShowUserById(id)
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
@@ -180,24 +180,12 @@ exports.adminGetUserById = async (req, res, next) => {
         return;
     }
 
-    console.log(admin);
-
-    if (admin != null) {
-        res.write(JSON.stringify({
-            "success": true,
-            "message": "Success in get user by id",
-        }, null, "\t"));
-        res.end();
-        return admin;
-    } else {
-        res.write(JSON.stringify({
-            "success": false,
-            "message": "No such data",
-        }, null, "\t"));
-        res.end();
-        return admin;
-    }
-
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "Success in get user by id",
+        "user": user
+    }, null, "\t"));
+    res.end();
 
 }
 
