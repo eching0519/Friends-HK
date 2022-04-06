@@ -4,24 +4,26 @@ import React, { Component, useState} from 'react';
 // import DatePicker from "react-datepicker";
  
 // import "react-datepicker/dist/react-datepicker.css";
+const showSpecificUserInfo = async () => {
+  let url = '/admin/userinfo';
+
+  let res = await fetch(url, {})
+
+}
 
 
 
 class Dashboard extends Component {
-  
   constructor(){
     super()
     this.state = {
-      status: "active",
-      button: "block"
-    }
-    this.specificinfo = {
       photo: "",
-      name: "",
-      userid: "",
-      email: "",
-      password: "",
-      is_block: ""
+      name: "default",
+      userid: "default",
+      email: "default",
+      password: "123456",
+      status: "Active",
+      button: "block"
     }
     this.changepassword = {
       newpassword: ""
@@ -32,7 +34,7 @@ class Dashboard extends Component {
 
   changeMessage() {
     this.setState({
-      status: "blocked",
+      status: "Blocked",
       button: "unblock"
     })
   }
@@ -99,20 +101,20 @@ class Dashboard extends Component {
               <div className="card-body">
                 
                 <img src={require("../../assets/images/faces/face1.jpg")} className="mr-2" alt="face" />
-                <h4 className="card-title">User Name</h4>
+                <h4 className="card-title">{this.state.name}</h4>
                 <div id="traffic-chart-legend" className="rounded-legend legend-vertical legend-bottom-left pt-4">
                   <ul>
                     <li>
                       <span className="legend-dots bg-primary"></span>UserID
-                      <span className="float-right">User_ID</span>
+                      <span className="float-right">{this.state.userid}</span>
                     </li>
                     <li>
                       <span className="legend-dots bg-primary"></span>Email
-                      <span className="float-right">User_email@gogo.com</span>
+                      <span className="float-right">{this.state.email}</span>
                     </li>
                     <li>
                       <span className="legend-dots bg-primary"></span>Password
-                      <span className="float-right">123456</span>
+                      <span className="float-right">{this.state.password}</span>
                     </li>
                     <li>
                       {/*depends on the status*/}
