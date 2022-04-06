@@ -5,7 +5,7 @@ import Spinner from '../app/shared/Spinner';
 
 // import Settings from './user-panel/settings';
 
-// const Dashboard = lazy(() => import('./dashboard/Dashboard'));
+const Dashboard = lazy(() => import('./dashboard/Dashboard'));
 const Changepassword = lazy(() => import('./dashboard/Chagepassword'));
 const Blockuser = lazy(() => import('./dashboard/Blockuser'));
 const Userlist = lazy(() => import('./dashboard/Userlist'));
@@ -50,7 +50,7 @@ const AppRoutes = (props) => {
   return (
     <Suspense fallback={<Spinner/>}>
       <Switch>
-        {/* <Route exact path="/dashboard" component={ Dashboard } /> */}
+        <Route exact path="/dashboard" component={ Dashboard } />
         
 
 
