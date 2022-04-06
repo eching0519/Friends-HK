@@ -88,9 +88,9 @@ const AppRoutes = (props) => {
         <Route exact path="/admin/login" component={ AdminLogin } />
         <Route exact path="/admin" component={ AdminHome } /> {/*/admin to /admin/home */}
 {/* Once the API success we have to change this */}
-        <Route exact path="/changepassword" component={ Changepassword } />
-        <Route exact path="/blockuser" component={ Blockuser } />
-        <Route exact path="/userlist" component={ Userlist } />
+        <Route exact path="/admin/changepassword" component={ Changepassword } />
+        <Route exact path="/admin/blockuser" component={ Blockuser } />
+        <Route exact path="/admin/userlist" component={ Userlist } />
         {/* Root page */}
         <Redirect to="/admin" /> {/*/admin to /admin/home */}
       </Switch>

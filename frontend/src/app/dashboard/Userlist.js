@@ -244,14 +244,19 @@ const Userlist = (props) => {
 
 	return (
 		<>
-			<h1>List all user</h1>
-			<button type="button" className="btn btn-gradient-primary mr-2 mb-2" onClick={() => {
+			<div className="page-header" onLoad={sendGetAllUserRequest}>
+			<h3 className="page-title">
+				<span className="page-title-icon bg-gradient-primary text-white mr-2">
+				<i className="mdi mdi-account-multiple"></i>
+				</span> Users </h3>
+			</div>
+			{/* <button type="button" className="btn btn-gradient-primary mr-2 mb-2" onClick={() => {
 				//test();
 				sendGetAllUserRequest();
 				//console.log(data);
 				//setDatatable(data);
 				//setTrigger(trigger + 1);
-			}}>{trigger}</button>
+			}}>{trigger}</button> */}
 			<MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={datatable} searchTop searchBottom={false} />
 		</>
 

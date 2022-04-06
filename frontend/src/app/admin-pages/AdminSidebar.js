@@ -65,20 +65,20 @@ class AdminSidebar extends Component {
               <i className="mdi mdi-home menu-icon"></i>
             </Link>
           </li> */}
-          <li className={ this.isPathActive('/userlist') ? 'nav-item active' : 'nav-item' }>
-            <Link className="nav-link" to="/userlist">
+          <li className={ this.isPathActive('/admin/userlist') ? 'nav-item active' : 'nav-item' }>
+            <Link className="nav-link" to="/admin/userlist">
               <span className="menu-title"><Trans>User List</Trans></span>
-              <i className="mdi mdi-home menu-icon"></i>
+              <i className="mdi mdi-account-multiple menu-icon"></i>
             </Link>
           </li>
-          <li className={ this.isPathActive('/blockuser') ? 'nav-item active' : 'nav-item' }>
-            <Link className="nav-link" to="/blockuser">
+          <li className={ this.isPathActive('/admin/blockuser') ? 'nav-item active' : 'nav-item' }>
+            <Link className="nav-link" to="/admin/blockuser">
               <span className="menu-title"><Trans>Block User</Trans></span>
               <i className="mdi mdi-home menu-icon"></i>
             </Link>
           </li>
-          <li className={ this.isPathActive('/changepassword') ? 'nav-item active' : 'nav-item' }>
-            <Link className="nav-link" to="/changepassword">
+          <li className={ this.isPathActive('/admin/changepassword') ? 'nav-item active' : 'nav-item' }>
+            <Link className="nav-link" to="/admin/changepassword">
               <span className="menu-title"><Trans>Change Password</Trans></span>
               <i className="mdi mdi-home menu-icon"></i>
             </Link>
