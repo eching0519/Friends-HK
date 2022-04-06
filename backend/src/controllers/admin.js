@@ -163,7 +163,7 @@ exports.adminUnblockUser = async (req, res, next) => {
 }
 
 exports.adminGetUserById = async (req, res, next) => {
-    if (!adminIsVerified(req, res)) return;
+    // if (!adminIsVerified(req, res)) return;
 
     //the following is get user by id 
     var id = req.body.id;
