@@ -13,6 +13,7 @@ const Chatbox = (props) => {
     const [user1, setUser1] = useState(null);   // user is a {id, name} object
     const [user2, setUser2] = useState(null);
     const [user3, setUser3] = useState(null);
+    const [chatRoom, setChatRoom] = useState(null);
     // const [user1Name, setUser1Name] = useState('');
     // const [user2Name, setUser2Name] = useState('');
     const [roomId, setRoomId] = useState('');   //store current room id
@@ -45,11 +46,35 @@ const Chatbox = (props) => {
     }, []);
 
     useEffect(() => {
-        if (props.chatHistory !== []) { //set chat history to messagelist
+        if (chatRoom !== null) {
+            console.log(chatRoom.chatbox);
+            setmessageList(chatRoom.chatbox);
+        }
+    }, [chatRoom]);
+
+    useEffect(() => {
+        setmessageList([]);
+        getChatRoomsocketio(props.roomId);
+        
+        /* 
+        console.log(props.roomId);
+        let cr = getChatRoomsocketio(props.roomId);
+        console.log(cr); 
+        */
+
+        /*         
+        if (cr.chatbox !== []) {
+             setmessageList(cr.chatbox);
+        } 
+        */
+       
+
+        /*         
+        if (false) { //set chat history to messagelist
             setmessageList(props.chatHistory);
         } else {
             setmessageList([{ text: 'welcome', name: 'admin', time: Date.UTC(1994, 9, 25) }]);    //if there is no chat history, initialize the message list.
-        }
+        } */
 
         const { userName, roomId } = { userName: props.userName, roomId: props.roomId }   //get names and room id from Sidebar component.
         console.log({ userName, roomId });
@@ -68,6 +93,24 @@ const Chatbox = (props) => {
         }
     }, [socket, props.roomId]);   //trigger useEffect if room changed from sidebar
 
+    useEffect(() => {
+        if (props.roomId !== '') {
+            getChatRoomsocketio(props.roomId);
+        }
+        if (chatRoom !== null) {
+            setmessageList(chatRoom.chatbox);
+        }
+        
+    }, [props.roomId]);
+
+    const getChatRoomsocketio = async (id) => {
+        let chatroom;
+        socket.emit("getChatRoom", id, (data) => {
+            chatroom = data;
+            setChatRoom(chatroom)
+            console.log(chatroom);
+        });
+    };
 
     useEffect(() => {
         socket.on("message", (message) => {
@@ -79,10 +122,7 @@ const Chatbox = (props) => {
 
     const sendMessage = (event) => {
         event.preventDefault();
-
         if (message) {
-            //console.log(message)
-            //setmessageList([...messageList, { text: message }])
             socket.emit('sendMessage', { roomId: roomId }, { message: message, senderId: props.userId, timeElapse: Date.now() }, (message) => {
                 console.log('message delivered:', message);
                 setMessage('')  //clear message input box

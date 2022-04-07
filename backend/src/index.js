@@ -86,14 +86,28 @@ io.on('connection', (socket) => {
         //io.to(room).emit('message', { text: `From system: ${name} left.`, name: 'admin' });
     });
 
-    socket.on("sendMessage", ({ roomId }, message, callback) => {
+    socket.on("sendMessage", async ({ roomId }, message, callback) => {
         //console.log('sockets in room before force join:', io.in(room).allSockets());
+        const Chatrooms = require('./models/chatroom');
+        const Chatbox = require('./models/chatbox');
+
+        let cb = new Chatbox(message.senderId, message.message, message.timeElapse); 
+        let cr = await Chatrooms.findById(roomId);
+        console.log("chatroom:", cr);
+        cr.addChatBox(cb);
 
         io.to(roomId).emit('message', { message: message.message, senderId: message.senderId, timeElapse: message.timeElapse });
 
         callback(message);
     });
 
+    socket.on("getChatRoom", async (roomId, callback) => {
+        const Chatrooms = require('./models/chatroom');
+        let cr = await Chatrooms.findById(roomId);
+
+        callback(cr);
+
+    });
 
     socket.on("getChatRoomList", async (userId, callback) => {
         console.log("getChatRoomList requiest recieved, user id:", userId);
@@ -124,7 +138,7 @@ io.on('connection', (socket) => {
                 allChatrooms[index].name = parsedNameStr;
 
             }
-            
+
         }
 
         callback(allChatrooms);

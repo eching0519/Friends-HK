@@ -34,9 +34,8 @@ const Sidebar = (props) => {
     }, [props.userId])  //when user id changed, fetch chat room list from server.
 
     const getChatroomlistSocketio = (id) => {
-        console.log('user id:', id);
+        //console.log('user id:', id);
         let chatlist;
-
         socket.emit("getChatRoomList", id, (data) => {
             chatlist = data;
             setChatroomlist(chatlist);
