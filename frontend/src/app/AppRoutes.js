@@ -92,7 +92,7 @@ const AppRoutes = (props) => {
         {/* <Route exact path="/admin/blockuser" component={ Blockuser } /> */}
         <Route exact path="/admin/userlist" component={ Userlist } />
         {/* Root page */}
-        <Redirect to="/admin" /> {/*/admin to /admin/home */}
+        <Redirect to="/login" />
       </Switch>
     </Suspense>
   );
