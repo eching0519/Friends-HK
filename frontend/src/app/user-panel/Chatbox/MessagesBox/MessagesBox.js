@@ -6,7 +6,7 @@ import './MessageBox.css'
 
 const Messagesbox = (props) => {
     return (
-        <ScrollToBottom className="messages">
+        <>
             {(props.messageList.length > 0) ?
                 props.messageList.map((message, i) =>
                     <div key={i}>
@@ -17,7 +17,7 @@ const Messagesbox = (props) => {
             <div>
                 <h4>{props.systemMessage.message}</h4>
             </div>
-        </ScrollToBottom>
+        </>
     )
 }
 

@@ -9,7 +9,7 @@ const Home = (props) => {
     const [roomId, setRoomId] = useState('');
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
-    const [currentPage, setCurrentPage] = useState('matchFriends');
+    const [currentPage, setCurrentPage] = useState('empty-chat');
     const [messageList, setmessageList] = useState([]);   //store all message.
     const [selectedRoomUserId, setSelectedRoomUserId] = useState(null);
     const [selectedRoomUserName, setSelectedRoomUserName] = useState(null);
@@ -25,6 +25,16 @@ const Home = (props) => {
     }, []);
 
     let pageplaceholder;    //placeholder for chatbox or friend match
+
+    if (currentPage === 'empty-chat') {
+        pageplaceholder = (<>
+            <div className="card card-fit-screen">
+                <div className='card-body'>
+                    <h2>Select an existing chatroom or </h2>
+                </div>
+            </div>
+        </>);
+    }
 
     if (currentPage === 'chat') {
         pageplaceholder = <Chatbox userName={userName} userId={userId} roomId={roomId} roomName={roomName} selectedRoomUserId={selectedRoomUserId} selectedRoomUserName={selectedRoomUserName} />;

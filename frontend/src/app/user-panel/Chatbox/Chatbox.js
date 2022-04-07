@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import StatusBar from './StatusBar/StatusBar';
 import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
+import $ from 'jquery';
 
 const socket = io({ //no url: default to localhost:8080
     autoConnect: false
@@ -106,6 +107,9 @@ const Chatbox = (props) => {
             setmessageList([...messageList, message]);
         });
 
+        // Scroll to bottom
+        $(".card-chatbox .card-body").scrollTop($(".card-chatbox .card-body")[0].scrollHeight);
+
     }, [messageList]);
 
 
@@ -121,7 +125,7 @@ const Chatbox = (props) => {
 
     return (
         <>
-            <div className="card">
+            <div className="card card-chatbox">
                 <div className="card-header bg-white">
                     <StatusBar userName={props.userName} roomId={props.roomId} roomName={props.roomName} />
                 </div>
