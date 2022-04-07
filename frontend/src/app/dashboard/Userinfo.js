@@ -22,7 +22,7 @@ const querystring = require('querystring');
      
 // }
 
-let url = "localhost:8080/admin/userlist";
+
 
 class Userinfo extends Component {
   
@@ -37,7 +37,7 @@ class Userinfo extends Component {
 
   async componentDidMount(){
     try{
-      const response = await fetch('/admin/userList', {
+      const response = await fetch('/admin/getuserbyid', {
         method: 'POST',
         body: querystring.stringify({
 
@@ -47,7 +47,8 @@ class Userinfo extends Component {
         },
       });
       const data = await response.json();
-      console.log(data);  
+      console.log(data);
+      this.setState({data : data});  
       console.log(typeof (data)); 
     }catch(err){
       console.log(err);
@@ -169,9 +170,10 @@ class Userinfo extends Component {
             <span className="page-title-icon bg-gradient-primary text-white mr-2">
               <i className="mdi mdi-account"></i>
             </span> Specific User Info template </h3> */}
-           <ul>
-             
-          </ul>
+            {/* {data.map((item)=>{
+              return <li key={item.id}>{item.name}</li>
+            })} */}
+           
         </div>
         
         <div className="row">
