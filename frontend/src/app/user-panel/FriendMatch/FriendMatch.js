@@ -20,8 +20,9 @@ const FriendMatch = (props) => {
 
     socket.on("waitMatch", (roomId) => {
         setmatchStatus('success');
-        props.setCurrentPage('chat');
-        props.setRoomId(roomId)
+        //props.setCurrentPage('chat');
+        console.log(roomId);
+        //props.setRoomId(roomId);
     });
 
     //let waitingMessage = '';
