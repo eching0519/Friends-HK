@@ -41,6 +41,7 @@ const Chatbox = (props) => {
 
     useEffect(() => {
         let nameStr = props.selectedRoomUserName.split(",");
+        
         setUser1({
             id: props.selectedRoomUserId[0],
             name: nameStr[0]
@@ -50,6 +51,12 @@ const Chatbox = (props) => {
             id: props.selectedRoomUserId[1],
             name: nameStr[1]
         });
+
+        setUser3({
+            id: props.selectedRoomUserId[2],
+            name: nameStr[2]
+        });
+
         setmessageList([]);
         getChatRoomsocketio(props.roomId);
 

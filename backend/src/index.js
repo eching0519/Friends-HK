@@ -57,6 +57,8 @@ const Message = require('./models/message')
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
+let specialThemeQueue = {}; //queue for special matching
+
 // Socket
 io.on('connection', (socket) => {
     console.log('New WebSocket connection, id:', socket.id);
@@ -86,12 +88,12 @@ io.on('connection', (socket) => {
         io.to(room).emit('message', { text: `From system: ${name} left.`, name: 'admin' });
     }); */
 
-    socket.on("sendMessage", async ( roomId , message, callback) => {
+    socket.on("sendMessage", async (roomId, message, callback) => {
         //console.log('sockets in room before force join:', io.in(room).allSockets());
         const Chatroom = require('./models/chatroom');
         const Chatbox = require('./models/chatbox');
 
-        let cb = new Chatbox(message.senderId, message.message, message.timeElapse); 
+        let cb = new Chatbox(message.senderId, message.message, message.timeElapse);
         let cr = await Chatroom.findById(roomId);
         console.log("chatroom:", cr);
         cr.addChatBox(cb);
@@ -152,28 +154,45 @@ io.on('connection', (socket) => {
         callback({ userName: userObject.name, picture: userObject.picture });
     });
 
-    let dinningUserId = [];
-
     //match by special theme
-    socket.on("matchBySpecialTheme", (theme, userId, callback) => {
+    socket.on("matchBySpecialTheme", async (theme, userId, callback) => {
         console.log(`recieved match request: theme: ${theme}, user id: ${userId}`);
-
         socket.join(theme);
 
+        if (`${theme}` in specialThemeQueue) {
+            console.log("key found")
+            specialThemeQueue[`${theme}`].push(userId);
+        } else {
+            console.log("key not found")
+            specialThemeQueue[`${theme}`] = [userId];
+        }
+
+        console.log(specialThemeQueue);
+
         if (io.sockets.adapter.rooms.get(theme).size >= 3) {
+            console.log(specialThemeQueue[`${theme}`]);
             console.log(`able to form group for special theme: ${theme}`);
             console.log(io.sockets.adapter.rooms.get(theme));
-            io.sockets.adapter.rooms.get(theme).forEach(element => {
-                console.log(element);
-            });
+
+
+
+            const Chatroom = require('./models/chatroom');
+            let cr = new Chatroom([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
+                `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
+
+            await cr.create();
 
             io.sockets.adapter.rooms.get(theme).forEach(element => {
                 console.log(element);
-                let roomId;
+
+                let roomId = cr._id.toString();
+                console.log("room id:", roomId);
                 io.sockets.sockets.get(element).emit("waitMatch", roomId);
                 //io.sockets.sockets.get(element).leave(theme); //leave the queue after matching
             });
 
+            delete specialThemeQueue[`${theme}`];
+            console.log(specialThemeQueue);
         }
         let numberofpeople = io.sockets.adapter.rooms.get(theme).size;
         callback(numberofpeople);
