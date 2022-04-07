@@ -8,6 +8,7 @@ const Home = (props) => {
     const [roomName, setRoomName] = useState('');
     const [roomId, setRoomId] = useState('');
     const [userName, setUserName] = useState('');
+    const [userId, setUserId] = useState('');
     const [logout, setLogout] = useState(false);
     const [currentPage, setCurrentPage] = useState('matchFriends');
 
@@ -18,6 +19,7 @@ const Home = (props) => {
     useEffect(() => {
         console.log('home component just mount');
         setUserName(JSON.parse(sessionStorage.getItem('UserProfile')).name);    //get user profile name.
+        setUserId(JSON.parse(sessionStorage.getItem('UserProfile')).id);
     }, []);
 
     let pageplaceholder;    //placeholder for chatbox or friend match
@@ -35,7 +37,7 @@ const Home = (props) => {
         <div className="row">
             <div className="col-md-3 grid-margin">
                 <div className="card">
-                    <Sidebar setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage} />
+                    <Sidebar userId={userId} setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage} />
                 </div>
             </div>
 

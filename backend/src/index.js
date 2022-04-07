@@ -58,10 +58,9 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
 // Socket
-
 io.on('connection', (socket) => {
     console.log('New WebSocket connection, id:', socket.id);
-    //match by special theme
+
     socket.on("joinRoom", ({ name, roomId }, callback) => {
         socket.join(roomId);    //add user to romm by room id.
         console.log(`user: ${name} assign to ${roomId}`);
@@ -95,6 +94,36 @@ io.on('connection', (socket) => {
         callback(message);
     });
 
+    socket.on("getChatRoomList", async (userId, callback) => {
+        console.log("getChatRoomList requiest recieved, user id:", userId);
+
+        const UserChatrooms = require('./models/user-chatrooms');
+        // const User = require('./models/user');
+        let allChatrooms = await UserChatrooms.findAllChatroomsByUserId(userId);
+        //console.log(allChatrooms);
+
+        callback(allChatrooms);
+    });
+
+    socket.on("getUserInfo", async (userId, callback) => {
+        console.log("getUserInfo requiest recieved, user id:", userId);
+
+        const User = require('./models/user');
+        // var user1Id = "6235ec5b43c0614834b29d68";
+        // var user2Id = "6235eccc43c0614834b29d69";
+        // var user1Obj = await User.findById(user1Id)
+        // var user2Obj = await User.findById(user2Id)
+        // console.log("User1's name", user1Obj.name)
+        // console.log("User1's picture", user1Obj.picture)    // User's picture can be undefined
+        // console.log("User2's name", user2Obj.name)
+        // console.log("User1's picture", user2Obj.picture)
+
+        let userObject = await User.findById(userId);
+
+        callback({userName: userObject.name, picture: userObject.picture});
+    });
+
+    //match by special theme
     socket.on("matchBySpecialTheme", (theme, user, callback) => {
         console.log(`recieved match request: theme: ${theme}, username: ${user}`);
 
