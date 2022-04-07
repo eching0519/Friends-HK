@@ -27,31 +27,50 @@ let url = "localhost:8080/admin/userlist";
 class Userinfo extends Component {
   
   state = {
-    data : []
+    data : [],
+    userid: '',
+    email: '',
+    userstatus: '',
+    password: '',
+    confirmPassword: ''
   }
 
-  componentDidMount(){
-    fetch('/admin/userList', {
-      method: 'POST',
-      body: querystring.stringify({
+  async componentDidMount(){
+    try{
+      const response = await fetch('/admin/userList', {
+        method: 'POST',
+        body: querystring.stringify({
 
-      }),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      });
+      const data = await response.json();
+      console.log(data);  
+      console.log(typeof (data)); 
+    }catch(err){
+      console.log(err);
+    }
+    // fetch('/admin/userList', {
+    //   method: 'POST',
+    //   body: querystring.stringify({
+
+    //   }),
+    //   headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => console.log(data));
   }
   
-  constructor(props){
-    super(props);
+  constructor(){
+    super(); //super class를 부른다 
     console.log("Is this working")
 
     this.state = {
       photo: "",
-      name: "default",
-      userid: "default",
       email: "default",
       password: "123456",
       status: "Active",
@@ -62,19 +81,6 @@ class Userinfo extends Component {
     }
   }
   
-  componentShowUser(){
-    fetch(url)
-    .then(res => res.json(), {
-      method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: querystring.stringify({
-
-			})
-    })
-    .then(data => console.log(data))
-  }
   
 
   changeMessage() {
@@ -84,10 +90,22 @@ class Userinfo extends Component {
     })
   }
 
-  state = {
-    password: '',
-    confirmPassword: ''
-  };
+  // fetchUserId(){
+  //   this.setState({
+  //     usderid: 'hello'
+  //   })
+  // }
+
+  // state = {
+  //   password: '',
+  //   confirmPassword: ''
+  // };
+
+  // convertToUserID() {
+  //   this.setState({
+  //     userid: 
+  //   })
+  // }
 
   handleOnPasswordInput(passwordInput) {
     this.setState({ password: passwordInput });
@@ -122,11 +140,28 @@ class Userinfo extends Component {
     }
   }
 
+  // fetchUserId(){
+  //   const queryId = this.props.location.search.split("=")[1];
+  //   const token = window.localStorage.JsonWebToken;
+
+  //   fetch(`/admin/userinfo/${queryId}`, {
+  //     headers: {Authorization: token}
+  //   })
+  //     .then(response => response.json())
+  //     .then(response => {
+  //       this.setState({
+  //         isLoading: false,
+  //         data: response.data,
+  //         skillData: response.tag_list
+  //       });
+  //     });
+  // }
+
 
   render () {
     console.log('render method called')
-    
-
+    const {data} = this.state;
+    const {userId} = this.props.match.params;
     return (
       <div>
         <div className="page-header">
@@ -134,25 +169,28 @@ class Userinfo extends Component {
             <span className="page-title-icon bg-gradient-primary text-white mr-2">
               <i className="mdi mdi-account"></i>
             </span> Specific User Info template </h3> */}
-       
+           <ul>
+             
+          </ul>
         </div>
         
         <div className="row">
           <div className="col-md-5 grid-margin stretch-card">
             <div className="card">
+              
             <h3 className="page-title">
             <span className="page-title-icon bg-gradient-primary text-white mr-2">
               <i className="mdi mdi-account"></i>
-            </span> Specific User Info template </h3>
+            </span> Specific User Info template 
+            </h3>
               <div className="card-body">
-              {/* {showSpecificUserInfo()} */}
                 <img src={require("../../assets/images/faces/face1.jpg")} className="mr-2" alt="face" />
                 <h4 className="card-title">{this.state.name}</h4>
                 <div id="traffic-chart-legend" className="rounded-legend legend-vertical legend-bottom-left pt-4">
                   <ul>
                     <li>
                       <span className="legend-dots bg-primary"></span>UserID
-                      <span className="float-right">{this.state.userid}</span>
+                      <span className="float-right">{userId}</span>
                     </li>
                     <li>
                       <span className="legend-dots bg-primary"></span>Email
