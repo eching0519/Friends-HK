@@ -26,6 +26,21 @@ const querystring = require('querystring');
 
 class Userinfo extends Component {
   
+  constructor(){
+    super(); //super class를 부른다 
+    console.log("Is this working")
+
+    this.state = {
+      photo: "",
+      email: "default",
+      password: "123456",
+      status: "Active",
+      button: "block"
+    }
+    this.changepassword = {
+      newpassword: ""
+    }
+  }
   state = {
     data : [],
     userid: '',
@@ -36,20 +51,24 @@ class Userinfo extends Component {
   }
 
   async componentDidMount(){
+    const {userId} = this.props.match.params
     try{
       const response = await fetch('/admin/getuserbyid', {
         method: 'POST',
         body: querystring.stringify({
-
+          id : userId
         }),
-        headers: {
+        headers: { 
           'Content-Type': 'application/x-www-form-urlencoded'
         },
       });
       const data = await response.json();
-      console.log(data);
-      this.setState({data : data});  
-      console.log(typeof (data)); 
+      const info = data.user
+      console.log(info)
+      // this.setState({
+      //   // items: data.user
+      // })
+      // this.setState({data : data});   
     }catch(err){
       console.log(err);
     }
@@ -66,21 +85,7 @@ class Userinfo extends Component {
     //   .then((data) => console.log(data));
   }
   
-  constructor(){
-    super(); //super class를 부른다 
-    console.log("Is this working")
-
-    this.state = {
-      photo: "",
-      email: "default",
-      password: "123456",
-      status: "Active",
-      button: "block"
-    }
-    this.changepassword = {
-      newpassword: ""
-    }
-  }
+  
   
   
 
@@ -161,10 +166,15 @@ class Userinfo extends Component {
 
   render () {
     console.log('render method called')
-    const {data} = this.state;
+    // const {data} = this.state;
     const {userId} = this.props.match.params;
+    // const {data} = this.componentDidMount();
+    // const {user} = data.userid
+    // {this.componentDidMount(userId)};
+    // {this.componentDidMount()}
     return (
       <div>
+        
         <div className="page-header">
           {/* <h3 className="page-title">
             <span className="page-title-icon bg-gradient-primary text-white mr-2">
@@ -187,7 +197,7 @@ class Userinfo extends Component {
             </h3>
               <div className="card-body">
                 <img src={require("../../assets/images/faces/face1.jpg")} className="mr-2" alt="face" />
-                <h4 className="card-title">{this.state.name}</h4>
+                <h4 className="card-title">{/*this.state.name*/}name gogo</h4>
                 <div id="traffic-chart-legend" className="rounded-legend legend-vertical legend-bottom-left pt-4">
                   <ul>
                     <li>
@@ -196,18 +206,18 @@ class Userinfo extends Component {
                     </li>
                     <li>
                       <span className="legend-dots bg-primary"></span>Email
-                      <span className="float-right">{this.state.email}</span>
+                      <span className="float-right">{/*this.state.email*/}email gogo</span>
                     </li>
                     <li>
                       <span className="legend-dots bg-primary"></span>Password
-                      <span className="float-right">{this.state.password}</span>
+                      <span className="float-right">{/*this.state.password*/}pass gogo</span>
                     </li>
                     <li>
                       {/*depends on the status*/}
                       {/*If status is block then button show unblock if status active button shows block */}
-                      <span className="legend-dots bg-primary"></span>{this.state.status}
+                      <span className="legend-dots bg-primary"></span>{/*this.state.status*/}status gogo
                       <span className="float-right">
-                        <button className='btn-auto btn-gradient-primary font-weight-bold' onClick={() => this.changeMessage()}>{this.state.button}</button>
+                        <button className='btn-auto btn-gradient-primary font-weight-bold' onClick={() => this.changeMessage()}>{/*this.state.button*/}button</button>
                       </span>
                     </li>
                   </ul>
