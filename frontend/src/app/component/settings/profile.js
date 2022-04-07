@@ -32,8 +32,6 @@ const ProfileSettings = (props) => {
     const [ageFrom, setAgeFrom] = useState(user.preferences==null? 18 : user.preferences.ageFrom);
     const [ageTo, setAgeTo] = useState(user.preferences==null? 40 : user.preferences.ageTo);
 
-    console.log(hashtags)
-
     const ageArr = Array.from({length: 53}, (_, i) => i + 12)
     ageArr.push('65+')
 
@@ -52,7 +50,6 @@ const ProfileSettings = (props) => {
             return
         }
         
-        console.log("Form has changed: ")
         props.setFormChanged(true)
         $("#submitBtn").removeClass('disabled')
     }, [ulang, uco, ugender, dob, uhobbies, bio, hashtags, plang, pgender, ageFrom, ageTo]);
@@ -60,21 +57,21 @@ const ProfileSettings = (props) => {
     const sendUpdatePreferenceRequest = async (d) => {
         let url = '/user/profile/preferences/update';
 
-        console.log(querystring.stringify({
-            lang: ulang,
-            co: uco,
-            gender: ugender,
-            dob: dob.toLocaleDateString('en-GB', {
-                day: 'numeric', month: 'short', year: 'numeric'
-              }).replace(/ /g, '-'),
-            hobbies: uhobbies,
-            bio: bio,
-            hashtags: hashtags,
-            plang: plang,
-            pgender: pgender,
-            ageFrom: ageFrom,
-            ageTo: ageTo
-        }))
+        // console.log(querystring.stringify({
+        //     lang: ulang,
+        //     co: uco,
+        //     gender: ugender,
+        //     dob: dob.toLocaleDateString('en-GB', {
+        //         day: 'numeric', month: 'short', year: 'numeric'
+        //       }).replace(/ /g, '-'),
+        //     hobbies: uhobbies,
+        //     bio: bio,
+        //     hashtags: hashtags,
+        //     plang: plang,
+        //     pgender: pgender,
+        //     ageFrom: ageFrom,
+        //     ageTo: ageTo
+        // }))
 
         let res = await fetch(url, {
             method: 'POST',
@@ -96,21 +93,21 @@ const ProfileSettings = (props) => {
             })
         });
 
-        console.log(querystring.stringify({
-            lang: ulang,
-            co: uco,
-            gender: ugender,
-            dob: dob.toLocaleDateString('en-GB', {
-                day: 'numeric', month: 'short', year: 'numeric'
-              }).replace(/ /g, '-'),
-            hobbies: uhobbies,
-            bio: bio,
-            hashtags: hashtags,
-            plang: plang,
-            pgender: pgender,
-            ageFrom: ageFrom,
-            ageTo: ageTo
-        }));
+        // console.log(querystring.stringify({
+        //     lang: ulang,
+        //     co: uco,
+        //     gender: ugender,
+        //     dob: dob.toLocaleDateString('en-GB', {
+        //         day: 'numeric', month: 'short', year: 'numeric'
+        //       }).replace(/ /g, '-'),
+        //     hobbies: uhobbies,
+        //     bio: bio,
+        //     hashtags: hashtags,
+        //     plang: plang,
+        //     pgender: pgender,
+        //     ageFrom: ageFrom,
+        //     ageTo: ageTo
+        // }));
 
         let data
         try {
@@ -133,7 +130,7 @@ const ProfileSettings = (props) => {
             return;
         }
 
-        console.log(data.user)
+        // console.log(data.user)
 
         setUser(data.user)
         props.setUser(data.user)
