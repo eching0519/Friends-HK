@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Tabs, Tab } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react';
+import { Tabs, Tab } from 'react-bootstrap';
 import { io } from 'socket.io-client';
 
 const socket = io({ //no url: default to localhost:8080
@@ -28,22 +28,19 @@ const Sidebar = (props) => {
     }, [chatroomlist]);
 
     useEffect(() => {
-        //const { userId } = { userId: props.userId };
         if (props.userId !== '') {
             getChatroomlistSocketio(props.userId);
         }
-        /* const { userId } = { userId: props.userId };
-        if (userId !== '') {
-            getChatroomlistSocketio(userId);
-        } */
     }, [props.userId])  //when user id changed, fetch chat room list from server.
 
     const getChatroomlistSocketio = (id) => {
-        console.log(id);
+        console.log('user id:', id);
+        let chatlist;
+
         socket.emit("getChatRoomList", id, (data) => {
-            let chatlist = data;
-            console.log(typeof (chatlist));
+            chatlist = data;
             setChatroomlist(chatlist);
+            
         });
     };
 
@@ -53,6 +50,9 @@ const Sidebar = (props) => {
             chatroomlist.forEach((element, index) => {
                 let button = <a key={index} href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e) => {
                     e.preventDefault();
+                    props.setSelectedRoomUserId(element.users);
+                    props.setSelectedRoomUserName(element.name);
+                    props.setmessageList(element.chatbox);
                     props.setRoomName(element.name);
                     props.setRoomId(element._id);
                     props.setCurrentPage('chat');
@@ -64,6 +64,8 @@ const Sidebar = (props) => {
                 </a>;
                 divArr.push(button);
             });
+        } else {
+            return <h2>Loading...</h2>
         }
         return divArr;
     };

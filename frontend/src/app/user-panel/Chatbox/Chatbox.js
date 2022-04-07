@@ -10,13 +10,33 @@ const socket = io({ //no url: default to localhost:8080
 });
 
 const Chatbox = (props) => {
+    const [user1, setUser1] = useState(null);   // user is a {id, name} object
+    const [user2, setUser2] = useState(null);
+    const [user3, setUser3] = useState(null);
+    // const [user1Name, setUser1Name] = useState('');
+    // const [user2Name, setUser2Name] = useState('');
     const [roomId, setRoomId] = useState('');   //store current room id
+
     const [roomName, setRoomName] = useState('');   //store current room name
 
     const [message, setMessage] = useState(''); //store message from the input box.
     const [messageList, setmessageList] = useState([]);   //store all message.
 
     useEffect(() => {
+        let nameStr = props.selectedRoomUserName.split(",");
+        setUser1({
+            id: props.selectedRoomUserId[0],
+            name: nameStr[0]
+        });
+
+        setUser2({
+            id: props.selectedRoomUserId[1],
+            name: nameStr[1]
+        });
+
+        // setUser1Id(props.selectedRoomUserId[0]);
+        // setUser2Id(props.selectedRoomUserId[1]);
+
         socket.connect();   //estiblish socket io connection
         return () => {
             socket.removeAllListeners();    //clean up listener
@@ -25,32 +45,17 @@ const Chatbox = (props) => {
     }, []);
 
     useEffect(() => {
-        //setSocket(io()) ; //estiblish socket io connection
-
-        //get chat history when room changed.
-        //if (sessionStorage.getItem(`${props.room}`) !== null) {
-        //console.log('fetch data from session storage');
-        //setmessageList(JSON.parse(sessionStorage.getItem(`${props.room}`)));
-        //} else {
-
-        // ADD features: if session storage does not contain chat history, try to fetch from server.
-
-        // if both server and session storage are empty, create new message.
-        //console.log('cannot fetch data from session storage');
-        setmessageList([{ text: 'welcome', name: 'admin' , time: Date.UTC(1994, 9, 25)}]);    //if there is no chat history, initialize the message list.
-        //}
+        if (props.chatHistory !== []) { //set chat history to messagelist
+            setmessageList(props.chatHistory);
+        } else {
+            setmessageList([{ text: 'welcome', name: 'admin', time: Date.UTC(1994, 9, 25) }]);    //if there is no chat history, initialize the message list.
+        }
 
         const { userName, roomId } = { userName: props.userName, roomId: props.roomId }   //get names and room id from Sidebar component.
         console.log({ userName, roomId });
         setRoomId(roomId);
 
-        socket.emit("joinRoom", { name: userName, roomId: roomId }, () => {
-            //console.log('sent message');
-        });
-
-        //socket.emit("pingRoom", { name: userName, room: room }, () => {
-        //console.log('sent message');
-        //});
+        socket.emit("joinRoom", { userId: props.userId, name: props.userName, roomId: props.roomId });
 
         socket.on("message", (message) => {
             console.log('client recieve:', message)
@@ -58,21 +63,15 @@ const Chatbox = (props) => {
         });
 
         return () => {
-            socket.emit("leaveRoom", { name: userName, roomId: roomId }, () => {
-
-            });
+            socket.emit("leaveRoom", { name: userName, roomId: roomId });
             socket.removeAllListeners();
-            //sessionStorage.setItem(`${props.room}`, JSON.stringify(messageList));
-            //setmessageList([]);
         }
     }, [socket, props.roomId]);   //trigger useEffect if room changed from sidebar
 
 
     useEffect(() => {
-        const { userName, roomId } = { userName: props.userName, roomId: props.roomId };
-
         socket.on("message", (message) => {
-            setmessageList([...messageList, message]);    //To be update
+            setmessageList([...messageList, message]);
         });
 
     }, [messageList]);
@@ -84,7 +83,7 @@ const Chatbox = (props) => {
         if (message) {
             //console.log(message)
             //setmessageList([...messageList, { text: message }])
-            socket.emit('sendMessage', { roomId: roomId }, { text: message, name: props.userName, time: Date.now() }, (message) => {
+            socket.emit('sendMessage', { roomId: roomId }, { message: message, senderId: props.userId, timeElapse: Date.now() }, (message) => {
                 console.log('message delivered:', message);
                 setMessage('')  //clear message input box
             });
@@ -98,7 +97,7 @@ const Chatbox = (props) => {
                     <StatusBar userName={props.userName} roomId={props.roomId} roomName={props.roomName} />
                 </div>
                 <div className="card-body bg-white">
-                    <Messagesbox messageList={messageList} userName={props.userName} />
+                    <Messagesbox messageList={messageList} userName={props.userName} userId={props.userId} user1={user1} user2={user2} user3={user3} />
                 </div>
                 <div className="card-footer bg-white">
                     <InputBar message={message} setMessage={setMessage} sendMessage={sendMessage} />

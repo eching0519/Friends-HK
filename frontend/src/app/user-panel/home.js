@@ -9,8 +9,10 @@ const Home = (props) => {
     const [roomId, setRoomId] = useState('');
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
-    const [logout, setLogout] = useState(false);
     const [currentPage, setCurrentPage] = useState('matchFriends');
+    const [messageList, setmessageList] = useState([]);   //store all message.
+    const [selectedRoomUserId, setSelectedRoomUserId] = useState(null);
+    const [selectedRoomUserName, setSelectedRoomUserName] = useState(null);
 
     useEffect(() => {
         LoginVerifier(props);   //verify user session when Home component rendered
@@ -25,7 +27,7 @@ const Home = (props) => {
     let pageplaceholder;    //placeholder for chatbox or friend match
 
     if (currentPage === 'chat') {
-        pageplaceholder = <Chatbox userName={userName} roomId={roomId} roomName={roomName} />;
+        pageplaceholder = <Chatbox chatHistory={messageList} userName={userName} userId={userId} roomId={roomId} roomName={roomName} selectedRoomUserId={selectedRoomUserId} selectedRoomUserName={selectedRoomUserName} />;
     }
 
     if (currentPage === 'matchFriends') {
@@ -37,7 +39,7 @@ const Home = (props) => {
         <div className="row">
             <div className="col-md-3 grid-margin">
                 <div className="card">
-                    <Sidebar userId={userId} setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage} />
+                    <Sidebar setSelectedRoomUserName={setSelectedRoomUserName} setSelectedRoomUserId={setSelectedRoomUserId} userId={userId} setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage} setmessageList={setmessageList} />
                 </div>
             </div>
 

@@ -61,22 +61,22 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection', (socket) => {
     console.log('New WebSocket connection, id:', socket.id);
 
-    socket.on("joinRoom", ({ name, roomId }, callback) => {
+    socket.on("joinRoom", ({ userId, name, roomId }, callback) => {
         socket.join(roomId);    //add user to romm by room id.
         console.log(`user: ${name} assign to ${roomId}`);
         console.log(io.in(roomId).allSockets());    //log all socket in room
 
-        socket.emit('message', { text: `You are now in room: ${roomId}`, name: 'admin', time: Date.now() });
-        socket.broadcast.to(roomId).emit('message', { text: `From system: ${name} has joined!`, name: 'admin', time: Date.now() });
+        socket.emit('message', { message: `You are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() });
+        socket.broadcast.to(roomId).emit('message', { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() });
 
     });
 
-    socket.on("leaveRoom", ({ name, roomId }, callback) => {
+    socket.on("leaveRoom", ({ userId, name, roomId }, callback) => {
         socket.leave(roomId);
         console.log(io.in(roomId).allSockets());  //log sockets remain in room
         console.log(`user: ${name} leave room: ${roomId}`);
 
-        io.to(roomId).emit('message', { text: `From system: ${name} left.`, name: 'admin', time: Date.now() });
+        io.to(roomId).emit('message', { message: `From system: ${name} left.`, senderId: 'admin', timeElapse: Date.now() });
     });
 
     socket.on("pingRoom", ({ name, roomId }, callback) => {
@@ -89,18 +89,43 @@ io.on('connection', (socket) => {
     socket.on("sendMessage", ({ roomId }, message, callback) => {
         //console.log('sockets in room before force join:', io.in(room).allSockets());
 
-        io.to(roomId).emit('message', { text: message.text, name: message.name, time: message.time });
+        io.to(roomId).emit('message', { message: message.message, senderId: message.senderId, timeElapse: message.timeElapse });
 
         callback(message);
     });
+
 
     socket.on("getChatRoomList", async (userId, callback) => {
         console.log("getChatRoomList requiest recieved, user id:", userId);
 
         const UserChatrooms = require('./models/user-chatrooms');
-        // const User = require('./models/user');
+        const User = require('./models/user');
         let allChatrooms = await UserChatrooms.findAllChatroomsByUserId(userId);
-        //console.log(allChatrooms);
+
+        for (let index = 0; index < allChatrooms.length; index++) {
+            //const element = array[index];
+            //console.log('object element:', allChatrooms[index]);
+
+            let userIdstring = allChatrooms[index].name;
+            let userIdarr = userIdstring.split(",");
+
+            let user1Name;
+            let user2Name;
+
+            let user1Obj = await User.findById(userIdarr[0]);
+            let user2Obj = await User.findById(userIdarr[1]);
+            if (userIdarr.length == 2) {
+
+                user1Name = user1Obj.name;
+                user2Name = user2Obj.name;
+
+                let parsedNameStr = `${user1Name},${user2Name}`;
+                console.log(user1Name, user2Name);
+                allChatrooms[index].name = parsedNameStr;
+
+            }
+            
+        }
 
         callback(allChatrooms);
     });
@@ -109,18 +134,11 @@ io.on('connection', (socket) => {
         console.log("getUserInfo requiest recieved, user id:", userId);
 
         const User = require('./models/user');
-        // var user1Id = "6235ec5b43c0614834b29d68";
-        // var user2Id = "6235eccc43c0614834b29d69";
-        // var user1Obj = await User.findById(user1Id)
-        // var user2Obj = await User.findById(user2Id)
-        // console.log("User1's name", user1Obj.name)
-        // console.log("User1's picture", user1Obj.picture)    // User's picture can be undefined
-        // console.log("User2's name", user2Obj.name)
-        // console.log("User1's picture", user2Obj.picture)
-
         let userObject = await User.findById(userId);
 
-        callback({userName: userObject.name, picture: userObject.picture});
+        //console.log(userObject.name);
+
+        callback({ userName: userObject.name, picture: userObject.picture });
     });
 
     //match by special theme
@@ -134,27 +152,19 @@ io.on('connection', (socket) => {
             //console.log(io.sockets.adapter.rooms.get(theme));
             io.sockets.adapter.rooms.get(theme).forEach(element => {
                 console.log(element);
-
                 io.sockets.sockets.get(element).emit("waitMatch");
             });
 
         }
         let numberofpeople = io.sockets.adapter.rooms.get(theme).size;
         callback(numberofpeople);
-
     });
 
-    socket.on('connect', () => {
-    });
+    /*     socket.on('connect', () => {
+        }); */
 
     socket.on('disconnect', (reason) => {
         console.log(reason);
-        //const user = removeUser(socket.id);
-
-        //if (user) {
-        //io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
-        //io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
-        //}
     });
 })
 
