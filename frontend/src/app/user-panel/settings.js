@@ -28,6 +28,13 @@ const Settings = (props) => {
         setFormChanged(false);
     }, [settingType])
 
+    useEffect(() => {
+        sessionStorage.setItem('UserProfile', JSON.stringify(props.user));
+        setFormChanged(false);
+        console.log("User changed")
+        window.scrollTo(0, 0);
+    }, [props.user])
+
     return (
         <>
         <div className="page-header">

@@ -2,15 +2,14 @@ const querystring = require('querystring');
 
 const LoginVerifier = async (props) => {
     if (props.user === null) {
-        console.log("props user null");
-        window.location.replace("/login");
+        // window.location.replace("/login");
+        window.location.pathname = "/login";
         return
     }
 
     // Check client session
     let myUser = JSON.parse(sessionStorage.getItem('UserProfile'));
     if (myUser === null) {
-        console.log("session storage null");
         window.location.replace("/login");
         return
     }

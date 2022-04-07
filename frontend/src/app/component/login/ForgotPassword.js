@@ -26,7 +26,7 @@ const ForgotPassword = props => {
         });
   
         let data = await res.json();
-        console.log(data)
+        // console.log(data)
   
         if (!data.success) {
           props.setAlert({
@@ -35,7 +35,7 @@ const ForgotPassword = props => {
             msg: data.message
           })
         } else {
-          console.log("Email sent")
+        //   console.log("Email sent")
         }
       }
 

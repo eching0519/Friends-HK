@@ -6,8 +6,8 @@ const querystring = require('querystring');
 
 const AccountSettings = (props) => {
     const [user, setUser] = useState(props.user)
-    const [email, setEmail] = useState(props.user===null?'':props.user.email)
-    const [uname, setUName] = useState(props.user===null?'':props.user.name)
+    const [email, setEmail] = useState(user===null?'':user.email)
+    const [uname, setUName] = useState(user===null?'':user.name)
     const [password, setPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [isLoaded, setLoaded] = useState(false)   // Check if page is loaded
@@ -63,16 +63,16 @@ const AccountSettings = (props) => {
             return;
         }
 
-        setUser(data.user)
+        setUser(data.user);
         props.setUser(data.user)
         window.alert("Your information is updated")
-        resetForm()
+        resetForm();
     };
 
     const resetForm = () => {
         $('#submitBtn').addClass('disabled').promise().then("class added")
         setEmail(user.email)
-        setUName(user.name)
+        // setUName(user.name)
         setPassword('')
         setNewPassword('')
     }
