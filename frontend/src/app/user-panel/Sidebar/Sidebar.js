@@ -39,6 +39,7 @@ const Sidebar = (props) => {
         let chatlist;
         socket.emit("getChatRoomList", id, (data) => {
             chatlist = data;
+            console.log(data)
             setChatroomlist(chatlist);
             
         });
@@ -47,6 +48,10 @@ const Sidebar = (props) => {
     const renderChatroomlist = () => {
         let divArr = [];
         if (chatroomlist !== null) {
+            if (chatroomlist.length == 0) {
+                return (<div className='m-4'>You have not joint any chatroom yet.</div>);
+            }
+
             chatroomlist.forEach((element, index) => {
                 let button = <a key={index} href="!#" 
                                      className="dropdown-item d-flex justify-content-center" 
