@@ -195,3 +195,16 @@
     margin-right: -50%;
     transform: translate(-50%, -50%);
 }
+
+.tab-content {
+  padding: 0px;
+}
+
+.tab-bottonlist {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.tab-bottonlist a {
+  padding: 10px;
+}

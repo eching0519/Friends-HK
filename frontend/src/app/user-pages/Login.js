@@ -23,7 +23,6 @@ const Login = (props) => {
     const [user, setUser] = useState(null);
 
     const loginSuccess = () => {
-      console.log("UserProfile:"+JSON.stringify(user))
       window.location.pathname = "/home";
     };
 
@@ -49,7 +48,7 @@ const Login = (props) => {
         return;
       }
       
-      console.log(data)
+      // console.log(data)
 
       if (!data.success) {
         setAlert({

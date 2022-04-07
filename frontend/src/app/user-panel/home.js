@@ -37,11 +37,7 @@ const Home = (props) => {
 
     return (
         <div className="row">
-            <div className="col-md-3 grid-margin">
-                <div className="card">
-                    <Sidebar setSelectedRoomUserName={setSelectedRoomUserName} setSelectedRoomUserId={setSelectedRoomUserId} userId={userId} setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage} setmessageList={setmessageList} />
-                </div>
-            </div>
+            <Sidebar setSelectedRoomUserName={setSelectedRoomUserName} setSelectedRoomUserId={setSelectedRoomUserId} userId={userId} setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage} setmessageList={setmessageList} />
 
             <div className="col-md-9 grid-margin stretch-card">
                 <div className='w-100'>

@@ -48,66 +48,63 @@ const Sidebar = (props) => {
         let divArr = [];
         if (chatroomlist !== null) {
             chatroomlist.forEach((element, index) => {
-                let button = <a key={index} href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e) => {
-                    e.preventDefault();
-                    props.setSelectedRoomUserId(element.users);
-                    props.setSelectedRoomUserName(element.name);
-                    props.setmessageList(element.chatbox);
-                    props.setRoomName(element.name);
-                    props.setRoomId(element._id);
-                    props.setCurrentPage('chat');
-                    //props.setMessagelist()
-                    //props.setName('Peter');
-                    console.log('selected room: ', element.name);
-                }}>
-                    <span className={'font-weight-bold'}><i className="mdi mdi-logout mr-2 text-primary h3"></i>{element.name}</span>
+                let button = <a key={index} href="!#" 
+                                     className="dropdown-item d-flex justify-content-center" 
+                                     onClick={(e) => {
+                                        e.preventDefault();
+                                        props.setSelectedRoomUserId(element.users);
+                                        props.setSelectedRoomUserName(element.name);
+                                        props.setmessageList(element.chatbox);
+                                        props.setRoomName(element.name);
+                                        props.setRoomId(element._id);
+                                        props.setCurrentPage('chat');
+                                        //props.setMessagelist()
+                                        //props.setName('Peter');
+                                        console.log('selected room: ', element.name);
+                                    }}>
+                    {/* <span className={'font-weight-bold'}> */}
+                        <span className='font-weight-bold'>{element.name}</span>
+                    {/* </span> */}
                 </a>;
-                divArr.push(button);
+                divArr.push((<div className='preview-list tab-bottonlist'>{button}</div>));
             });
         } else {
-            return <h2>Loading...</h2>
+            return <h2 className=''>Loading...</h2>
         }
         return divArr;
     };
 
     return (
         <>
-            <div className="bottonlist preview-list">
-                <button className="btn btn-light" onClick={() => { props.setCurrentPage('matchFriends') }}><i className="mdi mdi-account-multiple mr-2 text-primary h3"></i>Find new friends</button>
-                <button className="btn btn-light" onClick={() => { /* getChatroomlistSocketio() */ }}>DEBUG: get friends list</button>
-            </div>
-
-            <Tabs fill justify defaultActiveKey="chatroomlist" id="sidebar-func-tab" className="">
-                <Tab eventKey="chatroomlist" title="Chat Room" className="">
-                    {renderChatroomlist()}
-                </Tab>
-                <Tab eventKey="frinedlist" title="Friends" className="">
+        <div className="col-md-3 grid-margin">
+            <div className="card">
+                <div className='card-body'>
                     <div className="bottonlist preview-list">
-                        <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e) => {
-                            e.preventDefault();
-                            props.setRoomName('Room1');
-                            props.setRoomId('sdfsdfas3');
-                            props.setCurrentPage('chat');
-                            //props.setName('Peter');
-                            console.log('selected room: PeterRoom1');
-                        }}>
-                            <span className={'font-weight-bold'}><i className="mdi mdi-logout mr-2 text-primary h3"></i>Peter</span>
-                        </a>
-
-                        <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e) => {
-                            e.preventDefault();
-                            props.setRoomName('Room2');
-                            props.setRoomId('sdf9845ty8g3');
-                            props.setCurrentPage('chat');
-                            //props.setName('Mary');
-                            console.log('selected room: MaryRoom1');
-
-                        }}>
-                            <i className="mdi mdi-logout mr-2 text-primary h3"></i><span className={'font-weight-bold'}>Mary</span>
-                        </a>
+                        <button className="btn btn-light w-100" onClick={() => { props.setCurrentPage('matchFriends') }}><i className="mdi mdi-account-multiple mr-2 text-primary h3"></i>Find new friends</button>
                     </div>
-                </Tab>
-            </Tabs>
+
+                    <Tabs fill justify defaultActiveKey="chatroomlist" id="sidebar-func-tab" className="">
+                        <Tab eventKey="chatroomlist" title="Chatroom" className="">
+                            {renderChatroomlist()}
+                        </Tab>
+                        <Tab eventKey="frinedlist" title="Friends" className="">
+                            <div className="preview-list tab-bottonlist">
+                                <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e) => {
+                                    e.preventDefault();
+                                    props.setRoomName('Room1');
+                                    props.setRoomId('sdfsdfas3');
+                                    props.setCurrentPage('chat');
+                                    //props.setName('Peter');
+                                    console.log('selected room: PeterRoom1');
+                                }}>
+                                    <span className={'font-weight-bold'}>Peter</span>
+                                </a>
+                            </div>
+                        </Tab>
+                    </Tabs>
+                </div>
+            </div>
+        </div>
         </>
     )
 }
