@@ -10,7 +10,7 @@ const Home = (props) => {
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
     const [currentPage, setCurrentPage] = useState('matchFriends');
-    const [messageList, setmessageList] = useState([]);   //store all message.
+    //const [messageList, setmessageList] = useState([]);   //store all message.
     const [selectedRoomUserId, setSelectedRoomUserId] = useState(null);
     const [selectedRoomUserName, setSelectedRoomUserName] = useState(null);
 
@@ -27,11 +27,11 @@ const Home = (props) => {
     let pageplaceholder;    //placeholder for chatbox or friend match
 
     if (currentPage === 'chat') {
-        pageplaceholder = <Chatbox chatHistory={messageList} userName={userName} userId={userId} roomId={roomId} roomName={roomName} selectedRoomUserId={selectedRoomUserId} selectedRoomUserName={selectedRoomUserName} />;
+        pageplaceholder = <Chatbox userName={userName} userId={userId} roomId={roomId} roomName={roomName} selectedRoomUserId={selectedRoomUserId} selectedRoomUserName={selectedRoomUserName} />;
     }
 
     if (currentPage === 'matchFriends') {
-        pageplaceholder = <FriendMatch userName={userName} setCurrentPage={setCurrentPage} />;
+        pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={setCurrentPage} setRoomId={setRoomId} />;
     }
 
 
@@ -39,7 +39,7 @@ const Home = (props) => {
         <div className="row">
             <div className="col-md-3 grid-margin">
                 <div className="card">
-                    <Sidebar setSelectedRoomUserName={setSelectedRoomUserName} setSelectedRoomUserId={setSelectedRoomUserId} userId={userId} setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage} setmessageList={setmessageList} />
+                    <Sidebar setSelectedRoomUserName={setSelectedRoomUserName} setSelectedRoomUserId={setSelectedRoomUserId} userId={userId} setRoomId={setRoomId} setRoomName={setRoomName} setCurrentPage={setCurrentPage} />
                 </div>
             </div>
 

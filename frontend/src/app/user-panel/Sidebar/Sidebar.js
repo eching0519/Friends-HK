@@ -51,7 +51,7 @@ const Sidebar = (props) => {
                     e.preventDefault();
                     props.setSelectedRoomUserId(element.users);
                     props.setSelectedRoomUserName(element.name);
-                    props.setmessageList(element.chatbox);
+                    //props.setmessageList(element.chatbox);
                     props.setRoomName(element.name);
                     props.setRoomId(element._id);
                     props.setCurrentPage('chat');

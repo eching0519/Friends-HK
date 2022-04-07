@@ -18,14 +18,15 @@ const FriendMatch = (props) => {
         }
     }, []);
 
-    socket.on("waitMatch", () => {
+    socket.on("waitMatch", (roomId) => {
         setmatchStatus('success');
         props.setCurrentPage('chat');
+        props.setRoomId(roomId)
     });
 
     //let waitingMessage = '';
     const sendSpecialThemeMatchRequest = (matchTheme) => {
-        socket.emit('matchBySpecialTheme', matchTheme, props.userName, (numberofpeople) => {
+        socket.emit('matchBySpecialTheme', matchTheme, props.userId, (numberofpeople) => {
             console.log(`Still need ${3 - numberofpeople} people.`)
             //waitingMessage = `Still need ${3 - numberofpeople} people.`;
         });
@@ -111,30 +112,6 @@ const FriendMatch = (props) => {
                                         sendSpecialThemeMatchRequest('something');
                                     }} disabled={disableInput}>Go</button>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="card" >
-                            <div className="card-body">
-                                <h5 className="card-title">Dinning</h5>
-                                <p className="card-text">You pefer friends for dinning.</p>
-                                <button className="btn btn-light" onClick={() => {
-                                    //setMatchTheme('dinning');
-                                    setDisableInput(true);
-                                    setmatchStatus('pending');
-                                    sendSpecialThemeMatchRequest('dinning');
-                                }} disabled={disableInput}>Go</button>
-                            </div>
-                        </div>
-                        <div className="card" >
-                            <div className="card-body">
-                                <h5 className="card-title">Hiking</h5>
-                                <p className="card-text">you seek for fds for hiking.</p>
-                                <button className="btn btn-light" onClick={() => {
-                                    setDisableInput(true);
-                                    setmatchStatus('pending');
-                                    sendSpecialThemeMatchRequest('hiking');
-                                }} disabled={disableInput}>Go</button>
                             </div>
                         </div>
                     </div>
