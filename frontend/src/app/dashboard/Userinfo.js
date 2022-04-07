@@ -1,21 +1,53 @@
-import React, { Component, useState} from 'react';
+import React, { Component } from 'react';
 // import { ProgressBar } from 'react-bootstrap';
 // import {Bar, Doughnut} from 'react-chartjs-2';
 // import DatePicker from "react-datepicker";
- 
+const querystring = require('querystring'); 
 // import "react-datepicker/dist/react-datepicker.css";
-const showSpecificUserInfo = async () => {
-  let url = '/admin/userinfo';
 
-  let res = await fetch(url, {})
+// showSpecificUserInfo = async () => {
+//   let url = '/admin/userList';
 
-}
+//   let res = await fetch(url, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/x-www-form-urlencoded'
+//     },
+//     body: querystring.stringify({
 
+//     })
+//   });
+//   let data = await res.json();
+//   console.log(typeof (data));
+     
+// }
 
+let url = "localhost:8080/admin/userlist";
 
-class Dashboard extends Component {
-  constructor(){
-    super()
+class Userinfo extends Component {
+  
+  state = {
+    data : []
+  }
+
+  componentDidMount(){
+    fetch('/admin/userList', {
+      method: 'POST',
+      body: querystring.stringify({
+
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+  }
+  
+  constructor(props){
+    super(props);
+    console.log("Is this working")
+
     this.state = {
       photo: "",
       name: "default",
@@ -30,6 +62,19 @@ class Dashboard extends Component {
     }
   }
   
+  componentShowUser(){
+    fetch(url)
+    .then(res => res.json(), {
+      method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: querystring.stringify({
+
+			})
+    })
+    .then(data => console.log(data))
+  }
   
 
   changeMessage() {
@@ -79,6 +124,7 @@ class Dashboard extends Component {
 
 
   render () {
+    console.log('render method called')
     
 
     return (
@@ -99,7 +145,7 @@ class Dashboard extends Component {
               <i className="mdi mdi-account"></i>
             </span> Specific User Info template </h3>
               <div className="card-body">
-                
+              {/* {showSpecificUserInfo()} */}
                 <img src={require("../../assets/images/faces/face1.jpg")} className="mr-2" alt="face" />
                 <h4 className="card-title">{this.state.name}</h4>
                 <div id="traffic-chart-legend" className="rounded-legend legend-vertical legend-bottom-left pt-4">
@@ -205,4 +251,4 @@ const ListItem = (props) => {
       </li>
   )
 };
-export default Dashboard;
+export default Userinfo;

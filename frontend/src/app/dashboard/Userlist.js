@@ -38,7 +38,9 @@ const Userlist = (props) => {
 			})
 		});
 		let data = await res.json();
+		console.log("Look here");
 		console.log(typeof (data));
+		console.log(data);
 
 		let tableObject = {
 			columns: [
