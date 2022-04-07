@@ -71,7 +71,10 @@ const Sidebar = (props) => {
                         {/* <div>{element.chatbox[-1]}</div> */}
                     {/* </span> */}
                 </a>;
-                divArr.push((<><div className='preview-list tab-bottonlist'>{button}</div><div class="dropdown-divider"></div></>));
+                divArr.push((<>
+                                <div className='preview-list tab-bottonlist'>{button}</div>
+                                <div class="dropdown-divider"></div>
+                            </>));
             });
         } else {
             return <div class="inline-spinner-wrapper h3"><div class="spinner-border spinner-border text-muted"></div> Loading..</div>
@@ -106,7 +109,10 @@ const Sidebar = (props) => {
                         {/* <div>{element.chatbox[-1]}</div> */}
                     {/* </span> */}
                 </a>;
-                divArr.push((<div className='preview-list tab-bottonlist'>{button}</div>));
+                divArr.push((<>
+                    <div className='preview-list tab-bottonlist'>{button}</div>
+                    <div class="dropdown-divider"></div>
+                </>));
             });
         } else {
             return <div class="inline-spinner-wrapper h3"><div class="spinner-border spinner-border text-muted"></div> Loading..</div>
