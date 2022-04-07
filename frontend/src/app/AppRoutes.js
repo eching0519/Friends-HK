@@ -6,8 +6,9 @@ import Spinner from '../app/shared/Spinner';
 // import Settings from './user-panel/settings';
 
 const Dashboard = lazy(() => import('./dashboard/Dashboard'));
-
-
+// const Changepassword = lazy(() => import('./dashboard/Chagepassword'));
+// const Blockuser = lazy(() => import('./dashboard/Blockuser'));
+const Userlist = lazy(() => import('./dashboard/Userlist'));
 
 const Buttons = lazy(() => import('./_sample/basic-ui/Buttons'));
 const Dropdowns = lazy(() => import('./_sample/basic-ui/Dropdowns'));
@@ -39,6 +40,9 @@ const Verify = lazy(() => import('./user-pages/Verify'))
 const Home = lazy(() => import('./user-panel/home'));
 const Settings = lazy(() => import('./user-panel/settings'));
 
+// Admin
+const AdminLogin = lazy(() => import('./admin-pages/AdminLogin'));
+const AdminHome = lazy(() => import('./admin-pages/AdminHome'));
 
 
 const AppRoutes = (props) => {
@@ -47,6 +51,7 @@ const AppRoutes = (props) => {
     <Suspense fallback={<Spinner/>}>
       <Switch>
         <Route exact path="/dashboard" component={ Dashboard } />
+        
 
 
         <Route path="/basic-ui/buttons" component={ Buttons } />
@@ -79,9 +84,15 @@ const AppRoutes = (props) => {
         <Route path="/register" component={ Register } />
         <Route path="/verify" component={ Verify } />
 
-
+        {/* Admin page */}
+        <Route exact path="/admin/login" component={ AdminLogin } />
+        <Route exact path="/admin" component={ AdminHome } /> {/*/admin to /admin/home */}
+{/* Once the API success we have to change this */}
+        {/* <Route exact path="/admin/changepassword" component={ Changepassword } /> */}
+        {/* <Route exact path="/admin/blockuser" component={ Blockuser } /> */}
+        <Route exact path="/admin/userlist" component={ Userlist } />
         {/* Root page */}
-        <Redirect to="/home" />
+        <Redirect to="/home" /> {/*/admin to /admin/home */}
       </Switch>
     </Suspense>
   );

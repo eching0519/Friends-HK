@@ -30,11 +30,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Route
 const userRoute = require('./routes/user')
 const adminRoute = require('./routes/admin')
+const friendRoute = require('./routes/friend')
 // const chatroomRoute = require('./routes/chatroom')
 const { Session } = require('inspector')
 app.use('/user/profile/picture', express.static(path.join(__dirname, '..', '_file/profilePicture')))
 app.use('/user', userRoute)
 app.use('/admin', adminRoute)
+app.use('/friend', friendRoute)
 // app.set('socketio', io)
 // app.use('/', chatroomRoute)
 
@@ -117,29 +119,43 @@ io.on('connection', (socket) => {
         const User = require('./models/user');
         let allChatrooms = await UserChatrooms.findAllChatroomsByUserId(userId);
 
-        for (let index = 0; index < allChatrooms.length; index++) {
+        // Find friend's name by their Id
+        var participants;
+        var participantId;
+        var user;
+        // --- Group chatroom ---
+        for (let index = 0; index < allChatrooms.chatroom.length; index++) {
             //const element = array[index];
             //console.log('object element:', allChatrooms[index]);
+            participants = allChatrooms.chatroom[index].users;
 
-            let userIdstring = allChatrooms[index].name;
-            let userIdarr = userIdstring.split(",");
-
-            let user1Name;
-            let user2Name;
-
-            let user1Obj = await User.findById(userIdarr[0]);
-            let user2Obj = await User.findById(userIdarr[1]);
-            if (userIdarr.length == 2) {
-
-                user1Name = user1Obj.name;
-                user2Name = user2Obj.name;
-
-                let parsedNameStr = `${user1Name},${user2Name}`;
-                console.log(user1Name, user2Name);
-                allChatrooms[index].name = parsedNameStr;
-
+            let names = [];
+            for (let i = 0; i < participants.length; i++) {
+                participantId = participants[i];
+                // Not going to find current user's name
+                if (userId == participantId) continue
+                user = await User.findById(participantId);
+                names.push(user.name);
             }
 
+            allChatrooms.chatroom[index].name = names.toString().replace(',',', ');
+        }
+        // --- Friend chatroom ---
+        for (let index = 0; index < allChatrooms.friendChatroom.length; index++) {
+            //const element = array[index];
+            //console.log('object element:', allChatrooms[index]);
+            participants = allChatrooms.friendChatroom[index].users;
+
+            let names = [];
+            for (let i = 0; i < participants.length; i++) {
+                participantId = participants[i];
+                // Not going to find current user's name
+                if (userId == participantId) continue
+                user = await User.findById(participantId);
+                names.push(user.name);
+            }
+
+            allChatrooms.friendChatroom[index].name = names.toString().replace(',',', ');
         }
 
         callback(allChatrooms);
@@ -180,7 +196,7 @@ io.on('connection', (socket) => {
             let cr = new Chatroom([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
                 `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
 
-            await cr.create();
+            await cr.saveAsGroupChatroom();
 
             io.sockets.adapter.rooms.get(theme).forEach(element => {
                 console.log(element);

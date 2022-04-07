@@ -86,39 +86,6 @@
     border: 1px solid red;
     transform: translateX(70px);
 }
-
-  /* .modal-lg{
-        max-width: 1000px !important;
-  } */
-
-  /* .overlay {
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    right: 0;
-    background-color: rgba(255, 255, 255, 0.5);
-    overflow: hidden;
-    height: 0;
-    transition: .5s ease;
-    width: 100%;
-  }
-
-  .image_area:hover .overlay {
-    height: 50%;
-    cursor: pointer;
-  }
-
-  .text {
-    color: #333;
-    font-size: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    text-align: center;
-  } */
   
   .upload_image_form {
       position: relative;
@@ -196,13 +163,28 @@
     transform: translate(-50%, -50%);
 }
 
+/* .card, .card-body {
+  height: 100%;
+} */
+.card-fit-screen > .card-body {
+  height: calc(100vh - 70px - 128px);
+}
+
 .tab-content {
   padding: 0px;
+  height: calc(100% - 140px);
+  /* height: 100%; */
+  overflow-y: scroll;
 }
 
 .tab-bottonlist {
   padding-top: 0px;
   padding-bottom: 0px;
+}
+
+.tab-bottonlist .dropdown-item {
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .tab-bottonlist a {
@@ -212,4 +194,21 @@
 .inline-spinner-wrapper {
   margin: 15px;
   text-align: center;
+}
+.cursor-text {
+  cursor: text;
+}
+
+tbody[data-test="table-body"] tr:hover {
+  cursor: pointer;
+}
+
+.chatroom-list-content {
+  margin: 0px 20px;
+}
+
+.chatroom-list-content .msgOverview {
+  height: 34px;
+  white-space: initial;
+  overflow: hidden;
 }

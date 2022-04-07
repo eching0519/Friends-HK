@@ -8,7 +8,8 @@ const socket = io({ //no url: default to localhost:8080
 });
 
 const Sidebar = (props) => {
-    const [chatroomlist, setChatroomlist] = useState(null);
+    const [groupChatList, setGroupChatList] = useState(null);
+    const [friendChatList, setFriendChatList] = useState(null);
 
     useEffect(() => {
         socket.connect();   //estiblish socket io connection
@@ -25,8 +26,8 @@ const Sidebar = (props) => {
     }, [socket]);   //trigger useEffect if room changed from sidebar
 
     useEffect(() => {
-        console.log(chatroomlist);  //DEBUG
-    }, [chatroomlist]);
+        console.log(groupChatList);  //DEBUG
+    }, [groupChatList]);
 
     useEffect(() => {
         if (props.userId !== '') {
@@ -38,43 +39,77 @@ const Sidebar = (props) => {
         //console.log('user id:', id);
         let chatlist;
         socket.emit("getChatRoomList", id, (data) => {
-            chatlist = data;
-            console.log(data)
-            setChatroomlist(chatlist);
-            
+            setGroupChatList(data.chatroom);
+            setFriendChatList(data.friendChatroom);
         });
     };
 
     const renderChatroomlist = () => {
         let divArr = [];
-        if (chatroomlist !== null) {
-            if (chatroomlist.length == 0) {
+        if (groupChatList !== null) {
+            if (groupChatList.length == 0) {
                 return (<div className='m-4'>You have not joint any chatroom yet.</div>);
             }
 
-            chatroomlist.forEach((element, index) => {
-                let button = <a key={index} href="!#" 
-                                     className="dropdown-item d-flex justify-content-center" 
-                                     onClick={(e) => {
-                                        e.preventDefault();
-                                        props.setSelectedRoomUserId(element.users);
-                                        props.setSelectedRoomUserName(element.name);
-                                        props.setmessageList(element.chatbox);
-                                        props.setRoomName(element.name);
-                                        props.setRoomId(element._id);
-                                        props.setCurrentPage('chat');
-                                        //props.setMessagelist()
-                                        //props.setName('Peter');
-                                        console.log('selected room: ', element.name);
-                                    }}>
-                    {/* <span className={'font-weight-bold'}> */}
-                        <span className='font-weight-bold'>{element.name}</span>
+            groupChatList.forEach((element, index) => {
+                let button = 
+                    <a key={index} href="!#" className="dropdown-item justify-content-center" 
+                        onClick={(e) => {
+                        e.preventDefault();
+                        props.setSelectedRoomUserId(element.users);
+                        props.setSelectedRoomUserName(element.name);
+                        props.setmessageList(element.chatbox);
+                        props.setRoomName(element.name);
+                        props.setRoomId(element._id);
+                        props.setCurrentPage('chat');
+                        console.log('selected room: ', element.name);
+                    }}>
+                        <div className='chatroom-list-content'>
+                            <div className='font-weight-bold'>{element.name}</div>
+                            <div className='msgOverview'>{element.chatbox.length === 0? '' : element.chatbox.at(-1).message}</div>
+                        </div>
+                        {/* <div>{element.chatbox[-1]}</div> */}
+                    {/* </span> */}
+                </a>;
+                divArr.push((<><div className='preview-list tab-bottonlist'>{button}</div><div class="dropdown-divider"></div></>));
+            });
+        } else {
+            return <div class="inline-spinner-wrapper h3"><div class="spinner-border spinner-border text-muted"></div> Loading..</div>
+        }
+        return divArr;
+    };
+
+    const renderFriendChatroomlist = () => {
+        let divArr = [];
+        if (friendChatList !== null) {
+            if (friendChatList.length == 0) {
+                return (<div className='m-4'>Your friend list is empty.</div>);
+            }
+
+            friendChatList.forEach((element, index) => {
+                let button = 
+                    <a key={index} href="!#" className="dropdown-item justify-content-center" 
+                        onClick={(e) => {
+                        e.preventDefault();
+                        props.setSelectedRoomUserId(element.users);
+                        props.setSelectedRoomUserName(element.name);
+                        props.setmessageList(element.chatbox);
+                        props.setRoomName(element.name);
+                        props.setRoomId(element._id);
+                        props.setCurrentPage('chat');
+                        console.log('selected room: ', element.name);
+                    }}>
+                        <div className='chatroom-list-content'>
+                            <div className='font-weight-bold'>{element.name}</div>
+                            <div className='msgOverview'>{element.chatbox.length === 0? '' : element.chatbox.at(-1).message}</div>
+                        </div>
+                        {/* <div>{element.chatbox[-1]}</div> */}
                     {/* </span> */}
                 </a>;
                 divArr.push((<div className='preview-list tab-bottonlist'>{button}</div>));
             });
         } else {
-            return <div class="inline-spinner-wrapper"><div class="spinner-border"></div></div>
+            return <div class="inline-spinner-wrapper h3"><div class="spinner-border spinner-border text-muted"></div> Loading..</div>
         }
         return divArr;
     };
@@ -82,10 +117,10 @@ const Sidebar = (props) => {
     return (
         <>
         <div className="col-md-3 grid-margin">
-            <div className="card">
+            <div className="card card-fit-screen">
                 <div className='card-body'>
                     <div className="bottonlist preview-list">
-                        <button className="btn btn-light w-100" onClick={() => { props.setCurrentPage('matchFriends') }}><i className="mdi mdi-account-multiple mr-2 text-primary h3"></i>Find new friends</button>
+                        <button className="btn btn-light w-100" onClick={() => { props.setCurrentPage('matchFriends') }}><i className="mdi mdi-account-multiple mr-2 text-primary h3"></i>Meet New Friends!</button>
                     </div>
 
                     <Tabs fill justify defaultActiveKey="chatroomlist" id="sidebar-func-tab" className="">
@@ -93,18 +128,7 @@ const Sidebar = (props) => {
                             {renderChatroomlist()}
                         </Tab>
                         <Tab eventKey="frinedlist" title="Friends" className="">
-                            <div className="preview-list tab-bottonlist">
-                                <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e) => {
-                                    e.preventDefault();
-                                    props.setRoomName('Room1');
-                                    props.setRoomId('sdfsdfas3');
-                                    props.setCurrentPage('chat');
-                                    //props.setName('Peter');
-                                    console.log('selected room: PeterRoom1');
-                                }}>
-                                    <span className={'font-weight-bold'}>Peter</span>
-                                </a>
-                            </div>
+                            {renderFriendChatroomlist()}
                         </Tab>
                     </Tabs>
                 </div>

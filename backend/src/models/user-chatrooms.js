@@ -6,17 +6,25 @@ const Chatroom = require('./chatroom')
 class UserChatrooms {
     static findAllChatroomsByUserId = async (id) => {
         const db = getDatabase();
-        var chatroomList = [];
+        var chatroomList = {};
         var chatroom;
         return await db.collection('user-chatrooms')
                         .find({ '_id': ObjectID(id) })
                         .next()
                         .then(async (data) => {
 
+                            chatroomList['chatroom'] = []
                             for (let i = 0; i < data.chatroom.length; i++) {
                                 chatroom = await Chatroom.findById(data.chatroom[i])
-                                chatroomList.push(chatroom);
+                                chatroomList['chatroom'].push(chatroom);
                             }
+
+                            chatroomList['friendChatroom'] = []
+                            for (let i = 0; i < data.friendChatroom.length; i++) {
+                                chatroom = await Chatroom.findById(data.friendChatroom[i])
+                                chatroomList['friendChatroom'].push(chatroom);
+                            }
+
                             return chatroomList;
                         })
                         .catch(err => {

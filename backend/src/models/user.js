@@ -5,8 +5,10 @@ const getDatabase = require('../util/database').getDatabase;
 class User {
     static findAllAsync = async () => {
         const db = getDatabase();
-        const result = await db.collection('user').find();
-        return result.toArray();
+        let result = await db.collection('user').find();
+        result = await result.toArray();
+        await result.forEach(x => delete x['password']);
+        return result;
     }
 
     static findById = async (id, usage) => {
@@ -23,6 +25,14 @@ class User {
                         user.status = data.status;
                         user.preferences = data.preferences;
                         user.picture = data.picture;
+                        if (data.lang != null) user.lang = data.lang;
+                        if (data.co != null) user.co = data.co;
+                        if (data.dob != null) user.dob = data.dob;
+                        if (data.hobbies != null) user.hobbies = data.hobbies;
+                        if (data.bio != null) user.bio = data.bio;
+                        if (data.hashtags != null) user.hashtags = data.hashtags;
+                        if (data.preferences != null) user.preferences = data.preferences;
+                        if (data.friendlist != null) user.friendlist = data.friendlist;
                         return user;
 
                     default:
@@ -51,6 +61,14 @@ class User {
                         user.status = data.status;
                         user.preferences = data.preferences;
                         user.picture = data.picture;
+                        if (data.lang != null) user.lang = data.lang;
+                        if (data.co != null) user.co = data.co;
+                        if (data.dob != null) user.dob = data.dob;
+                        if (data.hobbies != null) user.hobbies = data.hobbies;
+                        if (data.bio != null) user.bio = data.bio;
+                        if (data.hashtags != null) user.hashtags = data.hashtags;
+                        if (data.preferences != null) user.preferences = data.preferences;
+                        if (data.friendlist != null) user.friendlist = data.friendlist;
                         return user;
                     default:
                         let myData = JSON.parse(JSON.stringify(data));
@@ -75,6 +93,14 @@ class User {
                 user.status = data.status;
                 user.preferences = data.preferences;
                 user.picture = data.picture;
+                if (data.lang != null) user.lang = data.lang;
+                if (data.co != null) user.co = data.co;
+                if (data.dob != null) user.dob = data.dob;
+                if (data.hobbies != null) user.hobbies = data.hobbies;
+                if (data.bio != null) user.bio = data.bio;
+                if (data.hashtags != null) user.hashtags = data.hashtags;
+                if (data.preferences != null) user.preferences = data.preferences;
+                if (data.friendlist != null) user.friendlist = data.friendlist;
                 return user;
             })
             .catch(err => {
@@ -82,15 +108,45 @@ class User {
             });
     }
 
+    static findByIdAndPassword = async (id, password) => {
+        const db = getDatabase();
+        return await db
+            .collection('user')
+            .find({ '_id': ObjectID(id), 'password': password })
+            .next()
+            .then(data => {
+                const user = new User(data.email, data.name);
+                user.id = data._id;
+                user.status = data.status;
+                user.picture = data.picture;
+                if (data.lang != null) user.lang = data.lang;
+                if (data.co != null) user.co = data.co;
+                if (data.dob != null) user.dob = data.dob;
+                if (data.hobbies != null) user.hobbies = data.hobbies;
+                if (data.bio != null) user.bio = data.bio;
+                if (data.hashtags != null) user.hashtags = data.hashtags;
+                if (data.preferences != null) user.preferences = data.preferences;
+                if (data.friendlist != null) user.friendlist = data.friendlist;
+                return user;
+            })
+            .catch(err => {
+                throw err; 
+            });
+    }
+
+    static changeStatus(id, status) {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: id },
+                                                { $set: {
+                                                    'status': status
+                                                } },
+                                                { upsert: false })
+    }
+
     constructor(email, name) {
         this.email = email;
         this.name = name;
-        // for personal self introduction
-        // example:
-        // reputation
-        // interest
-        // age....
-
+        this.status = 'active';
     }
 
     async create() {
@@ -140,6 +196,16 @@ class User {
                                                 } },
                                                 { upsert: false })
     }
+
+    updateFriendlist() {
+        const db = getDatabase();
+        return db.collection('user').updateOne( { _id: this.id },
+                                                { $push: {
+                                                    'friendlist': this.friendlist
+                                                } },
+                                                { upsert: false })
+    }
+
 
 
     //get the list of blocklist

@@ -21,8 +21,6 @@
 // await cr.create();                                                      // Save chatroom to database
 // console.log("Chatroom Id", cr._id.toString());                          // Get chatroom Id
 
-
-
 // var cb = new Chatbox(user1Id, 'Hi', Date.now());             // Create new chatbox. timeElapse is default to be Date.now(), so that it is obtional parameter
 // await cr.addChatBox(cb);                                     // Save chatbox to chatroom in database
 // cb = new Chatbox(user2Id, 'Hi');
@@ -58,7 +56,7 @@ class Chatroom {
         this.chatbox = [];
     }
 
-    async create() {
+    async saveAsGroupChatroom() {
         const db = getDatabase();
         await db.collection('chatroom').insertOne(this).then(result => {this._id = result.insertedId});
 
@@ -68,6 +66,21 @@ class Chatroom {
             // UserChatrooms.addRoom(user, this._id);
             await db.collection('user-chatrooms').updateOne( { _id: ObjectID(userId) },
                                                              { $push: { 'chatroom': this._id} },
+                                                             { upsert: false })
+        }
+        return this;
+    }
+
+    async saveAsFriendChatroom() {
+        const db = getDatabase();
+        await db.collection('chatroom').insertOne(this).then(result => {this._id = result.insertedId});
+
+        var userId;
+        for (let i = 0; i < this.users.length; i++) {
+            userId = this.users[i];
+            // UserChatrooms.addRoom(user, this._id);
+            await db.collection('user-chatrooms').updateOne( { _id: ObjectID(userId) },
+                                                             { $push: { 'friendChatroom': this._id} },
                                                              { upsert: false })
         }
         return this;
