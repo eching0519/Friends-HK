@@ -208,3 +208,8 @@
 .tab-bottonlist a {
   padding: 10px;
 }
+
+.inline-spinner-wrapper {
+  margin: 15px;
+  text-align: center;
+}

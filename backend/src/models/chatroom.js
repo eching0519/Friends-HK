@@ -21,6 +21,8 @@
 // await cr.create();                                                      // Save chatroom to database
 // console.log("Chatroom Id", cr._id.toString());                          // Get chatroom Id
 
+
+
 // var cb = new Chatbox(user1Id, 'Hi', Date.now());             // Create new chatbox. timeElapse is default to be Date.now(), so that it is obtional parameter
 // await cr.addChatBox(cb);                                     // Save chatbox to chatroom in database
 // cb = new Chatbox(user2Id, 'Hi');

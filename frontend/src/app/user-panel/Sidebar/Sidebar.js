@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 import { io } from 'socket.io-client';
+import Spinner from '../../shared/Spinner';
 
 const socket = io({ //no url: default to localhost:8080
     autoConnect: false
@@ -34,9 +35,8 @@ const Sidebar = (props) => {
     }, [props.userId])  //when user id changed, fetch chat room list from server.
 
     const getChatroomlistSocketio = (id) => {
-        console.log('user id:', id);
+        //console.log('user id:', id);
         let chatlist;
-
         socket.emit("getChatRoomList", id, (data) => {
             chatlist = data;
             setChatroomlist(chatlist);
@@ -69,7 +69,7 @@ const Sidebar = (props) => {
                 divArr.push((<div className='preview-list tab-bottonlist'>{button}</div>));
             });
         } else {
-            return <h2 className=''>Loading...</h2>
+            return <div class="inline-spinner-wrapper"><div class="spinner-border"></div></div>
         }
         return divArr;
     };

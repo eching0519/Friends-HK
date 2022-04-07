@@ -66,8 +66,8 @@ io.on('connection', (socket) => {
         console.log(`user: ${name} assign to ${roomId}`);
         console.log(io.in(roomId).allSockets());    //log all socket in room
 
-        socket.emit('message', { message: `You are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() });
-        socket.broadcast.to(roomId).emit('message', { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() });
+        socket.emit('systemMessage', { message: `You are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() });
+        socket.broadcast.to(roomId).emit('systemMessage', { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() });
 
     });
 
@@ -79,21 +79,34 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('message', { message: `From system: ${name} left.`, senderId: 'admin', timeElapse: Date.now() });
     });
 
-    socket.on("pingRoom", ({ name, roomId }, callback) => {
+    /* socket.on("pingRoom", ({ name, roomId }, callback) => {
         console.log(io.in(roomId).allSockets());
 
-        //socket.emit('message', { text: `You are now in room: ${room}` });
-        //io.to(room).emit('message', { text: `From system: ${name} left.`, name: 'admin' });
-    });
+        socket.emit('message', { text: `You are now in room: ${room}` });
+        io.to(room).emit('message', { text: `From system: ${name} left.`, name: 'admin' });
+    }); */
 
-    socket.on("sendMessage", ({ roomId }, message, callback) => {
+    socket.on("sendMessage", async ( roomId , message, callback) => {
         //console.log('sockets in room before force join:', io.in(room).allSockets());
+        const Chatroom = require('./models/chatroom');
+        const Chatbox = require('./models/chatbox');
+
+        let cb = new Chatbox(message.senderId, message.message, message.timeElapse); 
+        let cr = await Chatroom.findById(roomId);
+        console.log("chatroom:", cr);
+        cr.addChatBox(cb);
 
         io.to(roomId).emit('message', { message: message.message, senderId: message.senderId, timeElapse: message.timeElapse });
 
         callback(message);
     });
 
+    socket.on("getChatRoom", async (roomId, callback) => {
+        const Chatrooms = require('./models/chatroom');
+        let cr = await Chatrooms.findById(roomId);
+
+        callback(cr);
+    });
 
     socket.on("getChatRoomList", async (userId, callback) => {
         console.log("getChatRoomList requiest recieved, user id:", userId);
@@ -124,7 +137,7 @@ io.on('connection', (socket) => {
                 allChatrooms[index].name = parsedNameStr;
 
             }
-            
+
         }
 
         callback(allChatrooms);
@@ -136,23 +149,29 @@ io.on('connection', (socket) => {
         const User = require('./models/user');
         let userObject = await User.findById(userId);
 
-        //console.log(userObject.name);
-
         callback({ userName: userObject.name, picture: userObject.picture });
     });
 
+    let dinningUserId = [];
+
     //match by special theme
-    socket.on("matchBySpecialTheme", (theme, user, callback) => {
-        console.log(`recieved match request: theme: ${theme}, username: ${user}`);
+    socket.on("matchBySpecialTheme", (theme, userId, callback) => {
+        console.log(`recieved match request: theme: ${theme}, user id: ${userId}`);
 
         socket.join(theme);
 
         if (io.sockets.adapter.rooms.get(theme).size >= 3) {
             console.log(`able to form group for special theme: ${theme}`);
-            //console.log(io.sockets.adapter.rooms.get(theme));
+            console.log(io.sockets.adapter.rooms.get(theme));
             io.sockets.adapter.rooms.get(theme).forEach(element => {
                 console.log(element);
-                io.sockets.sockets.get(element).emit("waitMatch");
+            });
+
+            io.sockets.adapter.rooms.get(theme).forEach(element => {
+                console.log(element);
+                let roomId;
+                io.sockets.sockets.get(element).emit("waitMatch", roomId);
+                //io.sockets.sockets.get(element).leave(theme); //leave the queue after matching
             });
 
         }

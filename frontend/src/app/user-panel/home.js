@@ -27,11 +27,11 @@ const Home = (props) => {
     let pageplaceholder;    //placeholder for chatbox or friend match
 
     if (currentPage === 'chat') {
-        pageplaceholder = <Chatbox chatHistory={messageList} userName={userName} userId={userId} roomId={roomId} roomName={roomName} selectedRoomUserId={selectedRoomUserId} selectedRoomUserName={selectedRoomUserName} />;
+        pageplaceholder = <Chatbox userName={userName} userId={userId} roomId={roomId} roomName={roomName} selectedRoomUserId={selectedRoomUserId} selectedRoomUserName={selectedRoomUserName} />;
     }
 
     if (currentPage === 'matchFriends') {
-        pageplaceholder = <FriendMatch userName={userName} setCurrentPage={setCurrentPage} />;
+        pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={setCurrentPage} setRoomId={setRoomId} />;
     }
 
 
