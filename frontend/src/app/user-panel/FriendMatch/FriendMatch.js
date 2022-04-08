@@ -22,7 +22,7 @@ const FriendMatch = (props) => {
         }
     }, []);
 
-    socket.on("waitMatch", (roomId) => {
+    socket.on("waitMatch", (roomId) => {    //listen to server match result
         setmatchStatus('success');
         //props.setCurrentPage('chat');
         console.log(roomId);
@@ -30,7 +30,7 @@ const FriendMatch = (props) => {
     });
 
     //let waitingMessage = '';
-    const sendSpecialThemeMatchRequest = (matchTheme) => {
+    const sendSpecialThemeMatchRequest = (matchTheme) => {  //emit special match event to socket io
         socket.emit('matchBySpecialTheme', matchTheme, props.userId, (numberofpeople) => {
             console.log(`Still need ${3 - numberofpeople} people.`)
             //waitingMessage = `Still need ${3 - numberofpeople} people.`;
@@ -38,9 +38,11 @@ const FriendMatch = (props) => {
     };
     
     // // Issac Help Help
-    // const cancelSpecialThemeMatchRequest = () => {
-
-    // }
+    const cancelSpecialThemeMatchRequest = (matchTheme) => {    //emit cancel special match event to socket io
+        socket.emit("cancelMatchBySpecialTheme", matchTheme, props.userId, (message) => {
+            console.log("canel status:", message);
+        })
+    }
 
     let matchstatusplaceholder = <h3>not send</h3>;
 

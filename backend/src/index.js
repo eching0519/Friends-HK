@@ -62,7 +62,7 @@ const Chatrooms = require('./models/chatroom');
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
-let specialThemeQueue = {}; //queue for special matching
+const specialThemeQueue = {}; //queue for storing user id in special matching function
 
 // Socket
 io.on('connection', (socket) => {
@@ -181,7 +181,7 @@ io.on('connection', (socket) => {
         console.log(`recieved match request: theme: ${theme}, user id: ${userId}`);
         socket.join(theme);
 
-        if (`${theme}` in specialThemeQueue) {
+        if (`${theme}` in specialThemeQueue) {  //save user id to specialThemeQueue.
             console.log("key found")
             specialThemeQueue[`${theme}`].push(userId);
         } else {
@@ -220,11 +220,23 @@ io.on('connection', (socket) => {
         callback(numberofpeople);
     });
 
-    /*     socket.on('connect', () => {
-        }); */
+    socket.on("cancelMatchBySpecialTheme", async (theme, userId, callback) => {
+        console.log(`recieved cancel match request: theme: ${theme}, user id: ${userId}`);
+        socket.leave(theme);    //leave socket room(theme queue)
 
-    socket.on('disconnect', (reason) => {
-        console.log(reason);
+        if (`${theme}` in specialThemeQueue) {
+            console.log("key found")
+            specialThemeQueue[`${theme}`].pop(userId);  //remove user id from userid queue.
+        } else {
+            console.log("key not found")
+        }
+
+        console.log(specialThemeQueue); //log
+        callback("success");
+    });
+
+    socket.on('disconnect', (reason) => {   //if there is a socket disconnection
+        console.log(reason);    //log socket disconnect reason.
     });
 })
 

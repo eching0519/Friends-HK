@@ -45,16 +45,16 @@ const Chatbox = (props) => {
         console.log({ userName, roomId });
         setRoomId(roomId);
 
-        socket.emit("joinRoom", { userId: props.userId, name: props.userName, roomId: props.roomId });
+        socket.emit("joinRoom", { userId: props.userId, name: props.userName, roomId: props.roomId });  //join room by given room id
 
-        socket.on("message", (message) => {
+        socket.on("message", (message) => { //listen to room message
             console.log('client recieve:', message)
             setmessageList([...messageList, message]);    //add message to message list
         });
 
-        socket.on("systemMessage", (message) => {
+        socket.on("systemMessage", (message) => {   //listen to system message
             console.log("from system:", message)
-            setSystemMessage(message);
+            setSystemMessage(message);  
         });
 
         return () => {
