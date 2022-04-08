@@ -61,8 +61,7 @@ const Message = (props) => {
     return (
         isSentByCurrentUser
             ? (
-                <div className="messageContainer justifyEnd mt-1">
-
+                <div className="messageContainer justifyEnd">
                     <div className="messageBox bg-gradient-primary">
                         <p className="messageText colorWhite m-1">{props.message.message}</p>
                         <p className="sentText colorWhite pr-1 float-right">{parseTime(props.message.timeElapse)}</p>
@@ -72,8 +71,8 @@ const Message = (props) => {
             )
             : (
                 <>
-                    <p className="nameText pl-10 mt-3 mb-1">{getsenderName()}</p>
-                    <div className="messageContainer justifyStart ml-5">
+                    <div className="nameText">{getsenderName()}</div>
+                    <div className="messageContainer justifyStart">
 
                         <div className="messageBox bg-light">
                             <p className="messageText colorDark m-1">{props.message.message}</p>

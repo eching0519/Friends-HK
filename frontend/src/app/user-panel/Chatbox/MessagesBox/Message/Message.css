@@ -20,25 +20,27 @@
 
 .messageContainer {
   display: flex;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   margin-top: 3px;
+  margin-bottom: 7px;
 }
 
 .nameText {
   display: flex;
   align-items: center;
-  font-family: Helvetica;
+  /* font-family: Helvetica; */
   color: #828282;
-  font-size: 1.4em;
-  letter-spacing: 0.3px;
+  /* font-size: 1.4em; */
+  /* letter-spacing: 0.3px; */
 }
 
 .sentText {
   display: flex;
   align-items: center;
-  font-family: Helvetica;
+  /* font-family: Helvetica; */
   color: #828282;
-  letter-spacing: 0.3px;
+  /* letter-spacing: 0.3px; */
+  transform: translate(8px, 15px);
 }
 
 .pl-10 {
