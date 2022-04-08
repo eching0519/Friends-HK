@@ -36,6 +36,11 @@ const FriendMatch = (props) => {
             //waitingMessage = `Still need ${3 - numberofpeople} people.`;
         });
     };
+    
+    // // Issac Help Help
+    // const cancelSpecialThemeMatchRequest = () => {
+
+    // }
 
     let matchstatusplaceholder = <h3>not send</h3>;
 
