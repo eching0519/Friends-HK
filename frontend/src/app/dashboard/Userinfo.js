@@ -20,7 +20,7 @@ const Userinfo = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [buttonStatus, setButtonStatus] = useState({ status: "active", button: "Block" });
-      const onChange = (e) => {
+    const onChange = (e) => {
         setConfirmPassword(e.target.value);
 
       }                                          
@@ -28,7 +28,7 @@ const Userinfo = (props) => {
 
     useEffect(() => {
       getUserInfo();
-    }, []);
+    }, [confirmPassword]);
 
     useEffect(() => {
       resetUserPassword(userInfo.email, confirmPassword);
@@ -314,7 +314,7 @@ const Userinfo = (props) => {
               {renderFeedbackMessage()}
             </div>
           </div>
-          <button type="submit" className="btn btn-primary btn-block">
+          <button type="button" className="btn btn-primary btn-block">
             Change
           </button>
         </form>
