@@ -246,6 +246,7 @@ exports.setUserPassword = async (req, res, next) => {
 
     // Get user information
     var user;
+    console.log(req.body)
     try {
         user = await User.findByEmail(email, 'login')
     } catch (e) {

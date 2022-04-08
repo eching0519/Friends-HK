@@ -5,24 +5,9 @@ import React, { useState, useEffect } from 'react';
 const querystring = require('querystring'); 
 // import "react-datepicker/dist/react-datepicker.css";
 
-// showSpecificUserInfo = async () => {
-//   let url = '/admin/userList';
-
-//   let res = await fetch(url, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/x-www-form-urlencoded'
-//     },
-//     body: querystring.stringify({
-
-//     })
-//   });
-//   let data = await res.json();
-//   console.log(typeof (data));
-     
-// }
-
-
+// 해야할것  user status에서 블락을 누르면 unblock 되게 해야한다 백앤드 서버에서도
+// 사용자의 비밀번호를 바꿔야한다 백앤드 서버에서도
+// what is the difference between blocekd and unactive?
 
 const Userinfo = (props) => {
 
@@ -34,33 +19,88 @@ const Userinfo = (props) => {
                                             })
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [buttonStatus, setButtonStatus] = useState({ status: "active", button: "Block" }, {status: 'blocekd', button:"Unblock"});
-    
+    const [buttonStatus, setButtonStatus] = useState({ status: "active", button: "Block" });
+    const [updatepassword, setUpdatePassword] = useState({ email: 'default', password: '123456' });
+
     let changepassword = {newpassword: ""}
 
-  useEffect(async()=>{
-    const {userId} = props.match.params
-    try{
-      const response = await fetch('/admin/getuserbyid', {
+    useEffect(() => {
+      console.log("HERE");
+      getUserInfo();
+    }, []);
+
+    useEffect(() => {
+      resetUserPassword('levan91098@tourcc.com', '123456');
+    }, [userInfo]);
+    
+    const getUserInfo = async () => {
+      const {userId} = props.match.params;
+      try{
+      let res = await fetch('/admin/getuserbyid', {
         method: 'POST',
-        body: querystring.stringify({
-          id : userId
-        }),
-        headers: { 
+        headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
+        body: querystring.stringify({
+          id: userId
+        })
       });
-      const data = await response.json();
-      const info = data.user
+      let data = await res.json();
+      let info = data.user;
       console.log(info)
-      setUserInfo(info)
-      // this.setState({
-      //   // items: data.user
-      // })
-      // this.setState({data : data});   
+      setUserInfo(info);
     }catch(err){
       console.log(err);
     }
+  } 
+    const resetUserPassword = async (email , password) => {
+      
+      console.log(email);
+      try{
+      let res = await fetch('/admin/resetUserPassword', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-from-urlencoded'
+        },
+        body: querystring.stringify({
+          email: email,
+          password: password //new password
+        })
+      });
+      let data = await res.json();
+      console.log(data);
+      // let inf = userInfo;
+      // setUpdatePassword(data)
+      }catch(err){
+      console.log(err);
+    }
+  }
+     
+  
+  
+    
+
+  // useEffect(async()=>{
+  //   const {userId} = props.match.params
+  //   try{
+  //     const response = await fetch('/admin/getuserbyid', {
+  //       method: 'POST',
+  //       body: querystring.stringify({
+  //         id : userId
+  //       }),
+  //       headers: { 
+  //         'Content-Type': 'application/x-www-form-urlencoded'
+  //       },
+  //     });
+  //     const data = await response.json();
+  //     const info = data.user
+  //     console.log(info)
+  //     setUserInfo(info)   
+  //   }catch(err){
+  //     console.log(err);
+  //   }
+
+
     // fetch('/admin/userList', {
     //   method: 'POST',
     //   body: querystring.stringify({
@@ -72,7 +112,7 @@ const Userinfo = (props) => {
     // })
     //   .then((response) => response.json())
     //   .then((data) => console.log(data));
-  }, []);
+  // }, []);
   
 
   const changeMessage = () => {
@@ -150,7 +190,7 @@ const Userinfo = (props) => {
 
     console.log('render method called')
     // const {data} = this.state;
-    const {userId} = props.match.params;
+    // const {userId} = props.match.params;
     // const {data} = this.componentDidMount();
     // const {user} = data.userid
     // {this.componentDidMount(userId)};
@@ -193,7 +233,7 @@ const Userinfo = (props) => {
             <h3 className="page-title">
             <span className="page-title-icon bg-gradient-primary text-white mr-2">
               <i className="mdi mdi-account"></i>
-            </span> Specific User Info template 
+            </span> User Information 
             </h3>
               <div className="card-body">
                 <img src={userInfo.photo} className="mr-2" alt="face" />
@@ -283,7 +323,8 @@ const Userinfo = (props) => {
         </div>
       </div> 
     );
-}
+  }
+
 
 export default Userinfo;
 
