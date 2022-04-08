@@ -7,14 +7,6 @@ const SpecialThemeCard = (props) => {
     let themes = props.themes;
     let languages = props.languages;
     return (
-
-        // {(props.messageList.length > 0) ?
-        //     props.messageList.map((message, i) =>
-        //         <div key={i}>
-        //             <Message message={message} userName={props.userName} userId={props.userId} chatRoom={props.chatRoom} />
-        //         </div>
-        //     ) : <></>
-        // }
         <>
             {props.themes.map((theme, i) => (
                 <div className="stretch-card-custom grid-margin" key={i}>

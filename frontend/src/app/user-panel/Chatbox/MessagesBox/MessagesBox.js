@@ -5,6 +5,7 @@ import Message from './Message/Message';
 import './MessageBox.css'
 
 const Messagesbox = (props) => {
+    console.log(props.messageList)
     return (
         <>
             {(props.messageList.length > 0) ?

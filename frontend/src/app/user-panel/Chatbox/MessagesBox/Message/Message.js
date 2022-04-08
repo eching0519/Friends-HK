@@ -5,6 +5,7 @@ import './Message.css';
 const Message = (props) => {
     let isSentByCurrentUser = false;
     let chatRoom = props.chatRoom;
+    let userList = chatRoom.usersInfo;
 
     /**
     useEffect(() => {
@@ -18,21 +19,11 @@ const Message = (props) => {
         isSentByCurrentUser = true;
     }
     const getsenderName = () => {
-        return chatRoom.usersInfo[props.message.senderId].name;
-        // let senderName = '';
-        // if (props.message.senderId = props.user1.id) {
-        //     senderName = props.user1.name;
-
-        // } else if (props.message.senderId = props.user2.id) {
-        //     senderName = props.user2.name;
-
-        // } else if (props.user3 !== null) {
-        //     if (props.message.senderId = props.user3.id) {
-        //         senderName = props.user3.name;
-        //     }
-        // }
-        // // console.log(isSentByCurrentUser);
-        // return senderName;
+        let senderId = props.message.senderId;
+        console.log(senderId)
+        console.log(userList)
+        console.log(userList[senderId])
+        return chatRoom.usersInfo[senderId].name;
     }
 
 

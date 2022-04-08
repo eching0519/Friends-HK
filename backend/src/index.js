@@ -137,14 +137,16 @@ io.on('connection', (socket) => {
             participants = allChatrooms.chatroom[index].users;
 
             let names = [];
+            let usersInfo = {};
             for (let i = 0; i < participants.length; i++) {
                 participantId = participants[i];
-                // Not going to find current user's name
-                if (userId == participantId) continue
                 user = await User.findById(participantId);
-                names.push(user.name);
+                usersInfo[participantId] = user;
+                // Not going to find current user's name
+                if (userId != participantId) names.push(user.name);
             }
 
+            allChatrooms.chatroom[index].usersInfo = usersInfo;
             allChatrooms.chatroom[index].name = names.toString().replace(',',', ');
         }
         // --- Friend chatroom ---
@@ -154,14 +156,16 @@ io.on('connection', (socket) => {
             participants = allChatrooms.friendChatroom[index].users;
 
             let names = [];
+            let usersInfo = {};
             for (let i = 0; i < participants.length; i++) {
                 participantId = participants[i];
-                // Not going to find current user's name
-                if (userId == participantId) continue
                 user = await User.findById(participantId);
-                names.push(user.name);
+                usersInfo[participantId] = user;
+                // Not going to find current user's name
+                if (userId != participantId) names.push(user.name);
             }
 
+            allChatrooms.friendChatroom[index].usersInfo = usersInfo;
             allChatrooms.friendChatroom[index].name = names.toString().replace(',',', ');
         }
 

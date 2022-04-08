@@ -8,8 +8,6 @@ const socket = io({ //no url: default to localhost:8080
 });
 
 const Sidebar = (props) => {
-    // const [props.groupChatList, setGroupChatList] = useState(null);
-    // const [props.friendChatList, setFriendChatList] = useState(null);
 
     useEffect(() => {
         socket.connect();   //estiblish socket io connection
@@ -47,7 +45,6 @@ const Sidebar = (props) => {
                         props.setRoomName(element.name);
                         props.setSelectedRoomId(element._id);
                         props.setCurrentPage('chat');
-                        console.log('selected room: ', element.name);
                     }}>
                         <div className='chatroom-list-content'>
                             <div className='font-weight-bold'>{element.name}</div>
@@ -85,7 +82,6 @@ const Sidebar = (props) => {
                         props.setRoomName(element.name);
                         props.setSelectedRoomId(element._id);
                         props.setCurrentPage('chat');
-                        console.log('selected room: ', element.name);
                     }}>
                         <div className='chatroom-list-content'>
                             <div className='font-weight-bold'>{element.name}</div>
