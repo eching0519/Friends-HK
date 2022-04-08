@@ -8,8 +8,8 @@ const socket = io({ //no url: default to localhost:8080
 });
 
 const Sidebar = (props) => {
-    const [groupChatList, setGroupChatList] = useState(null);
-    const [friendChatList, setFriendChatList] = useState(null);
+    // const [props.groupChatList, setGroupChatList] = useState(null);
+    // const [props.friendChatList, setFriendChatList] = useState(null);
 
     useEffect(() => {
         socket.connect();   //estiblish socket io connection
@@ -26,32 +26,17 @@ const Sidebar = (props) => {
     }, [socket]);   //trigger useEffect if room changed from sidebar
 
     useEffect(() => {
-        console.log(groupChatList);  //DEBUG
-    }, [groupChatList]);
-
-    useEffect(() => {
-        if (props.userId !== '') {
-            getChatroomlistSocketio(props.userId);
-        }
-    }, [props.userId])  //when user id changed, fetch chat room list from server.
-
-    const getChatroomlistSocketio = (id) => {
-        //console.log('user id:', id);
-        let chatlist;
-        socket.emit("getChatRoomList", id, (data) => {
-            setGroupChatList(data.chatroom);
-            setFriendChatList(data.friendChatroom);
-        });
-    };
+        console.log(props.groupChatList);  //DEBUG
+    }, [props.groupChatList]);
 
     const renderChatroomlist = () => {
         let divArr = [];
-        if (groupChatList !== null) {
-            if (groupChatList.length == 0) {
+        if (props.groupChatList !== null) {
+            if (props.groupChatList.length == 0) {
                 return (<div className='m-4'>You have not joint any chatroom yet.</div>);
             }
 
-            groupChatList.forEach((element, index) => {
+            props.groupChatList.forEach((element, index) => {
                 let button = 
                     <a key={index} href="!#" className="dropdown-item justify-content-center" 
                         onClick={(e) => {
@@ -60,7 +45,7 @@ const Sidebar = (props) => {
                         props.setSelectedRoomUserName(element.name);
                         props.setmessageList(element.chatbox);
                         props.setRoomName(element.name);
-                        props.setRoomId(element._id);
+                        props.setSelectedRoomId(element._id);
                         props.setCurrentPage('chat');
                         console.log('selected room: ', element.name);
                     }}>
@@ -84,12 +69,12 @@ const Sidebar = (props) => {
 
     const renderFriendChatroomlist = () => {
         let divArr = [];
-        if (friendChatList !== null) {
-            if (friendChatList.length == 0) {
+        if (props.friendChatList !== null) {
+            if (props.friendChatList.length == 0) {
                 return (<div className='m-4'>Your friend list is empty.</div>);
             }
 
-            friendChatList.forEach((element, index) => {
+            props.friendChatList.forEach((element, index) => {
                 let button = 
                     <a key={index} href="!#" className="dropdown-item justify-content-center" 
                         onClick={(e) => {
@@ -98,7 +83,7 @@ const Sidebar = (props) => {
                         props.setSelectedRoomUserName(element.name);
                         props.setmessageList(element.chatbox);
                         props.setRoomName(element.name);
-                        props.setRoomId(element._id);
+                        props.setSelectedRoomId(element._id);
                         props.setCurrentPage('chat');
                         console.log('selected room: ', element.name);
                     }}>
