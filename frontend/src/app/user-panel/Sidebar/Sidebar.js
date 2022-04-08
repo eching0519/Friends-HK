@@ -35,6 +35,7 @@ const Sidebar = (props) => {
             }
 
             props.groupChatList.forEach((element, index) => {
+                console.log("Sidebar", element)
                 let button = 
                     <a key={index} href="!#" className="dropdown-item justify-content-center" 
                         onClick={(e) => {
@@ -72,6 +73,7 @@ const Sidebar = (props) => {
             }
 
             props.friendChatList.forEach((element, index) => {
+                console.log("Sidebar", element)
                 let button = 
                     <a key={index} href="!#" className="dropdown-item justify-content-center" 
                         onClick={(e) => {

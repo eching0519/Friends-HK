@@ -7,6 +7,8 @@ const Message = (props) => {
     let chatRoom = props.chatRoom;
     let userList = chatRoom.usersInfo;
 
+    console.log("Message", props)
+
     /**
     useEffect(() => {
         //console.log(props.message.text)
@@ -20,13 +22,11 @@ const Message = (props) => {
     }
     const getsenderName = () => {
         let senderId = props.message.senderId;
-        console.log(senderId)
-        console.log(userList)
-        console.log(userList[senderId])
+        console.log("getsenderName", senderId)
+        console.log("getsenderName", userList)
+        console.log("getsenderName", userList[senderId])
         return chatRoom.usersInfo[senderId].name;
     }
-
-
 
     const parseTime = (time) => {
         let currentTime = new Date(Date.now());
@@ -50,6 +50,13 @@ const Message = (props) => {
 
 
     return (
+        (props.message.senderId === "admin") ? (
+            <div className="text-center">
+                <div className="system-message">
+                    <div> {props.message.message} </div>
+                </div>
+            </div>
+        ) : (
         isSentByCurrentUser
             ? (
                 <div className="messageContainer justifyEnd">
@@ -74,6 +81,7 @@ const Message = (props) => {
                 </>
 
             )
+        )
     );
 }
 

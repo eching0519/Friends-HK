@@ -6,20 +6,27 @@ import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
 import $ from 'jquery';
 
+import ChatSocketContext from './Chatroom'
 // const socket = io({ //no url: default to localhost:8080
 //     autoConnect: false
 // });
 
 const Chatbox = (props) => {
+    const socket = useContext(ChatSocketContext)
+
     const [user, setUser] = useState(props.user)
     const [chatRoom, setChatRoom] = useState(props.chatRoom);
     const [messageList, setmessageList] = useState(chatRoom.chatbox);   //store all message.
+    
     // const [user1Name, setUser1Name] = useState('');
     // const [user2Name, setUser2Name] = useState('');
     const [roomId, setRoomId] = useState(chatRoom._id);         //store current room id
     const [roomName, setRoomName] = useState(chatRoom.name);    //store current room name
     const [message, setMessage] = useState('');                 //store message from the input box.
-    // const [systemMessage, setSystemMessage] = useState('');
+
+    const [systemMessage, setSystemMessage] = useState(null);
+    console.log(props)
+    // console.log(systemMessage)
 
     // useEffect(() => {
     //     socket.connect();   //estiblish socket io connection
@@ -36,29 +43,36 @@ const Chatbox = (props) => {
     //     }
     // }, [chatRoom]);
 
+    useEffect(() => {
+        // setmessageList([]);
+        // props.getChatRoomsocketio(roomId);
+
+        // let userName = props.user.name;
+
+        // // props.socket.emit("joinRoom", { userId: props.userId, name: props.userName, roomId: chatRoom._id });
+
+        // props.socket.on("message", (message) => {
+        //     console.log('client recieve:', message)
+        //     // props.setmessageList([...messageList, message]);    //add message to message list
+        // });
+
+        console.log(socket)
+
+        // socket.on("systemMessage", (message) => {
+        //     console.log("from system:", message)
+        //     setSystemMessage(message);
+        // });
+
+        // return () => {
+        //     props.socket.emit("leaveRoom", { name: userName, roomId: roomId });
+        //     props.socket.removeAllListeners();
+        // }
+    }, [socket]);   //trigger useEffect if room changed from sidebar
+
     // useEffect(() => {
-    //     // setmessageList([]);
-    //     // props.getChatRoomsocketio(roomId);
-
-    //     let userName = props.user.name;
-
-    //     socket.emit("joinRoom", { userId: props.userId, name: props.userName, roomId: chatRoom._id });
-
-    //     socket.on("message", (message) => {
-    //         console.log('client recieve:', message)
-    //         props.setmessageList([...messageList, message]);    //add message to message list
-    //     });
-
-    //     socket.on("systemMessage", (message) => {
-    //         console.log("from system:", message)
-    //         props.setSystemMessage(message);
-    //     });
-
-    //     return () => {
-    //         socket.emit("leaveRoom", { name: userName, roomId: roomId });
-    //         socket.removeAllListeners();
-    //     }
-    // }, [socket]);   //trigger useEffect if room changed from sidebar
+    //     if (systemMessage === null) return
+    //     console.log("systemMessage", systemMessage);
+    // },[systemMessage])
 
     // useEffect(() => {
     //     if (props.roomId !== '') {
@@ -112,7 +126,7 @@ const Chatbox = (props) => {
                     <StatusBar userName={props.user.name} roomId={roomId} roomName={chatRoom.name} />
                 </div>
                 <div className="card-body bg-white">
-                    <Messagesbox systemMessage={props.systemMessage} messageList={messageList} userName={props.user.name} userId={props.user.id} chatRoom={chatRoom} />
+                    <Messagesbox systemMessage={systemMessage} messageList={messageList} userName={props.user.name} userId={props.user.id} chatRoom={chatRoom} />
                 </div>
                 <div className="card-footer bg-white">
                     <InputBar message={message} setMessage={setMessage} sendMessage={sendMessage} />

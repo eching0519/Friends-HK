@@ -5,21 +5,25 @@ import Message from './Message/Message';
 import './MessageBox.css'
 
 const Messagesbox = (props) => {
-    console.log(props.messageList)
+    console.log("Messagesbox", props)
     return (
         <>
-            {(props.messageList.length > 0) ?
-                props.messageList.map((message, i) =>
+            {
+                props.messageList.map((value, i) => 
+                { 
+                    console.log("Messagesbox", value)
+                    console.log("Messagesbox", i)
+                    return (
                     <div key={i}>
-                        <Message message={message} userName={props.userName} userId={props.userId} chatRoom={props.chatRoom} />
+                        <Message 
+                                message={value} 
+                                userName={props.userName} 
+                                userId={props.userId} 
+                                chatRoom={props.chatRoom} />
                     </div>
-                ) : <></>
+                    )
+                })
             }
-            <div>
-                {/* <div className="text-center"> */}
-                    <div className="system-message"><div>{props.systemMessage.message}</div></div>
-                {/* </div> */}
-            </div>
         </>
     )
 }

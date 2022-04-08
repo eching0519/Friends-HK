@@ -73,7 +73,7 @@ io.on('connection', (socket) => {
         console.log(`user: ${name} assign to ${roomId}`);
         console.log(io.in(roomId).allSockets());    //log all socket in room
 
-        socket.emit('systemMessage', { message: `You are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() });
+        socket.emit('systemMessage', {roomId: roomId, msg: { message: `You are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() }});
         socket.broadcast.to(roomId).emit('systemMessage', { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() });
 
     });
