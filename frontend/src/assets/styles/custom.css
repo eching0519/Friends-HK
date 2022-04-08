@@ -170,11 +170,6 @@
   height: calc(100vh - 70px - 128px);
 }
 
-.card-chatbox > .card-body {
-  height: calc(100vh - 70px - 307px);
-  overflow-y: scroll;
-}
-
 .tab-content {
   padding: 0px;
   height: calc(100% - 140px);

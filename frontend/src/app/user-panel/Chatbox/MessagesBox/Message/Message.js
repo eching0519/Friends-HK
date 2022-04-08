@@ -63,8 +63,8 @@ const Message = (props) => {
             ? (
                 <div className="messageContainer justifyEnd">
                     <div className="messageBox bg-gradient-primary">
-                        <p className="messageText colorWhite m-1">{props.message.message}</p>
-                        <p className="sentText colorWhite pr-1 float-right">{parseTime(props.message.timeElapse)}</p>
+                        <div className="messageText colorWhite m-1">{props.message.message}</div>
+                        <div className="sentText colorWhite pr-1 float-right">{parseTime(props.message.timeElapse)}</div>
                     </div>
 
                 </div>
@@ -75,8 +75,8 @@ const Message = (props) => {
                     <div className="messageContainer justifyStart">
 
                         <div className="messageBox bg-light">
-                            <p className="messageText colorDark m-1">{props.message.message}</p>
-                            <p className="sentText pr-1 float-right">{parseTime(props.message.timeElapse)}</p>
+                            <div className="messageText colorDark m-1">{props.message.message}</div>
+                            <div className="sentText pr-1 float-right">{parseTime(props.message.timeElapse)}</div>
                         </div>
 
                     </div>
