@@ -55,6 +55,9 @@ mongoConnect(() => {
 
 // Model
 const Message = require('./models/message')
+const UserChatrooms = require('./models/user-chatrooms');
+const User = require('./models/user');
+const Chatrooms = require('./models/chatroom');
 
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
@@ -106,17 +109,21 @@ io.on('connection', (socket) => {
     });
 
     socket.on("getChatRoom", async (roomId, callback) => {
-        const Chatrooms = require('./models/chatroom');
         let cr = await Chatrooms.findById(roomId);
-
+        let usersInfo = {};
+        var uId, user;
+        for (let i = 0; i < cr.users.length; i++) {
+            uId = cr.users[i];
+            user = await User.findById(uId);
+            usersInfo[uId] = user;
+        }
+        cr.usersInfo = usersInfo;
         callback(cr);
     });
 
     socket.on("getChatRoomList", async (userId, callback) => {
         console.log("getChatRoomList requiest recieved, user id:", userId);
 
-        const UserChatrooms = require('./models/user-chatrooms');
-        const User = require('./models/user');
         let allChatrooms = await UserChatrooms.findAllChatroomsByUserId(userId);
 
         // Find friend's name by their Id
@@ -164,7 +171,6 @@ io.on('connection', (socket) => {
     socket.on("getUserInfo", async (userId, callback) => {
         console.log("getUserInfo requiest recieved, user id:", userId);
 
-        const User = require('./models/user');
         let userObject = await User.findById(userId);
 
         callback({ userName: userObject.name, picture: userObject.picture });

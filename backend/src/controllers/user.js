@@ -516,23 +516,17 @@ exports.updateProfile = async (req, res, next) => {
     if (newName!=""){
         user.name = newName;
         user.updateName();
-        res.write(JSON.stringify({
-            "success": true
-        }, null, "\t"));
-        res.end();
-        console.log("update name");
     }
 
     if (newPassword!=""){
         user.password = newPassword;
         user.updatePassword();
-        res.write(JSON.stringify({
-            "success": true
-        }, null, "\t"));
-        res.end();
-        console.log("update password");
+        delete user.password
     }
-
-
     
+    res.write(JSON.stringify({
+        "success": true,
+        "user": user
+    }, null, "\t"));
+    res.end();
 }
