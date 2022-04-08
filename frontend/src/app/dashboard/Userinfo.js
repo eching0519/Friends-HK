@@ -20,19 +20,19 @@ const Userinfo = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [buttonStatus, setButtonStatus] = useState({ status: "active", button: "Block" });
-    const onChange = (e) => {
-        setConfirmPassword(e.target.value);
+    // const onChange = (e) => {
+    //     setConfirmPassword(e.target.value);
 
-      }                                          
+    //   }                                          
     // let changepassword = {newpassword: ""}
 
     useEffect(() => {
       getUserInfo();
-    }, [confirmPassword]);
+    }, []);
 
-    useEffect(() => {
-      resetUserPassword(userInfo.email, confirmPassword);
-    }, [userInfo, confirmPassword]);
+    // useEffect(() => {
+    //   resetUserPassword(userInfo.email, confirmPassword);
+    // }, [userInfo, confirmPassword]);
     
     const getUserInfo = async () => {
       const {userId} = props.match.params;
@@ -55,7 +55,7 @@ const Userinfo = (props) => {
     }
   } 
     const resetUserPassword = async (email , password) => {
-      
+      console.log(password)
       console.log(email);
       try{
       let res = await fetch('/admin/resetUserPassword', {
@@ -70,6 +70,7 @@ const Userinfo = (props) => {
       });
       let data = await res.json();
       console.log(data);
+      
       // let inf = userInfo;
       // setUpdatePassword(data)
       }catch(err){
@@ -306,15 +307,16 @@ const Userinfo = (props) => {
                 className={`form-control ${confirmPasswordClassName()}`}
                 id="confirmPasswordInput"
                 placeholder="Type Password Again"
-                onChange= {onChange}
-                // {e =>
-                //   handleOnConfirmPasswordInput(e.target.value)
-                // }
+                onChange= {e =>
+                  handleOnConfirmPasswordInput(e.target.value)
+                }
               />
               {renderFeedbackMessage()}
             </div>
           </div>
-          <button type="button" className="btn btn-primary btn-block">
+          <button type="button" className="btn btn-primary btn-block" onClick = {() => {
+            resetUserPassword(userInfo.email, confirmPassword);
+          }}>
             Change
           </button>
         </form>
