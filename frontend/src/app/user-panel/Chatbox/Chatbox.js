@@ -11,9 +11,6 @@ const socket = io({ //no url: default to localhost:8080
 });
 
 const Chatbox = (props) => {
-    const [user1, setUser1] = useState(null);   // user is a {id, name} object
-    const [user2, setUser2] = useState(null);
-    const [user3, setUser3] = useState(null);
     const [chatRoom, setChatRoom] = useState(null);
     // const [user1Name, setUser1Name] = useState('');
     // const [user2Name, setUser2Name] = useState('');
@@ -41,23 +38,6 @@ const Chatbox = (props) => {
     }, [chatRoom]);
 
     useEffect(() => {
-        let nameStr = props.selectedRoomUserName.split(",");
-        
-        setUser1({
-            id: props.selectedRoomUserId[0],
-            name: nameStr[0]
-        });
-
-        setUser2({
-            id: props.selectedRoomUserId[1],
-            name: nameStr[1]
-        });
-
-        setUser3({
-            id: props.selectedRoomUserId[2],
-            name: nameStr[2]
-        });
-
         setmessageList([]);
         getChatRoomsocketio(props.roomId);
 
@@ -99,6 +79,7 @@ const Chatbox = (props) => {
             chatroom = data;
             setChatRoom(chatroom)
             console.log(chatroom);
+            // console.log(chatRoom);
         });
     };
 
@@ -130,7 +111,7 @@ const Chatbox = (props) => {
                     <StatusBar userName={props.userName} roomId={props.roomId} roomName={props.roomName} />
                 </div>
                 <div className="card-body bg-white">
-                    <Messagesbox systemMessage={systemMessage} messageList={messageList} userName={props.userName} userId={props.userId} user1={user1} user2={user2} user3={user3} />
+                    <Messagesbox systemMessage={systemMessage} messageList={messageList} userName={props.userName} userId={props.userId} chatRoom={chatRoom} />
                 </div>
                 <div className="card-footer bg-white">
                     <InputBar message={message} setMessage={setMessage} sendMessage={sendMessage} />

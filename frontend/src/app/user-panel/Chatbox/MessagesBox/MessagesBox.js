@@ -10,7 +10,7 @@ const Messagesbox = (props) => {
             {(props.messageList.length > 0) ?
                 props.messageList.map((message, i) =>
                     <div key={i}>
-                        <Message message={message} userName={props.userName} userId={props.userId} user1={props.user1} user2={props.user2} user3={props.user3} />
+                        <Message message={message} userName={props.userName} userId={props.userId} chatRoom={props.chatRoom} />
                     </div>
                 ) : <></>
             }
