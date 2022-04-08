@@ -225,8 +225,9 @@ io.on('connection', (socket) => {
         socket.leave(theme);    //leave socket room(theme queue)
 
         if (`${theme}` in specialThemeQueue) {
-            console.log("key found")
-            specialThemeQueue[`${theme}`].pop(userId);  //remove user id from userid queue.
+            console.log("key found");
+            let index = specialThemeQueue[`${theme}`].indexOf(userId);
+            specialThemeQueue[`${theme}`].slice(index, 1);  //remove user id from userid queue.
         } else {
             console.log("key not found")
         }
