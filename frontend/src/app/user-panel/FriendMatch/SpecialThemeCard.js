@@ -25,11 +25,11 @@ const SpecialThemeCard = (props) => {
                                 var lang;
                                 for(let i = 0; i < languages.length; i++) {
                                     lang = languages[i];
-                                    console.log(theme + '-' + lang)
-                                    // props.setMatchTheme(theme + '-' + lang);
-                                    // props.setDisableInput(true);
-                                    // props.setmatchStatus('pending');
-                                    // props.sendSpecialThemeMatchRequest(theme + '-' + lang);
+                                    // console.log(theme + '-' + lang)
+                                    props.setMatchTheme(theme + '-' + lang);
+                                    props.setDisableInput(true);
+                                    props.setmatchStatus('pending');
+                                    props.sendSpecialThemeMatchRequest(theme + '-' + lang);
                                 }
                             }}>
                             <img src={require("../../../assets/images/dashboard/circle.svg")} className="card-img-absolute" alt="circle" />

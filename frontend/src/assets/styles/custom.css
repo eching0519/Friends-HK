@@ -175,6 +175,7 @@
   height: calc(100% - 140px);
   /* height: 100%; */
   overflow-y: auto;
+  /* overflow-y: scroll; */
 }
 
 .tab-bottonlist {
@@ -245,7 +246,7 @@ tbody[data-test="table-body"] tr:hover {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  /* height: 330px; */
+  height: 245px;
 }
 
 .special-theme-container div {
@@ -263,4 +264,15 @@ tbody[data-test="table-body"] tr:hover {
 .special-theme-container div .stretch-card-custom .card-body h2 {
   white-space: normal;
   /* height: 73px; */
+}
+
+/* Scroll bar */
+.special-theme-container::-webkit-scrollbar, .tab-content::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #e4e4e9; /* or add it to the track */
+}
+
+.special-theme-container::-webkit-scrollbar-thumb, .tab-content::-webkit-scrollbar-thumb {
+  background: #868e96;
 }
