@@ -20,18 +20,19 @@ const Userinfo = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [buttonStatus, setButtonStatus] = useState({ status: "active", button: "Block" });
-    const [updatepassword, setUpdatePassword] = useState({ email: 'default', password: '123456' });
+      const onChange = (e) => {
+        setConfirmPassword(e.target.value);
 
-    let changepassword = {newpassword: ""}
+      }                                          
+    // let changepassword = {newpassword: ""}
 
     useEffect(() => {
-      console.log("HERE");
       getUserInfo();
     }, []);
 
     useEffect(() => {
-      resetUserPassword('levan91098@tourcc.com', '123456');
-    }, [userInfo]);
+      resetUserPassword(userInfo.email, confirmPassword);
+    }, [userInfo, confirmPassword]);
     
     const getUserInfo = async () => {
       const {userId} = props.match.params;
@@ -60,7 +61,7 @@ const Userinfo = (props) => {
       let res = await fetch('/admin/resetUserPassword', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-from-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: querystring.stringify({
           email: email,
@@ -305,17 +306,15 @@ const Userinfo = (props) => {
                 className={`form-control ${confirmPasswordClassName()}`}
                 id="confirmPasswordInput"
                 placeholder="Type Password Again"
-                onChange={e =>
-                  handleOnConfirmPasswordInput(e.target.value)
-                }
+                onChange= {onChange}
+                // {e =>
+                //   handleOnConfirmPasswordInput(e.target.value)
+                // }
               />
               {renderFeedbackMessage()}
             </div>
           </div>
-          <button type="submit" className="btn btn-primary btn-block" onClick={(event)=>{
-            event.preventDefault();
-          }
-          }>
+          <button type="submit" className="btn btn-primary btn-block">
             Change
           </button>
         </form>
