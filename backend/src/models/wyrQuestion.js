@@ -1252,3 +1252,5 @@ const questions = [
       "b": "take three years off the end of your life"
     }
   ]
+
+  module.exports = {questions};

@@ -12,7 +12,8 @@ const Messagesbox = (props) => {
                     <div key={i}>
                         <Message message={message} userName={props.userName} userId={props.userId} chatRoom={props.chatRoom} />
                     </div>
-                ) : <></>
+                    //better put system message here:
+                ) : <h2>Loading</h2> // Loading placeholder
             }
             <div>
                 {/* <div className="text-center"> */}
