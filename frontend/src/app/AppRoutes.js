@@ -77,7 +77,7 @@ const AppRoutes = (props) => {
         <Route path="/general-pages/blank-page" component={ BlankPage } />
 
         {/* Our UI */}
-        <Route path="/home" component={ Home } />
+        <Route path="/home"><Home currentPage={props.homepageState} setCurrentPage={props.setHomepageState} /></Route>
         <Route path="/settings"><Settings user={props.user} setUser={props.setUser} /></Route>
 
         <Route path="/login" component={ Login } />

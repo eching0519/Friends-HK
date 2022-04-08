@@ -15,7 +15,9 @@ const Messagesbox = (props) => {
                 ) : <></>
             }
             <div>
-                <h4>{props.systemMessage.message}</h4>
+                {/* <div className="text-center"> */}
+                    <div className="system-message"><div>{props.systemMessage.message}</div></div>
+                {/* </div> */}
             </div>
         </>
     )

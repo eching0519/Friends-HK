@@ -51,8 +51,9 @@ const App = (props) => {
 
   let myUser = JSON.parse(sessionStorage.getItem('UserProfile'));
   const [user, setUser] = useState(myUser)
+  const [homepageState, setHomepageState] = useState('matchFriends');
   
-  let navbarComponent = !isFullPageLayout ? (!isAdminPageLayout ? <Navbar user={user}/> : <AdminNavbar />) : '';
+  let navbarComponent = !isFullPageLayout ? (!isAdminPageLayout ? <Navbar user={user} setHomepageState={setHomepageState}/> : <AdminNavbar />) : '';
   let sidebarComponent = (!isFullPageLayout && isAdminPageLayout) ? <AdminSidebar/> : '';
   let SettingsPanelComponent = !isFullPageLayout ? <SettingsPanel/> : '';
   // let footerComponent = !isFullPageLayout ? <Footer/> : '';
@@ -65,7 +66,7 @@ const App = (props) => {
           { sidebarComponent }
           <div className="main-panel">
             <div className="content-wrapper">
-              <AppRoutes user={user} setUser={setUser} />
+              <AppRoutes user={user} setUser={setUser} homepageState={homepageState} setHomepageState={setHomepageState} />
               { SettingsPanelComponent }
             </div>
             {/* { footerComponent } */}

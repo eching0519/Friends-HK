@@ -215,5 +215,33 @@ tbody[data-test="table-body"] tr:hover {
 .chatroom-list-content .msgOverview {
   height: 34px;
   white-space: initial;
+  word-break: break-all;
   overflow: hidden;
+}
+
+.system-message {
+  padding: 5px 20px;
+  text-align: center;
+}
+
+.system-message div {
+  margin: auto;
+  padding: 20px;
+  width: 50%;
+  word-break: break-all;
+}
+
+.chatroom-homepage {
+  /* padding: 70px 0; */
+  text-align: center;
+  
+}
+
+.chatroom-homepage div {
+  padding: 80px 0px;
+}
+
+.chatroom-homepage div .brand-logo {
+  text-align: center;
+  padding: 0px 80px;
 }
