@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { io } from 'socket.io-client';
+import SpecialThemeCard from "./SpecialThemeCard";
 
 const socket = io({ //no url: default to localhost:8080
     autoConnect: false
@@ -9,6 +10,9 @@ const FriendMatch = (props) => {
     const [matchTheme, setMatchTheme] = useState('default');
     const [matchStatus, setmatchStatus] = useState('wait');
     const [disableInput, setDisableInput] = useState(false);
+
+    // Special theme
+    const themes = ['Dining', 'Outdoor Activities', 'Board Games', 'Computer Games', 'Online Games'];
 
     useEffect(() => {
         socket.connect();   //estiblish socket io connection
@@ -48,7 +52,7 @@ const FriendMatch = (props) => {
             <div className="card">
                 <div className="card-body">
                 <h2>Welcome back</h2>
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-md-5 stretch-card grid-margin">
                             <div className="card bg-light card-img-holder text-black">
                                 <div className="card-body">
@@ -64,56 +68,41 @@ const FriendMatch = (props) => {
                                 </div>
                             </div>
                         </div>
+                    </div> */}
+                    
+                    <div className="col-md-5 grid-margin">
+                    <div className="card card-img-holder text-white cursor-pointer btn-gradient-primary">
+                        <div className="card-body" onClick={(e) => {
+                                e.preventDefault()
+                                var languages = props.user.preferences.lang
+                                var lang;
+                                for(let i = 0; i < languages.length; i++) {
+                                    lang = languages[i];
+                                    console.log('default-' + lang)
+                                    // props.setMatchTheme(theme + '-' + lang);
+                                    // props.setDisableInput(true);
+                                    // props.setmatchStatus('pending');
+                                    // props.sendSpecialThemeMatchRequest(theme + '-' + lang);
+                                }
+                            }}>
+                            <img src={require("../../../assets/images/dashboard/circle.svg")} className="card-img-absolute" alt="circle" />
+                            <h4 class="font-weight-normal mb-3">Preferences Matching</h4>
+                            <h2 class="mb-5">Let's get started!</h2>
+                            <h6 class="card-text">Start meeting a group of new friends!</h6>
+                        </div>
                     </div>
-                    <h3>Quicker way to match friends:</h3>
-                    <div className="row">
+                </div>
 
-                        <div className="col-md-3 stretch-card grid-margin">
-                            <div className="card bg-gradient-danger card-img-holder text-white">
-                                <div className="card-body">
-                                    <h4 className="font-weight-normal mb-3">Special Theme</h4>
-                                    <h2 className="mb-5">Dinning</h2>
-                                    <h6 className="card-text">Lets eat tgt.</h6>
-                                    <button className="btn btn-light float-right" onClick={() => {
-                                        //setMatchTheme('dinning');
-                                        setDisableInput(true);
-                                        setmatchStatus('pending');
-                                        sendSpecialThemeMatchRequest('dinning');
-                                    }} disabled={disableInput}>Go</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3 stretch-card grid-margin">
-                            <div className="card bg-gradient-primary card-img-holder text-white">
-                                <div className="card-body">
-                                    <h4 className="font-weight-normal mb-3">Special Theme</h4>
-                                    <h2 className="mb-5">Hiking</h2>
-                                    <h6 className="card-text">Lets hiking tgt.</h6>
-                                    <button className="btn btn-light float-right" onClick={() => {
-                                        //setMatchTheme('dinning');
-                                        setDisableInput(true);
-                                        setmatchStatus('pending');
-                                        sendSpecialThemeMatchRequest('hiking');
-                                    }} disabled={disableInput}>Go</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3 stretch-card grid-margin">
-                            <div className="card bg-gradient-success card-img-holder text-white">
-                                <div className="card-body">
-                                    <h4 className="font-weight-normal mb-3">Special Theme</h4>
-                                    <h2 className="mb-5">Something</h2>
-                                    <h6 className="card-text">Lets do sth tgt.</h6>
-                                    <button className="btn btn-light float-right" onClick={() => {
-                                        //setMatchTheme('dinning');
-                                        setDisableInput(true);
-                                        setmatchStatus('pending');
-                                        sendSpecialThemeMatchRequest('something');
-                                    }} disabled={disableInput}>Go</button>
-                                </div>
-                            </div>
+                    <h3>You may want to match friends with these activities:</h3>
+                    <div className="col-md-12 special-theme-container">
+                        <div>
+                            <SpecialThemeCard
+                                        themes={themes}
+                                        languages={props.user.preferences.lang}
+                                        setMatchTheme={setMatchTheme} 
+                                        setDisableInput={setDisableInput} 
+                                        setmatchStatus={setmatchStatus} 
+                                        sendSpecialThemeMatchRequest={sendSpecialThemeMatchRequest} />
                         </div>
                     </div>
 

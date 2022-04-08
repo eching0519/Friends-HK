@@ -38,7 +38,7 @@ const Settings = (props) => {
     return (
         <>
         <div className="page-header">
-            <h3 className="page-title" onClick={trial}>Settings</h3>
+            <h3 className="page-title" onClick={trial}><span class="page-title-icon bg-gradient-primary text-white mr-2"><i class="mdi mdi-settings"></i></span> Settings</h3>
             {/* <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item">

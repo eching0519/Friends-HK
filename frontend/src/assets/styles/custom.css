@@ -174,7 +174,7 @@
   padding: 0px;
   height: calc(100% - 140px);
   /* height: 100%; */
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .tab-bottonlist {
@@ -239,4 +239,28 @@ tbody[data-test="table-body"] tr:hover {
 .chatroom-homepage div .brand-logo {
   text-align: center;
   padding: 0px 80px;
+}
+
+.special-theme-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  /* height: 330px; */
+}
+
+.special-theme-container div {
+  display: inline-block;
+  /* white-space: nowrap; */
+  padding-right: 10px;
+  vertical-align:top;
+}
+
+.special-theme-container div .stretch-card-custom .card-body {
+  width: 270px;
+  height: 230px;
+}
+
+.special-theme-container div .stretch-card-custom .card-body h2 {
+  white-space: normal;
+  /* height: 73px; */
 }

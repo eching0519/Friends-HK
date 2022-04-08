@@ -62,7 +62,7 @@ const Home = (props) => {
     }
 
     if (props.currentPage === 'matchFriends') {
-        pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setRoomId} />;
+        pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setRoomId} user={props.user} />;
     }
 
     return pageplaceholder;
