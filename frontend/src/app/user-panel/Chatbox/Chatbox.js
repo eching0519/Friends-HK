@@ -4,6 +4,8 @@ import { io } from 'socket.io-client';
 import StatusBar from './StatusBar/StatusBar';
 import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
+import WRUgame from "../WRUgame/WRUgame";
+
 import $ from 'jquery';
 
 const socket = io({ //no url: default to localhost:8080
@@ -11,6 +13,8 @@ const socket = io({ //no url: default to localhost:8080
 });
 
 const Chatbox = (props) => {
+    const [wouldURgame, setWouldURgame] = useState(false);
+
     const [chatRoom, setChatRoom] = useState(null);
     // const [user1Name, setUser1Name] = useState('');
     // const [user2Name, setUser2Name] = useState('');
@@ -109,12 +113,13 @@ const Chatbox = (props) => {
             <div className="card card-chatbox">
                 <div className="card-header bg-white">
                     <StatusBar userName={props.userName} roomId={props.roomId} roomName={props.roomName} />
+                    {wouldURgame? <WRUgame userName={props.userName} roomId={props.roomId} setWouldURgame={setWouldURgame}/>: <></>}
                 </div>
                 <div className="card-body bg-white">
                     <Messagesbox systemMessage={systemMessage} messageList={messageList} userName={props.userName} userId={props.userId} chatRoom={chatRoom} />
                 </div>
                 <div className="card-footer bg-white">
-                    <InputBar message={message} setMessage={setMessage} sendMessage={sendMessage} />
+                    <InputBar message={message} setMessage={setMessage} sendMessage={sendMessage} setWouldURgame={setWouldURgame}/>
                 </div>
             </div>
         </>
