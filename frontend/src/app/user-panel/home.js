@@ -38,7 +38,7 @@ const Home = (props) => {
                             <div className="brand-logo">
                                 <img src={require("../../assets/images/logo.svg")} alt="logo" />
                             </div>
-                            <span className='display-5'>Select an existing chatroom or <a href='#' onClick={() => { props.setCurrentPage('matchFriends') }}>Meet New Friends Here</a>!</span>
+                            <span className='display-5'>Select an existing chatroom or <a href='#' onClick={(e) => { e.preventDefault(); props.setCurrentPage('matchFriends'); }}>Meet New Friends Here</a>!</span>
                         </div>
                     </div>
                 </div>
