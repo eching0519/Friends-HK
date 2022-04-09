@@ -104,9 +104,8 @@ exports.adminChangePassword = async (req, res, next) => {
 exports.adminBlockUser = async (req, res, next) => {
 
     //check reqsession
-    
     // console.log("Halloooo")
-    console.log(id)
+    // console.log(id)
     if (!adminIsVerified(req, res)) return;
 
     //the following id is userid(want to block that one)

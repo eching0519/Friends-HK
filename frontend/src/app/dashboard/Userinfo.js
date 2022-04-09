@@ -19,7 +19,7 @@ const Userinfo = (props) => {
                                             })
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [buttonStatus, setButtonStatus] = useState({ status: "active", button: "Block" }, { status: "block", button: "Unblock"} );
+    const [buttonStatus, setButtonStatus] = useState({ status: "", button: "" });
   
     //buttonStatus status = userInfo.status
 
@@ -27,6 +27,9 @@ const Userinfo = (props) => {
       getUserInfo();
     }, []);
 
+    useEffect(() => {
+      changeMessage(userInfo.status)
+    }, [userInfo])
     
     const getUserInfo = async () => {
       const {userId} = props.match.params;
@@ -71,7 +74,7 @@ const Userinfo = (props) => {
       console.log(err);
     }
   }
-    const blockUser = async (id1) => {
+    const blockUser = async (id) => {
       // const {userId} = props.match.params;
       try{
         let res = await fetch('/admin/block', {
@@ -80,7 +83,7 @@ const Userinfo = (props) => {
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           body: querystring.stringify({
-            id: id1
+            id: id
           })
         });
         let data = await res.json();
@@ -109,6 +112,14 @@ const Userinfo = (props) => {
       }
     } 
      
+  const blockorUnblock = (userstatus, userid) => {
+    if (userstatus === 'active'){
+      blockUser(userid)
+    }
+    else if (userstatus === 'block'){
+      unblockUser(userid)
+    }
+  }
 
   const changeMessage = (userstatus) => {
     if (userstatus === 'active'){
@@ -210,7 +221,7 @@ const Userinfo = (props) => {
                       {/*If status is block then button show unblock if status active button shows block */}
                       <span className="legend-dots bg-primary"></span>{userInfo.status}
                       <span className="float-right">
-                        <button type="button"  className='btn-auto btn-gradient-primary font-weight-bold' onChange={() => changeMessage(userInfo.status)} onClick={() => blockUser(userInfo._id)}>{buttonStatus.button}</button>
+                        <button type="button"  className='btn-auto btn-gradient-primary font-weight-bold' onChange={() => changeMessage(userInfo.status)} onClick={() => blockorUnblock(userInfo.status, userInfo._id)}>{buttonStatus.button}</button>
                       </span>
                     </li>
                   </ul>
