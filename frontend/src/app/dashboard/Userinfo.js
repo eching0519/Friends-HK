@@ -67,7 +67,7 @@ const Userinfo = (props) => {
       });
       let data = await res.json();
       console.log(data);
-      
+      getUserInfo();
       // let inf = userInfo;
       // setUpdatePassword(data)
       }catch(err){
@@ -88,6 +88,7 @@ const Userinfo = (props) => {
         });
         let data = await res.json();
         console.log(data)
+        getUserInfo();
       }catch(err){
         console.log(err);
       }
@@ -107,6 +108,7 @@ const Userinfo = (props) => {
         });
         let data = await res.json();
         console.log(data)
+        getUserInfo();
       }catch(err){
         console.log(err);
       }
