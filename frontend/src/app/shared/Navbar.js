@@ -4,12 +4,17 @@ import { useHistory } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import Signout from '../component/common/Signout'
 import { EmptyIcon } from './Variable'
+import LoginVerifier from '../component/common/LoginVerifier'
 
 const Navbar = (props) => {
   const history = useHistory();
   const [user, setUser] = useState(props.user)
   console.log(user)
   const [userPic, setUserPic] = useState((user==null||user.picture==null)? EmptyIcon : props.user.picture)
+
+  useEffect(() => {
+    LoginVerifier(props);   //verify user session when Home component rendered
+  }, [props.location]);
 
   useEffect(()=>{
     setUser(props.user)

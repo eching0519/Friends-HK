@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import LoginVerifier from '../component/common/LoginVerifier'
 const querystring = require('querystring');
 
 const langDic = {"yue": "Cantonese", "cmn": "Mandarin", "eng": "English"};
@@ -7,8 +6,6 @@ const coDic = {"NA": "North America", "SA": "South America", "ER": "Europe", "AS
 const genderDic = {"M": "Male", "F": "Female", "TM": "Trans male", "TF": "Trans female", "NB": "Non-binary", "ND": "Not Declare"};
 
 const FriendList = (props) => {
-    LoginVerifier(props)
-
     const [inRequest, setInRequest] = useState([])
     const [outRequest, setOutRequest] = useState([])
 

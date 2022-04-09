@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import LoginVerifier from '../component/common/LoginVerifier'
 import AccountSettings from '../component/settings/account';
 import ProfileSettings from '../component/settings/profile';
-import PrivacySettings from '../component/settings/privacy'
+// import PrivacySettings from '../component/settings/privacy'
 import AlertMessage from '../component/common/AlertMessage';
 import { Trans } from 'react-i18next';
 
 const Settings = (props) => {
-    LoginVerifier(props)
-    
     const [formChanged, setFormChanged] = useState(false)
     const [settingType, setType] = useState('profile');
     const [alert, setAlert] = useState({visible:false});

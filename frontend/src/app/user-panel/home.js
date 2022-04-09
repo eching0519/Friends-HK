@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import LoginVerifier from '../component/common/LoginVerifier';
 // import Chatbox from './Chatbox/Chatbox';
 // import Sidebar from './Sidebar/Sidebar';
 import FriendMatch from './FriendMatch/FriendMatch';
@@ -17,11 +16,6 @@ const Home = (props) => {
     const [roomId, setRoomId] = useState('');
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
-
-    useEffect(() => {
-        LoginVerifier(props);   //verify user session when Home component rendered
-
-    }, [props.name]);
 
     useEffect(() => {
         console.log('Home component mounted, load required infomation');
