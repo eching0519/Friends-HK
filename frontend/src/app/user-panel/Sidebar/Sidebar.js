@@ -139,11 +139,11 @@ const Sidebar = (props) => {
 
                     <Tabs fill justify defaultActiveKey="chatroomlist" id="sidebar-func-tab" className="">
                         <Tab eventKey="chatroomlist" title="Chatroom" className="">
-                            {chatroomlist}
+                            {chatroomlist.length == 0? <div className='m-4'>You have not joint any chatroom yet.</div> : chatroomlist}
                             {/* {renderChatroomlist()} */}
                         </Tab>
                         <Tab eventKey="frinedlist" title="Friends" className="">
-                            {friendChatroomlist}
+                            {friendChatroomlist.length == 0? <div className='m-4'>Your friend list is empty.</div>: friendChatroomlist}
                             {/* {renderFriendChatroomlist()} */}
                         </Tab>
                     </Tabs>
