@@ -159,10 +159,6 @@ const FriendMatch = (props) => {
         </div>
     );
 
-    if (props.user.preferences == null) {
-        pageToRender = <></>;
-    }
-
     return pageToRender;
 }
 
