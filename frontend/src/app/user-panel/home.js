@@ -5,6 +5,13 @@ import Sidebar from './Sidebar/Sidebar';
 import FriendMatch from './FriendMatch/FriendMatch';
 // import Chatroom from './Chatroom';
 import Chatrooms from './Chatbox/Chatroom';
+import SocketContext from '../SocketContext'
+
+import { io } from 'socket.io-client';
+
+const socket = io({ //no url: default to localhost:8080
+    autoConnect: true
+});
 
 const Home = (props) => {
     const [roomId, setRoomId] = useState('');
@@ -13,12 +20,19 @@ const Home = (props) => {
 
     useEffect(() => {
         LoginVerifier(props);   //verify user session when Home component rendered
+
     }, [props.name]);
 
     useEffect(() => {
-        console.log('home component just mount');
+        console.log('Home component mounted, load required infomation');
         setUserName(JSON.parse(sessionStorage.getItem('UserProfile')).name);    //get user profile name.
         setUserId(JSON.parse(sessionStorage.getItem('UserProfile')).id);
+        socket.connect(); //estiblish socket io connection
+
+        return () => {
+            //socket.removeAllListeners();    //clean up listener
+            //socket.disconnect();    //disconnect socket io connection
+        }
     }, []);
 
     let pageplaceholder;    //placeholder for chatbox or friend match
@@ -31,7 +45,11 @@ const Home = (props) => {
         pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setRoomId} user={props.user} />;
     }
 
-    return pageplaceholder;
+    return (
+        <SocketContext.Provider value={socket}>
+            {pageplaceholder}
+        </SocketContext.Provider>
+    );
 }
 
 export default Home;

@@ -67,6 +67,7 @@ const specialThemeQueue = {}; //queue for storing user id in special matching fu
 // Socket
 io.on('connection', (socket) => {
     console.log('New WebSocket connection, id:', socket.id);
+    console.log(io.sockets.allSockets());
 
     socket.on("joinRoom", ({ userId, name, roomId }, callback) => {
         socket.join(roomId);    //add user to romm by room id.
@@ -236,26 +237,47 @@ io.on('connection', (socket) => {
         callback("success");
     });
 
-    socket.on("joinWouldURgame", (userName, roomId) => {
+    socket.on("joinWouldURgame", (userName, roomId, callback) => {
         socket.join(`wru:${roomId}`)
         console.log(`user: ${userName} join the would you rather game`)
-        const { questions } = require('./models/wyrQuestion');  //get question bank
+
+        callback('join a game successfully!');
 
         // console.log(questions[0]);
 
 
-        let min = Math.ceil(0);
-        let max = Math.floor(70);
-        let i = Math.floor(Math.random() * (max - min) + min);
 
-        socket.emit("wouldURgameQuestion", questions[i]);
-        //socket.emit("wouldURgameSession", questions[0]);
+        if (io.sockets.adapter.rooms.get(`wru:${roomId}`).size >= 2) {
+            const { questions } = require('./models/wyrQuestion');  //get question bank
+            let min = Math.ceil(0);
+            let max = Math.floor(70);
+            let i = Math.floor(Math.random() * (max - min) + min);
+            io.to(`wru:${roomId}`).emit("assignWouldURgameQuestion", questions[i]);
+        }
+
 
     });
 
     socket.on("sendWouldURanswer", (userName, roomId, answer, callback) => {
         //socket.join(`wru:${roomId}`)
         console.log(`user choice: ${answer}`);
+        callback('answer recieve from user:', userName);
+
+        io.to(`wru:${roomId}`).emit("waitResponseUserName", userName, answer);
+
+        if (io.sockets.adapter.rooms.get(`wru:${roomId}`).size >= 2) {
+            const { questions } = require('./models/wyrQuestion');  //get question bank
+
+            let min = Math.ceil(0);
+            let max = Math.floor(70);
+            let i = Math.floor(Math.random() * (max - min) + min);
+            setInterval(() => {
+                io.to(`wru:${roomId}`).emit("assignWouldURgameQuestion", questions[i]);
+            }, 4000)
+        }
+
+
+
         // const { questions } = require('./models/wyrQuestion');
         // console.log(questions[0]);
     });

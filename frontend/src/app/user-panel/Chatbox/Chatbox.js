@@ -5,14 +5,17 @@ import StatusBar from './StatusBar/StatusBar';
 import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
 import WRUgame from "../WRUgame/WRUgame";
+import SocketContext from "../../SocketContext";
 
 import $ from 'jquery';
 
-const socket = io({ //no url: default to localhost:8080
-    autoConnect: false
-});
+// const socket = io({ //no url: default to localhost:8080
+//     autoConnect: false
+// });
 
 const Chatbox = (props) => {
+    const socket = useContext(SocketContext);
+    
     const [wouldURgame, setWouldURgame] = useState(false);
 
     const [chatRoom, setChatRoom] = useState(null);
@@ -26,12 +29,15 @@ const Chatbox = (props) => {
     const [messageList, setmessageList] = useState([]);   //store all message.
     const [systemMessage, setSystemMessage] = useState('');
 
+   
+
     useEffect(() => {
-        socket.connect();   //estiblish socket io connection
-        return () => {
-            socket.removeAllListeners();    //clean up listener
-            socket.disconnect();    //disconnect socket io connection
-        }
+        console.log(socket);
+        //socket.connect();   //estiblish socket io connection
+        // return () => {
+        //     socket.removeAllListeners();    //clean up listener
+        //     socket.disconnect();    //disconnect socket io connection
+        // }
     }, []);
 
     useEffect(() => {
@@ -61,11 +67,11 @@ const Chatbox = (props) => {
             setSystemMessage(message);  
         });
 
-        return () => {
-            socket.emit("leaveRoom", { name: userName, roomId: roomId });
-            socket.removeAllListeners();
-        }
-    }, [socket, props.roomId]);   //trigger useEffect if room changed from sidebar
+        // return () => {
+        //     socket.emit("leaveRoom", { name: userName, roomId: roomId });
+        //     socket.removeAllListeners();
+        // }
+    }, [props.roomId]);   //trigger useEffect if room changed from sidebar
 
     useEffect(() => {
         if (props.roomId !== '') {

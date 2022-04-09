@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 import { io } from 'socket.io-client';
 import Spinner from '../../shared/Spinner';
+import SocketContext from '../../SocketContext';
 
-const socket = io({ //no url: default to localhost:8080
+/* const socket = io({ //no url: default to localhost:8080
     autoConnect: false
-});
+}); */
 
 const Sidebar = (props) => {
     // const [props.groupChatList, setGroupChatList] = useState(null);
     // const [props.friendChatList, setFriendChatList] = useState(null);
-
+    const socket = useContext(SocketContext);
+    
     useEffect(() => {
-        socket.connect();   //estiblish socket io connection
-        return () => {
-            socket.removeAllListeners();    //clean up listener
-            socket.disconnect();    //disconnect socket io connection
-        }
+        // socket.connect();   //estiblish socket io connection
+        // return () => {
+        //     socket.removeAllListeners();    //clean up listener
+        //     socket.disconnect();    //disconnect socket io connection
+        // }
     }, []);
 
     useEffect(() => {
-        return () => {
-            socket.removeAllListeners();
-        }
+        // return () => {
+        //     socket.removeAllListeners();
+        // }
     }, [socket]);   //trigger useEffect if room changed from sidebar
 
     useEffect(() => {

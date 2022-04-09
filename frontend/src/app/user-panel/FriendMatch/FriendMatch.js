@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import { io } from 'socket.io-client';
+import SocketContext from "../../SocketContext";
 // import SpecialThemeCard from "./SpecialThemeCard";
 
-const socket = io({ //no url: default to localhost:8080
-    autoConnect: false
-});
+// const socket = io({ //no url: default to localhost:8080
+//     autoConnect: false
+// });
 
 const FriendMatch = (props) => {
+    const socket = useContext(SocketContext);
+
     const [matchTheme, setMatchTheme] = useState('default');
     const [matchStatus, setmatchStatus] = useState('wait');
     const [disableInput, setDisableInput] = useState(false);
@@ -16,11 +19,11 @@ const FriendMatch = (props) => {
     const [themes, setThemes] = useState(['Dining', 'Workouts', 'Outdoor Activities', 'Board Games', 'Computer Games', 'Online Games']);
 
     useEffect(() => {
-        socket.connect();   //estiblish socket io connection
-        return () => {
-            socket.removeAllListeners();    //clean up listener
-            socket.disconnect();    //disconnect socket io connection
-        }
+        // socket.connect();   //estiblish socket io connection
+        // return () => {
+        //     socket.removeAllListeners();    //clean up listener
+        //     socket.disconnect();    //disconnect socket io connection
+        // }
     }, []);
 
     socket.on("waitMatch", (roomId) => {    //listen to server match result
