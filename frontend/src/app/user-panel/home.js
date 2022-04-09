@@ -24,10 +24,12 @@ const Home = (props) => {
     let pageplaceholder;    //placeholder for chatbox or friend match
 
     if (props.currentPage === 'chat') {
+        console.log("Chat")
         pageplaceholder = <Chatrooms setCurrentPage={props.setCurrentPage} user={props.user} />
     }
 
     if (props.currentPage === 'matchFriends') {
+        console.log("MatchFriends")
         pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setRoomId} user={props.user} />;
     }
 

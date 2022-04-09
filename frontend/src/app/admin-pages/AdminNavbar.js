@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
+import { EmptyIcon } from "../shared/Variable"
 
 const AdminNavbar = (props) => {
   let admin = JSON.parse(sessionStorage.getItem('AdminProfile'));
@@ -30,7 +31,7 @@ const AdminNavbar = (props) => {
             <Dropdown alignRight>
               <Dropdown.Toggle className="nav-link">
                 <div className="nav-profile-img">
-                  <img src={require("../../assets/images/emptyFace.png")} alt="user"/>
+                  <img src={EmptyIcon} alt="user"/>
                 </div>
                 <div className="nav-profile-text">
                   <p className="mb-1 text-black">{admin===null? "N/A" : admin.name}</p>

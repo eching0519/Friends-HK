@@ -218,3 +218,25 @@ exports.FindRequest = async (req, res, next) => {
     }, null, "\t"));
     res.end();
 }
+
+exports.FindUserFriendRequest = async (req, res, next) => {
+    const userId = req.body.id;
+    let requests;
+    try {
+        requests = await Friend.findFriendRequestsOfUser(userId)
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": true,
+            "message": "There are no incoming friend request."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    res.write(JSON.stringify({
+        "success": true,
+        "requests": requests
+    }, null, "\t"));
+    res.end();
+    return;
+}

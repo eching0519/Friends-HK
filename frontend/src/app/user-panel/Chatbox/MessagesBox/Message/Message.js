@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
-
+import { EmptyIcon } from '../../../../shared/Variable'
 import './Message.css';
-
-const emptyFace = require("../../../../../assets/images/emptyFace.png");
 
 const Message = (props) => {
     let isSentByCurrentUser = false;
@@ -40,7 +38,7 @@ const Message = (props) => {
         if (chatRoom.usersInfo[senderId].picture !== undefined) {
             return chatRoom.usersInfo[senderId].picture;
         }
-        return emptyFace;
+        return EmptyIcon;
     }
 
     const parseTime = (time) => {

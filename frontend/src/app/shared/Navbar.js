@@ -3,17 +3,18 @@ import { Dropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import Signout from '../component/common/Signout'
+import { EmptyIcon } from './Variable'
 
 const Navbar = (props) => {
   const history = useHistory();
   const [user, setUser] = useState(props.user)
   console.log(user)
-  const [userPic, setUserPic] = useState((user==null||user.picture==null)? require("../../assets/images/emptyFace.png") : props.user.picture)
+  const [userPic, setUserPic] = useState((user==null||user.picture==null)? EmptyIcon : props.user.picture)
 
   useEffect(()=>{
     setUser(props.user)
     setUserPic((user==null||user.picture==null)? 
-                require("../../assets/images/emptyFace.png") : 
+                EmptyIcon : 
                 props.user.picture +"?" + + new Date().getTime()) // Add time so that the image source must updated immediately
   }, [props.user])
 
@@ -48,7 +49,7 @@ const Navbar = (props) => {
           <li className="nav-item nav-profile">
             <div className="nav-link" onClick={() => window.location.pathname = '/userProfile'}>
               <div className="nav-profile-img">
-                <img src={(user==null||user.picture==null)? require("../../assets/images/emptyFace.png") : props.user.picture} alt="user"/>
+                <img src={(user==null||user.picture==null)? EmptyIcon : props.user.picture} alt="user"/>
                 <span className="availability-status online"></span>
               </div>
               <div className="nav-profile-text">
@@ -173,7 +174,7 @@ const Navbar = (props) => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="navbar-dropdown">
-                <Dropdown.Item href="!#" onClick={evt =>evt.preventDefault()}>
+                <Dropdown.Item href="/friend">
                   <i className="mdi mdi-account-multiple mr-2 text-danger"></i>
                   <Trans>Friends</Trans>
                 </Dropdown.Item>

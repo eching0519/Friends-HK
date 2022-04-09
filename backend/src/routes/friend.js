@@ -13,5 +13,6 @@ friendRouter.post('/rejectRequest', friendController.RejectRequest)
 friendRouter.post('/acceptRequest', friendController.AcceptRequest)
 friendRouter.post('/cancelRequest', friendController.CancelRequest)
 friendRouter.post('/findRequest', friendController.FindRequest)
+friendRouter.post('/userFriendRequest', friendController.FindUserFriendRequest)
 
 module.exports = friendRouter;

@@ -1,6 +1,7 @@
 const { ObjectID } = require('mongodb');
 
 const getDatabase = require('../util/database').getDatabase;
+const User = require('./user');
 
 class Friend {
 
@@ -36,6 +37,34 @@ class Friend {
             .catch(err=>{
                 throw err;
             });
+    }
+
+    static findFriendRequestsOfUser = async (id) =>{
+        const db = getDatabase();
+        let incomingRequest = await db
+                                .collection('friendRequest')
+                                .find({to: id, status: 'pending'}).toArray();
+
+        let fromId;
+        let from;
+        for (let i = 0 ; i < incomingRequest.length; i++) {
+            fromId = incomingRequest[i].from;
+            from = await User.findById(fromId);
+            incomingRequest[i].from = from;
+        }
+
+        let outgoingRequest = await db
+                                .collection('friendRequest')
+                                .find({from: id, status: 'pending'}).toArray();
+        let toId;
+        let to;
+        for (let i = 0 ; i < outgoingRequest.length; i++) {
+            toId = outgoingRequest[i].to;
+            to = await User.findById(toId);
+            outgoingRequest[i].to = to;
+        }
+
+        return {'incoming': incomingRequest, 'outgoing': outgoingRequest};
     }
 
     constructor(to, from, status) {

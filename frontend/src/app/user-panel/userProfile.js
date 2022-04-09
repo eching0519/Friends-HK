@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LoginVerifier from '../component/common/LoginVerifier'
+import { EmptyIcon } from "../shared/Variable"
 const querystring = require('querystring');
 
 const UserProfile = (props) => {
@@ -17,7 +18,7 @@ const UserProfile = (props) => {
 
         <div className="row">
             <div className="col-md-3 grid-margin">
-                <UserProfileSidebar user={props.user} targetId={props.user.id} detailed={false} action={false} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
+                <UserProfileSidebar user={props.user} target={props.user} targetId={props.user.id} detailed={false} action={false} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
                 {/* <UserProfileSidebar user={props.user} targetId="6238539fd9d1a253646a53f6" detailed={true} action={true} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} furtherInfo={furtherInfo} /> */}
             </div>
             <div className="col-md-9 grid-margin stretch-card">
@@ -43,13 +44,12 @@ export const UserProfileSidebar = (props) => {
                         "badge badge-gradient-info ml-1 mt-1 badge-sm", 
                         "badge badge-gradient-danger ml-1 mt-1 badge-sm"];
     const capitalize = (str) => { return str.charAt(0).toUpperCase() + str.slice(1); }
-    const emptyFace = require("../../assets/images/emptyFace.png");
 
-    const [target, setTarget] = useState(null);
+    const [target, setTarget] = useState(props.target);
     const [sidebarContent, setSidebarContent] = useState({});
     const [infoContent, setInfoContent] = useState({});
     const [preferenceContent, setPreferenceContent] = useState({});
-    const [picture, setPicture] = useState(emptyFace);
+    const [picture, setPicture] = useState(EmptyIcon);
     const [friendRequest, setFriendRequest] = useState(null);
     const [requestExist, setRequestExist] = useState(false);
 
@@ -86,7 +86,8 @@ export const UserProfileSidebar = (props) => {
             "Bio": userInfo.bio
         }
         let lang = [], gender = [], ageRange = "";
-        if(preference != undefined || preference !== null) {
+        if(preference != undefined && preference !== null) {
+            console.log(preference)
             lang = (preference.lang === undefined)? [] : preference.lang;
             gender = (preference.gender !== undefined)? preference.gender : [];
             ageRange = (preference.ageFrom===undefined)? '' : preference.ageFrom + " ~ " + preference.ageTo;
@@ -276,7 +277,10 @@ export const UserProfileSidebar = (props) => {
     }
 
     return (
-        <div className="card" onLoad={()=>{getTargetInfo(props.targetId);getFriendRequest(props.targetId, props.user.id)}}>
+        <div className="card" onLoad={()=>{
+            if (target==null) getTargetInfo(props.targetId);
+            getFriendRequest(props.targetId, props.user.id)
+        }}>
             <div className="card-body">
                 <div className="pl-4 pr-4">
                     <img className="rounded-circle userSidebar-img" src={picture} />

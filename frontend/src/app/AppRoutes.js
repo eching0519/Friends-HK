@@ -40,6 +40,7 @@ const Verify = lazy(() => import('./user-pages/Verify'))
 const Home = lazy(() => import('./user-panel/home'));
 const Settings = lazy(() => import('./user-panel/settings'));
 const UserProfile = lazy(() => import('./user-panel/userProfile'));
+const FriendList = lazy(() => import('./user-panel/friendList'));
 
 // Admin
 const AdminLogin = lazy(() => import('./admin-pages/AdminLogin'));
@@ -81,6 +82,7 @@ const AppRoutes = (props) => {
         <Route path="/home"><Home currentPage={props.homepageState} setCurrentPage={props.setHomepageState} user={props.user} /></Route>
         <Route path="/settings"><Settings user={props.user} setUser={props.setUser} /></Route>
         <Route path="/userProfile"><UserProfile user={props.user} /></Route>
+        <Route path="/friend"><FriendList user={props.user} /></Route>
 
         <Route path="/login" component={ Login } />
         <Route path="/register" component={ Register } />
@@ -94,7 +96,7 @@ const AppRoutes = (props) => {
         {/* <Route exact path="/admin/blockuser" component={ Blockuser } /> */}
         <Route exact path="/admin/userlist" component={ Userlist } />
         {/* Root page */}
-        <Redirect to="/userProfile" /> {/*/admin to /admin/home */}
+        <Redirect to="/friend" /> {/*/admin to /admin/home */}
       </Switch>
     </Suspense>
   );
