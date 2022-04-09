@@ -2,7 +2,6 @@ import React, { Component, useState } from 'react';
 import { ProgressBar } from 'react-bootstrap';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import DatePicker from "react-datepicker";
-// import React, { Component, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { MDBDataTableV5 } from 'mdbreact';
@@ -11,17 +10,16 @@ import { type } from 'os';
 import $ from 'jquery';
 const querystring = require('querystring');
 
-// import "react-datepicker/dist/react-datepicker.css";
+
 
 const Userlist = (props) => {
 	const [userName, setUserName] = useState('');
 	const [userPassword, setUserPassword] = useState('');
-	//const [trigger, setTrigger] = useState(1);
 	const [datatable, setDatatable] = useState('');
 
 
 	useEffect(() => {
-		sendGetAllUserRequest();	//fetch user list from server when component first rendered.
+		sendGetAllUserRequest();	
 	}, []);
 
 
@@ -38,7 +36,9 @@ const Userlist = (props) => {
 			})
 		});
 		let data = await res.json();
+		console.log("Look here");
 		console.log(typeof (data));
+		console.log(data);
 
 		let tableObject = {
 			columns: [
@@ -103,7 +103,7 @@ const Userlist = (props) => {
 			<button type="button" className="btn btn-gradient-primary mr-2 mb-2" onClick={() => {
 				sendGetAllUserRequest();
 			}}>refresh</button>
-			<MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={datatable} searchTop searchBottom={false} />
+			<MDBDataTableV5 hover entriesOptions={[10]} entries={10} pagesAmount={4} data={datatable} searchTop searchBottom={false} />
 		</>
 
 	)

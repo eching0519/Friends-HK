@@ -59,12 +59,12 @@ class AdminSidebar extends Component {
     return (
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
         <ul className="nav">
-          <li className={ this.isPathActive('/dashboard') ? 'nav-item active' : 'nav-item' }>
-            <Link className="nav-link" to="/dashboard">
-              <span className="menu-title"><Trans>Dashboard</Trans></span>
+          {/* <li className={ this.isPathActive('/admin/userinfo') ? 'nav-item active' : 'nav-item' }>
+            <Link className="nav-link" to="/admin/userinfo">
+              <span className="menu-title"><Trans>User info</Trans></span>
               <i className="mdi mdi-home menu-icon"></i>
             </Link>
-          </li>
+          </li> */}
           <li className={ this.isPathActive('/admin/userlist') ? 'nav-item active' : 'nav-item' }>
             <Link className="nav-link" to="/admin/userlist">
               <span className="menu-title"><Trans>User List</Trans></span>
