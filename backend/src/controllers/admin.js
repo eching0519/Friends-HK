@@ -104,6 +104,9 @@ exports.adminChangePassword = async (req, res, next) => {
 exports.adminBlockUser = async (req, res, next) => {
 
     //check reqsession
+    
+    // console.log("Halloooo")
+    console.log(id)
     if (!adminIsVerified(req, res)) return;
 
     //the following id is userid(want to block that one)
@@ -142,6 +145,7 @@ exports.adminUnblockUser = async (req, res, next) => {
     try {
         // admin = await Admin.remove_Blocklist(id);
         await User.changeStatus(id, 'active');
+        
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,

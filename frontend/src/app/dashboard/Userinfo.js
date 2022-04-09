@@ -1,3 +1,4 @@
+import { NONAME } from 'dns';
 import React, { useState, useEffect } from 'react';
 // import { ProgressBar } from 'react-bootstrap';
 // import {Bar, Doughnut} from 'react-chartjs-2';
@@ -6,7 +7,6 @@ const querystring = require('querystring');
 // import "react-datepicker/dist/react-datepicker.css";
 
 // 해야할것  user status에서 블락을 누르면 unblock 되게 해야한다 백앤드 서버에서도
-// 사용자의 비밀번호를 바꿔야한다 백앤드 서버에서도
 // what is the difference between blocekd and unactive?
 
 const Userinfo = (props) => {
@@ -19,20 +19,14 @@ const Userinfo = (props) => {
                                             })
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [buttonStatus, setButtonStatus] = useState({ status: "active", button: "Block" });
-    // const onChange = (e) => {
-    //     setConfirmPassword(e.target.value);
-
-    //   }                                          
-    // let changepassword = {newpassword: ""}
+    const [buttonStatus, setButtonStatus] = useState({ status: "active", button: "Block" }, { status: "block", button: "Unblock"} );
+  
+    //buttonStatus status = userInfo.status
 
     useEffect(() => {
       getUserInfo();
     }, []);
 
-    // useEffect(() => {
-    //   resetUserPassword(userInfo.email, confirmPassword);
-    // }, [userInfo, confirmPassword]);
     
     const getUserInfo = async () => {
       const {userId} = props.match.params;
@@ -77,10 +71,29 @@ const Userinfo = (props) => {
       console.log(err);
     }
   }
-    const blockUser = async (id) => {
+    const blockUser = async (id1) => {
       // const {userId} = props.match.params;
       try{
         let res = await fetch('/admin/block', {
+          method: 'POST',
+          headers : {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: querystring.stringify({
+            id: id1
+          })
+        });
+        let data = await res.json();
+        console.log(data)
+      }catch(err){
+        console.log(err);
+      }
+    }
+    
+    const unblockUser = async (id) => {
+      // const {userId} = props.match.params;
+      try{
+        let res = await fetch('/admin/unblock', {
           method: 'POST',
           headers : {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -97,11 +110,23 @@ const Userinfo = (props) => {
     } 
      
 
-  const changeMessage = () => {
-    setButtonStatus({
-      status: "Blocked",
-      button: "Unblock"
-    })
+  const changeMessage = (userstatus) => {
+    if (userstatus === 'active'){
+      setButtonStatus({
+        status: userstatus,
+        button: "Block"
+      })
+    }
+    else if(userstatus === 'block'){
+      setButtonStatus({
+        status: userstatus,
+        button: "Unblcok"
+      })
+    }
+    // setButtonStatus({
+    //   status: userstatus,
+    //   button: "default"
+    // })
   }
   const handleOnPasswordInput = (passwordInput) => {
     setPassword(passwordInput);
@@ -185,7 +210,7 @@ const Userinfo = (props) => {
                       {/*If status is block then button show unblock if status active button shows block */}
                       <span className="legend-dots bg-primary"></span>{userInfo.status}
                       <span className="float-right">
-                        <button type="button"  className='btn-auto btn-gradient-primary font-weight-bold' onClick={() => blockUser(userInfo._id)}>button{/*buttonStatus.button*/}</button>
+                        <button type="button"  className='btn-auto btn-gradient-primary font-weight-bold' onChange={() => changeMessage(userInfo.status)} onClick={() => blockUser(userInfo._id)}>{buttonStatus.button}</button>
                       </span>
                     </li>
                   </ul>
