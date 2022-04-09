@@ -11,7 +11,7 @@ class Friend {
             .find({'to': id1, 'from': id2})
             .next()
             .then(data=>{
-                const friend = new Friend(data.from, data.to)
+                const friend = new Friend(data.to, data.from)
                 friend.status = data.status
                 friend.id= data._id
                 return friend;
@@ -41,27 +41,21 @@ class Friend {
                                                 { upsert: false })
     }
 
-    acceptRequest() {
+    async acceptRequest() {
         const db = getDatabase();
-        return db.collection('friendRequest').updateOne( { _id: this.id },
+        return await db.collection('friendRequest').updateOne( { _id: this.id },
                                                 { $set: {
                                                     'status': 'accept'
                                                 } },
                                                 { upsert: false })
     }
 
-    deleteRequest() {
+    async deleteRequest() {
+        console.log("deleteRequest")
         const db = getDatabase();
-        return db.collection('friendRequest').deleteOne( { _id: this.id },
-                                                { upsert: false })
+        return await db.collection('friendRequest').deleteOne( { _id: this.id },
+                                                    { upsert: false })
     }
-
-
-
-
-
-
-
 
 }
 

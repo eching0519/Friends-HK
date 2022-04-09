@@ -1,7 +1,6 @@
 const getDatabase = require('../util/database').getDatabase;
 const User = require('../models/user')
 const Friend = require('../models/friend')
-const EmailSender = require('../util/emailSender')
 const crypto = require("crypto");
 const path = require("path");
 const { type } = require('os');
@@ -48,10 +47,12 @@ exports.SendFriendRequest = async (req, res, next) =>{
     } catch(e) {
     }
 
-    if (request) {
+    console.log(request)
+    if (request.status === 'pending') {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Request is pending."
+            "message": "Request is pending.",
+            "request": request
         }, null, "\t"));
         res.end();
         return
@@ -68,7 +69,8 @@ exports.SendFriendRequest = async (req, res, next) =>{
 
     res.write(JSON.stringify({
         "success": true,
-        "message": "Friend request sent."
+        "message": "Friend request sent.",
+        "request": request
     }, null, "\t"));
     res.end()
 
@@ -94,7 +96,8 @@ exports.RejectRequest = async(req, res, next)=>{
     friend.deleteRequest();
     res.write(JSON.stringify({
         "success": true,
-        "message": "Request rejected"
+        "message": "Request rejected",
+        "request": friend
     }, null, "\t"));
     res.end();
 
@@ -158,9 +161,61 @@ exports.AcceptRequest = async(req, res, next)=>{
     friend.acceptRequest();
     res.write(JSON.stringify({
         "success": true,
-        "message": "Request accepted"
+        "message": "Request accepted",
+        "request": friend
     }, null, "\t"));
     res.end();
 
 
+}
+
+exports.CancelRequest = async (req, res, next) => {
+    const reqId = req.body.id;
+    var request;
+    try {
+        request = await Friend.findById(to, from)
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "No such record."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    request.deleteRequest();
+    res.write(JSON.stringify({
+        "success": true,
+        "message": "Request canceled"
+    }, null, "\t"));
+    res.end();
+}
+
+exports.FindRequest = async (req, res, next) => {
+    const to = req.body.user1;
+    const from = req.body.user2;
+    var friend;
+    try {
+        friend = await Friend.findById(to, from)
+        if (!friend) friend = await Friend.findById(from, to)
+    } catch (e) {}
+
+    try {
+        if (!friend) friend = await Friend.findById(from, to)
+    } catch (e) {
+        res.write(JSON.stringify({
+            "success": false,
+            "message": "No such record."
+        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+    
+
+    res.write(JSON.stringify({
+        "success": true,
+        "request": friend
+    }, null, "\t"));
+    res.end();
 }

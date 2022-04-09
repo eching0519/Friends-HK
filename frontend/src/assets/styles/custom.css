@@ -281,6 +281,10 @@ tbody[data-test="table-body"] tr:hover {
   overflow: auto;
 }
 
-.badge {
+.badge-sm {
+  font-size:small;
+}
+
+.badge-md {
   font-size: medium;
 }
