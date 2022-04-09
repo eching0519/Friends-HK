@@ -79,12 +79,14 @@ const AccountSettings = (props) => {
 
     return (
         <>
-        <div className="card-body">
+        {/* <div className="card-body">
             <h4 className="card-title">Account</h4>
 
             <UploadPicture user={user} setUser={props.setUser} setAlert={props.setAlert} />
-        </div>
+        </div> */}
         <div className="card-body">
+            <h4 className="card-title">Account</h4>
+            <p className="card-description">Update your account password and display name</p>
             <form className="forms-sample" onSubmit={async (e)=>{
                 e.preventDefault();
                 sendResetPwRequest()
