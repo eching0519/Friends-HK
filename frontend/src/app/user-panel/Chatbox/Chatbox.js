@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 
 import StatusBar from './StatusBar/StatusBar';
 import Messagesbox from './MessagesBox/MessagesBox';
@@ -116,10 +116,13 @@ const Chatbox = (props) => {
 
     return (
         <>
+            <div>
+                {wouldURgame? <WRUgame userName={props.userName} roomId={props.roomId} setWouldURgame={setWouldURgame}/>: <></>}
+            </div>
             <div className="card card-chatbox">
                 <div className="card-header bg-white">
                     <StatusBar userName={props.userName} roomId={props.roomId} roomName={props.roomName} />
-                    {wouldURgame? <WRUgame userName={props.userName} roomId={props.roomId} setWouldURgame={setWouldURgame}/>: <></>}
+                    
                 </div>
                 <div className="card-body bg-white">
                     <Messagesbox systemMessage={systemMessage} messageList={messageList} userName={props.userName} userId={props.userId} chatRoom={chatRoom} />
@@ -127,7 +130,10 @@ const Chatbox = (props) => {
                 <div className="card-footer bg-white">
                     <InputBar message={message} setMessage={setMessage} sendMessage={sendMessage} setWouldURgame={setWouldURgame}/>
                 </div>
+                
             </div>
+            
+            
         </>
     )
 }
