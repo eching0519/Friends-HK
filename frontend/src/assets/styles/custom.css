@@ -276,3 +276,11 @@ tbody[data-test="table-body"] tr:hover {
 .special-theme-container::-webkit-scrollbar-thumb, .tab-content::-webkit-scrollbar-thumb {
   background: #868e96;
 }
+
+.card-body {
+  overflow: auto;
+}
+
+.badge {
+  font-size: medium;
+}
