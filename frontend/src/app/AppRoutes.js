@@ -96,7 +96,7 @@ const AppRoutes = (props) => {
         {/* <Route exact path="/admin/blockuser" component={ Blockuser } /> */}
         <Route exact path="/admin/userlist" component={ Userlist } />
         {/* Root page */}
-        <Redirect to="/friend" /> {/*/admin to /admin/home */}
+        <Redirect to="/home" /> {/*/admin to /admin/home */}
       </Switch>
     </Suspense>
   );
