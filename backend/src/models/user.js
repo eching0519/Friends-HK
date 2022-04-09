@@ -134,7 +134,7 @@ class User {
 
     static changeStatus(id, status) {
         const db = getDatabase();
-        return db.collection('user').updateOne( { _id: id },
+        return db.collection('user').updateOne( { _id: ObjectID(id) },
                                                 { $set: {
                                                     'status': status
                                                 } },
