@@ -105,7 +105,7 @@ const Userlist = (props) => {
 			<button type="button" className="btn btn-gradient-primary mr-2 mb-2" onClick={() => {
 				sendGetAllUserRequest();
 			}}>refresh</button>
-			<MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={datatable} searchTop searchBottom={false} />
+			<MDBDataTableV5 hover entriesOptions={[5]} entries={5} pagesAmount={4} data={datatable} searchTop searchBottom={false} />
 		</>
 
 	)

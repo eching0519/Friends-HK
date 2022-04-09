@@ -265,7 +265,12 @@ const Userinfo = (props) => {
             </div>
           </div>
           <button type="button" className="btn btn-primary btn-block" onClick = {() => {
-            resetUserPassword(userInfo.email, confirmPassword);
+            if (confirmPassword.length !== 0){
+              resetUserPassword(userInfo.email, confirmPassword);
+            }
+            else{
+              window.alert("Type new password");
+            }
           }}>
             Change
           </button>
