@@ -3,70 +3,66 @@ import React, { useState, useEffect } from 'react';
 const querystring = require('querystring'); 
 
 
-const Userinfo = (props) => {
+const Userinfo = (props) => { //Function for admin 
 
-    const [userInfo, setUserInfo] = useState({  photo: "../../assets/images/faces/face1.jpg",
+    const [userInfo, setUserInfo] = useState({  photo: "../../assets/images/faces/face1.jpg", //each factors will change related to the specific user
                                                 email: "default",
                                                 password: "123456",
                                                 status: "Active",
                                                 button: "block"
                                             })
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [buttonStatus, setButtonStatus] = useState({ status: "", button: "" });
+    const [password, setPassword] = useState(''); //to change the password 
+    const [confirmPassword, setConfirmPassword] = useState(''); // to confirm the changed password
+    const [buttonStatus, setButtonStatus] = useState({ status: "", button: "" }); // to change the button based on the status
   
-    useEffect(() => {
-      getUserInfo();
+    useEffect(() => { //to render this function
+      getUserInfo(); //to fetch and load a user's data on the interface
     }, []);
 
-    useEffect(() => {
-      changeMessage(userInfo.status)
-    }, [userInfo])
+    useEffect(() => { //to render this function
+      changeMessage(userInfo.status) //to change the name of the button regards to the user's status 
+    }, [userInfo]) //use the userInfo
     
-    const getUserInfo = async () => {
-      const {userId} = props.match.params;
+    const getUserInfo = async () => { //to fetch the user information from the backend
+      const {userId} = props.match.params; //get the user Id from the url
       try{
-      let res = await fetch('/admin/getuserbyid', {
+      let res = await fetch('/admin/getuserbyid', { //fetch the api regards to its format
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: querystring.stringify({
-          id: userId
+          id: userId //requiremnt to fetch the user information
         })
       });
-      let data = await res.json();
+      let data = await res.json(); //save the fetched data into variable
       let info = data.user;
-      console.log(info)
-      setUserInfo(info);
+      setUserInfo(info); //to update the UserInfo by useState
     }catch(err){
-      console.log(err);
+      console.log(err); //to check error on the console
     }
   } 
-    const resetUserPassword = async (email , password) => {
-      console.log(password)
-      console.log(email);
+    const resetUserPassword = async (email , password) => { //to change the user's password
       try{
-      let res = await fetch('/admin/resetUserPassword', {
-        method: 'POST',
+      let res = await fetch('/admin/resetUserPassword', { // to fetch the data from backend
+        method: 'POST', //requirements to fetch the data from api
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: querystring.stringify({
           email: email,
-          password: password //new password
+          password: password //new password of the user
         })
       });
-      let data = await res.json();
-      console.log(data);
-      getUserInfo();
+      let data = await res.json(); //save the fetched data into variable
+      getUserInfo(); //to dynamically change the password on the user information
       }catch(err){
-      console.log(err);
+      console.log(err); //if error, show error
     }
   }
-    const blockUser = async (id) => {
+    const blockUser = async (id) => { // to block the user
       try{
-        let res = await fetch('/admin/block', {
+        let res = await fetch('/admin/block', { //fetch the data from api by submitting the requirements
           method: 'POST',
           headers : {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -75,17 +71,16 @@ const Userinfo = (props) => {
             id: id
           })
         });
-        let data = await res.json();
-        console.log(data)
-        getUserInfo();
+        let data = await res.json(); //save the fetched data to variable
+        getUserInfo(); // update the user status that this user is blocked 
       }catch(err){
         console.log(err);
       }
     }
     
-    const unblockUser = async (id) => {
+    const unblockUser = async (id) => { //to unblock the blocekd user
       try{
-        let res = await fetch('/admin/unblock', {
+        let res = await fetch('/admin/unblock', { //fetch the api by providing the requirements
           method: 'POST',
           headers : {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -95,55 +90,54 @@ const Userinfo = (props) => {
           })
         });
         let data = await res.json();
-        console.log(data)
-        getUserInfo();
+        getUserInfo(); //update the user status from block to active 
       }catch(err){
         console.log(err);
       }
     } 
      
-  const blockorUnblock = (userstatus, userid) => {
-    if (userstatus === 'active'){
+  const blockorUnblock = (userstatus, userid) => { // changes on the button based on the user's status
+    if (userstatus === 'active'){ //if the user status is active the button can block the user 
       blockUser(userid)
     }
-    else if (userstatus === 'block'){
+    else if (userstatus === 'block'){ //if the user status is block the button can unblock the user
       unblockUser(userid)
     }
   }
 
-  const changeMessage = (userstatus) => {
-    if (userstatus === 'active'){
+  const changeMessage = (userstatus) => { // change the message of the button based on the user status
+    if (userstatus === 'active'){// if user status is active the button shows Block
       setButtonStatus({
         status: userstatus,
         button: "Block"
       })
     }
-    else if(userstatus === 'block'){
+    else if(userstatus === 'block'){// if user status is block the button shows Unblock
       setButtonStatus({
         status: userstatus,
         button: "Unblcok"
       })
     }
   }
-  const handleOnPasswordInput = (passwordInput) => {
+  const handleOnPasswordInput = (passwordInput) => { //to change the password based on the input
     setPassword(passwordInput);
   }
 
-  const handleOnConfirmPasswordInput = (confirmPasswordInput) => {
+  const handleOnConfirmPasswordInput = (confirmPasswordInput) => {//to change the confirmpassword based on the input
       setConfirmPassword(confirmPasswordInput);
   }
 
-  const doesPasswordMatch = () => {
+  const doesPasswordMatch = () => { // check whther input of password and confirmpassword match
     return password === confirmPassword;
   }
 
-  const confirmPasswordClassName = () => {
+  const confirmPasswordClassName = () => { // to indicate either success or error inside of the input.
     if (confirmPassword) {
-      return doesPasswordMatch() ? 'is-valid' : 'is-invalid';
+      return doesPasswordMatch() ? 'is-valid' : 'is-invalid'; //If true then return 'is-valid'. If false then return 'is-invalid' 
     }
   }
 
-  const renderFeedbackMessage = () => {
+  const renderFeedbackMessage = () => { //to give user feedback whther inputs of password and inputpassword match each other. 
     if (confirmPassword) {
       if (!doesPasswordMatch()) {
         return (
