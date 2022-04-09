@@ -3,6 +3,7 @@ import React, { useEffect, useState, useContext } from "react";
 import StatusBar from './StatusBar/StatusBar';
 import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
+import $ from 'jquery';
 
 // const socket = io({ //no url: default to localhost:8080
 //     autoConnect: false
@@ -15,21 +16,18 @@ const ChatroomBox = (props) => {
     // sendMessage
     const [message, setMessage] = useState('');
 
-    console.log()
-
     return Object.entries(props.chatroomList).map(([roomId, chatroom]) => {
-        console.log("ChatroomBox", roomId)
-        console.log("ChatroomBox", chatroom)
-    return (
-                        <Box 
-                            // key={index} 
-                            chatroom={chatroom} 
-                            user={props.user}
-                            // systemMessage={chatroom.systemMessage}
-                            message={message}
-                            setMessage={setMessage}
-                            sendMessage={props.sendMessage} />
-                    )});
+        return (
+            <Box 
+                // key={index} 
+                chatroom={chatroom} 
+                user={props.user}
+                // systemMessage={chatroom.systemMessage}
+                message={message}
+                setMessage={setMessage}
+                sendMessage={props.sendMessage}
+                selectedRoomId={props.selectedRoomId} />
+        )});
 
     
 }
@@ -42,12 +40,28 @@ const Box = (props) => {
     // setMessage
     // sendMessage
     console.log("ChatroomBox box", props)
+
+    const hidden = "card card-chatbox d-none"
+    const show = "card card-chatbox"
+    const [myClassName, setClassName] = useState(hidden)
+    useEffect(() => {
+        setClassName(hidden)
+        if (props.chatroom._id === props.selectedRoomId) {
+            setClassName(show)
+        }
+    }, [props.selectedRoomId]);
+
+    // Scroll to bottom
+    useEffect(() => {
+        $(`#${props.chatroom._id}`).scrollTop($(`#${props.chatroom._id}`)[0].scrollHeight);
+    }, [myClassName, props.chatroom])
+
     return (
-        <div className="card card-chatbox">
+        <div className={myClassName}>
             <div className="card-header bg-white">
                 <StatusBar userName={props.user.name} roomId={props.chatroom._id} roomName={props.chatroom.name} />
             </div>
-            <div className="card-body bg-white">
+            <div className="card-body bg-white" id={props.chatroom._id}>
                 <Messagesbox 
                              messageList={props.chatroom.chatbox} 
                              userName={props.user.name} 

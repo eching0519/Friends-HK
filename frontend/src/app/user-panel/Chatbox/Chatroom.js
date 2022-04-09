@@ -200,7 +200,8 @@ const Chatrooms = (props) => {
                         // })
                         <ChatroomBox chatroomList={allChatList}
                                                 user={props.user}
-                                                sendMessage={sendMessage} />
+                                                sendMessage={sendMessage}
+                                                selectedRoomId={selectedRoomId} />
                      : (<>
                         <div className="card card-fit-screen">
                             <div className='card-body'>
