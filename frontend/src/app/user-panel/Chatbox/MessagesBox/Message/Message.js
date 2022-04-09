@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 
 import './Message.css';
 
+const emptyFace = require("../../../../../assets/images/emptyFace.png");
+
 const Message = (props) => {
     let isSentByCurrentUser = false;
     let chatRoom = props.chatRoom;
@@ -20,17 +22,25 @@ const Message = (props) => {
     if (props.message.senderId === props.userId) {
         isSentByCurrentUser = true;
     }
-    const getsenderName = () => {
+    const getSenderName = () => {
         let senderId = props.message.senderId;
-        console.log("getsenderName", senderId)
-        console.log("getsenderName", userList)
+        if (senderId === 'admin') return ''
+
         try {
-            console.log("getsenderName", userList[senderId])
+            console.log("getSenderName", userList[senderId])
             return chatRoom.usersInfo[senderId].name;
         } catch(e) {
             return senderId;
         }
-        
+    }
+    const getUserPicture = () => {
+        let senderId = props.message.senderId;
+        if (senderId === 'admin') return ''
+
+        if (chatRoom.usersInfo[senderId].picture !== undefined) {
+            return chatRoom.usersInfo[senderId].picture;
+        }
+        return emptyFace;
     }
 
     const parseTime = (time) => {
@@ -53,6 +63,7 @@ const Message = (props) => {
         }
     };
 
+    const pic = getUserPicture();
 
     return (
         (props.message.senderId === "admin") ? (
@@ -61,27 +72,30 @@ const Message = (props) => {
                     <div> {props.message.message} </div>
                 </div>
             </div>
-        ) : (
-        isSentByCurrentUser
-            ? (
+        ) : ( 
+            isSentByCurrentUser? (
                 <div className="messageContainer justifyEnd">
                     <div className="messageBox bg-gradient-primary">
                         <div className="messageText colorWhite m-1">{props.message.message}</div>
                         <div className="sentText colorWhite pr-1 float-right">{parseTime(props.message.timeElapse)}</div>
                     </div>
-
                 </div>
             )
             : (
                 <>
-                    <div className="nameText">{getsenderName()}</div>
-                    <div className="messageContainer justifyStart">
+                    <div className="row">
+                        {(props.lastMsgSender === props.message.senderId)? '' : <img className="rounded-circle chatbox-icon" src={getUserPicture()} />}
+                        <div className={(props.lastMsgSender === props.message.senderId)? 'next-chatbox' : 'first-chatbox'}>
+                            {(props.lastMsgSender === props.message.senderId)? '' : <div className="nameText">{getSenderName()}</div>}
+                            <div className="messageContainer justifyStart">
 
-                        <div className="messageBox bg-light">
-                            <div className="messageText colorDark m-1">{props.message.message}</div>
-                            <div className="sentText pr-1 float-right">{parseTime(props.message.timeElapse)}</div>
+                                <div className="messageBox bg-light">
+                                    <div className="messageText colorDark m-1">{props.message.message}</div>
+                                    <div className="sentText pr-1 float-right">{parseTime(props.message.timeElapse)}</div>
+                                </div>
+
+                            </div>
                         </div>
-
                     </div>
                 </>
 

@@ -6,6 +6,8 @@ import './MessageBox.css'
 
 const Messagesbox = (props) => {
     console.log("Messagesbox", props)
+
+    var lastMsgSender = 'admin';
     return (
         <>
             {
@@ -13,15 +15,18 @@ const Messagesbox = (props) => {
                 { 
                     console.log("Messagesbox", value)
                     console.log("Messagesbox", i)
-                    return (
-                    <div key={i}>
-                        <Message 
-                                message={value} 
-                                userName={props.userName} 
-                                userId={props.userId} 
-                                chatRoom={props.chatRoom} />
-                    </div>
-                    )
+                    let item = (
+                        <div key={i}>
+                            <Message 
+                                    message={value} 
+                                    userName={props.userName} 
+                                    userId={props.userId} 
+                                    chatRoom={props.chatRoom}
+                                    lastMsgSender={lastMsgSender} />
+                        </div>
+                    );
+                    lastMsgSender = value.senderId
+                    return item
                 })
             }
         </>

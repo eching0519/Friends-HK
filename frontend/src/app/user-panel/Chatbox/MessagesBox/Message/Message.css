@@ -1,5 +1,5 @@
 .messageBox {
-  border-radius: 20px;
+  border-radius: 17px;
   padding: 10px 20px 5px 20px;
   color: white;
   display: inline-block;
@@ -21,8 +21,18 @@
 .messageContainer {
   display: flex;
   /* justify-content: flex-end; */
-  margin-top: 3px;
-  margin-bottom: 7px;
+  
+}
+
+.messageContainer .bg-gradient-primary {
+  /* margin-top: 3px; */
+  margin-bottom: 4px;
+}
+
+.chatbox-icon {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
 }
 
 .nameText {
@@ -37,7 +47,7 @@
   align-items: center;
   color: #828282;
   letter-spacing: 0.3px;
-  transform: translate(8px, -5px);
+  transform: translate(10px, -3px);
 }
 
 .pl-10 {
@@ -48,8 +58,24 @@
   padding-right: 10px;
 }
 
+.incomeMsgContainer {
+  position: relative;
+}
+
 .justifyStart {
   justify-content: flex-start;
+}
+
+.first-chatbox {
+  margin-top: 3px;
+  margin-bottom: 4px;
+}
+
+.next-chatbox {
+  margin-top: 0px;
+  transform: translate(60px, 0px);
+  margin-top: 0px;
+  margin-bottom: 4px;
 }
 
 .justifyEnd {
