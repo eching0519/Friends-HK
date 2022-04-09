@@ -58,6 +58,7 @@ const Message = require('./models/message')
 const UserChatrooms = require('./models/user-chatrooms');
 const User = require('./models/user');
 const Chatrooms = require('./models/chatroom');
+const Chatbox = require('./models/chatbox')
 
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
@@ -73,7 +74,7 @@ io.on('connection', (socket) => {
         console.log(`user: ${name} assign to ${roomId}`);
         console.log(io.in(roomId).allSockets());    //log all socket in room
 
-        socket.emit('systemMessage', {roomId: roomId, msg: { message: `You are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() }});
+        socket.emit('systemMessage', {roomId: roomId, message: { message: `You are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() }});
         socket.broadcast.to(roomId).emit('systemMessage', { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() });
 
     });
@@ -83,7 +84,8 @@ io.on('connection', (socket) => {
         console.log(io.in(roomId).allSockets());  //log sockets remain in room
         console.log(`user: ${name} leave room: ${roomId}`);
 
-        io.to(roomId).emit('message', { message: `From system: ${name} left.`, senderId: 'admin', timeElapse: Date.now() });
+        var returnMsg = new Chatbox('admin', `From system: ${name} left.`, Date.now())
+        io.to(roomId).emit('message', { roomId: roomId ,message: returnMsg });
     });
 
     /* socket.on("pingRoom", ({ name, roomId }, callback) => {
@@ -103,7 +105,8 @@ io.on('connection', (socket) => {
         console.log("chatroom:", cr);
         cr.addChatBox(cb);
 
-        io.to(roomId).emit('message', { message: message.message, senderId: message.senderId, timeElapse: message.timeElapse });
+        // io.to(roomId).emit('message', { message: message.message, senderId: message.senderId, timeElapse: message.timeElapse });
+        io.to(roomId).emit('message', { roomId: roomId ,message: cb });
 
         callback(message);
     });

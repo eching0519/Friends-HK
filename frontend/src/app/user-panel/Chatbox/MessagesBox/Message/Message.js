@@ -24,8 +24,13 @@ const Message = (props) => {
         let senderId = props.message.senderId;
         console.log("getsenderName", senderId)
         console.log("getsenderName", userList)
-        console.log("getsenderName", userList[senderId])
-        return chatRoom.usersInfo[senderId].name;
+        try {
+            console.log("getsenderName", userList[senderId])
+            return chatRoom.usersInfo[senderId].name;
+        } catch(e) {
+            return senderId;
+        }
+        
     }
 
     const parseTime = (time) => {

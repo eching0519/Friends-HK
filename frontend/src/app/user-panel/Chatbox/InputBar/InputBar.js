@@ -21,7 +21,10 @@ function InputBar(props) {
 
                 <button className="btn btn-rounded btn-gradient-primary col-auto" onClick={e => {
                     //props.setMessages([...messages, message])
-                    props.sendMessage(e);
+                    e.preventDefault();
+                    console.log("sendMessage inputbar", props.message)
+                    props.sendMessage(props.message, props.roomId);
+                    props.setMessage('')
                 }}>Send</button>
             </div>
                 

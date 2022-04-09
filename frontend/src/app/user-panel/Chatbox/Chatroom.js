@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { io, Socket } from 'socket.io-client';
-import Chatbox from "./Chatbox";
+// import Chatbox from "./Chatbox";
 import Sidebar from '../Sidebar/Sidebar';
-import $ from 'jquery';
 import { createContext } from "react";
 import ChatroomBox from "./ChatroomBox";
 
@@ -12,30 +11,19 @@ const socket = io({ //no url: default to localhost:8080
 export const ChatSocketContext = createContext<Socket>(socket);
 
 const Chatrooms = (props) => {
-    // const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('UserProfile')))
-    const [user, setUser] = useState(props.user);
-    const [selectedRoomUserName, setSelectedRoomUserName] = useState(null);
-    const [selectedRoomUserId, setSelectedRoomUserId] = useState(null);
     const [selectedRoomId, setSelectedRoomId] = useState('');   //store current room id
-    const [roomName, setRoomName] = useState('');
     const [messageList, setmessageList] = useState([]);   //store all message.
-    const [systemMessage, setSystemMessage] = useState({});
-    // const [systemMessages, setSystemMessages] = useState(null);
-    let systemMessages = {};
 
     // Function from Sidebar
     const [groupChatList, setGroupChatList] = useState(null);
     const [friendChatList, setFriendChatList] = useState(null);
     let chatList = [];
     const [allChatList, setAllChatList] = useState(null);
-    useEffect(()=>{if(allChatList) console.log("allChatList", allChatList);}, [allChatList]);
-
     const [chatroomList, setChatroomList] = useState({});
     const [systemMsgList, setSystemMsgList] = useState({});
-
+    const [incomingMsgList, setIncomingMsgList] = useState({});
 
     const getChatroomlistSocketio = (id) => {
-        //console.log('user id:', id);
         socket.emit("getChatRoomList", id, (data) => {
             console.log(data)
             setGroupChatList(data.chatroom);
@@ -67,23 +55,28 @@ const Chatrooms = (props) => {
         //     socket.emit("joinRoom", { userId: user.id, name: user.name, roomId: chatList[i]._id });
         // }
 
-        socket.on("message", (message) => {
-            console.log('client recieve:', message)
-            setmessageList([...messageList, message]);    //add message to message list
+        socket.on("message", (response) => {
+            console.log('client recieve:', response)
+            var roomId = response.roomId;
+            var message = response.message;
+            console.log('client recieve:', roomId, message)
+            // // setmessageList([...messageList, message]);    //add message to message list
+            // var targetChatroom = allChatList[roomId];
+            // setAllChatList({...allChatList, [roomId]: {...targetChatroom, 'chatbox': [...targetChatroom.chatbox, response.message]}});
+
+            // var roomId = response.roomId;
+            // var message = response.msg
+            var prevChatbox = (roomId in incomingMsgList)? incomingMsgList[roomId] : [];
+            setIncomingMsgList(prevList => ({...prevList, [roomId]: [...prevChatbox, message]}));
         });
 
         // Get system messages
-        socket.on("systemMessage", (message) => {
-            console.log("from system:", message)
-            let roomId = message.roomId;
-            let msg = message.msg;
-                
+        socket.on("systemMessage", (response) => {
+            console.log("from system:", response)
 
-            setSystemMessage(message);
-            systemMessages = {...systemMessages, [message.roomId]: {...message.msg}};
-            console.log("System message", systemMessages);
-
-            setSystemMsgList(prevList => ({...prevList, [message.roomId]: {...message.msg}}));
+            var roomId = response.roomId;
+            var message = response.message
+            setSystemMsgList(prevList => ({...prevList, [roomId]: {...message}}));
             console.log("Get system message (1)")
 
             // setAllChatList()
@@ -112,56 +105,42 @@ const Chatrooms = (props) => {
     }, [systemMsgList]);
 
     useEffect(() => {
-        socket.on("message", (message) => {
-            setmessageList([...messageList, message]);
+        if (!allChatList) return
+        Object.entries(incomingMsgList).map((value, key) => {
+            console.log("allChatList incoming", value);
+            var roomId = value[0];
+            var msg = value[1];
+            if (allChatList && roomId in allChatList) {
+                var targetChatroom = allChatList[roomId];
+                setAllChatList({...allChatList, [roomId]: {...targetChatroom, 'chatbox': [...targetChatroom.chatbox, ...msg]}});
+            }
         });
-    });
+    }, [incomingMsgList]);
+
+    // useEffect(() => {
+    //     socket.on("message", (message) => {
+    //         setmessageList([...messageList, message]);
+    //     });
+    // });
 
     useEffect(() => {
-        if (user.id !== '') {
-            getChatroomlistSocketio(user.id);
+        if (props.user.id !== '') {
+            getChatroomlistSocketio(props.user.id);
         }
-    }, [user])  //when user id changed, fetch chat room list from server.
+    }, [props.user])  //when user id changed, fetch chat room list from server.
 
 
     // handle chat list
     useEffect(() => {
         if (groupChatList === null || friendChatList === null) return
-        groupChatList.forEach(chatroom => {
-            // console.log(chatroom)
-            setChatroomList(prevList => ({...prevList, [chatroom._id]: <Chatbox 
-                                                                            chatRoom={chatroom} 
-                                                                            socket={socket}
-                                                                            user={props.user} 
-                                                                            systemMessage={systemMessage} 
-                                                                            // setSystemMessage={setSystemMessage}
-                                                                            sendMessageBySocket={sendMessageBySocket}
-                                                                            // systemMsgList={systemMsgList} 
-                                                                            />}))
-        });
-        if (groupChatList === null || friendChatList === null) return
-
-        // chatList = [...Object.values(groupChatList), ...Object.values(friendChatList)];
-        friendChatList.forEach(chatroom => {
-            setChatroomList(prevList => ({...prevList, [chatroom._id]: <Chatbox 
-                                                                            chatRoom={chatroom} 
-                                                                            user={props.user} 
-                                                                            systemMessage={systemMessage} 
-                                                                            // setSystemMessage={setSystemMessage}
-                                                                            sendMessageBySocket={sendMessageBySocket}
-                                                                            // systemMsgList={systemMsgList} 
-                                                                            />}))
-        });
-        if (groupChatList === null || friendChatList === null) return
         chatList = [...Object.values(groupChatList), ...Object.values(friendChatList)];
         startSocketFunction();
 
-        console.log("Handle chat list (2)");
-    }, [groupChatList, friendChatList, user.id]);
+    }, [groupChatList, friendChatList, props.user.id]);
 
     const startSocketFunction = () => {
         for (let i = 0; i < chatList.length; i++) {
-            socket.emit("joinRoom", { userId: user.id, name: user.name, roomId: chatList[i]._id });
+            socket.emit("joinRoom", { userId: props.user.id, name: props.user.name, roomId: chatList[i]._id });
         }
     }
 
@@ -177,27 +156,21 @@ const Chatrooms = (props) => {
     //     chatList = [...Object.values(groupChatList), ...Object.values(friendChatList)];
     // }, [friendChatList])
 
-
-    // Select chatroom
-    const [chatbox, setChatbox] = useState(null);
-
+    // Select Chatroom
     useEffect(() => {
         if (selectedRoomId === '') return
-        setChatbox(chatroomList[selectedRoomId])
-        setSystemMessage(systemMessages[selectedRoomId])
-        
-        console.log("selectedRoomId", chatbox);
-        console.log("selectedRoomId", systemMessages[selectedRoomId]);
-        console.log("selectedRoomId", systemMessage);
+        // setChatbox(chatroomList[selectedRoomId])
     }, [selectedRoomId])
 
-    useEffect(() => {
-        console.log("chatbox", chatbox);
-        console.log("systemMessage", systemMessage)
-    }, [chatbox]);
+    // useEffect(() => { console.log("chatbox", chatbox); }, [chatbox]);
+
+    useEffect(()=>{if(allChatList) console.log("allChatList", allChatList);}, [allChatList]);
+    useEffect(()=>{if(incomingMsgList) console.log("incomingMsgList", incomingMsgList);}, [incomingMsgList]);
 
 
+    // Checked
     const sendMessage = (message, roomId) => {
+        console.log("sendMessage", message)
         if (message) {
             socket.emit('sendMessage', roomId, { message: message, senderId: props.user.id, timeElapse: Date.now() }, (message) => {
                 console.log('message delivered:', message);
@@ -207,11 +180,9 @@ const Chatrooms = (props) => {
 
     return (
         <div className="row">
-            <Sidebar setSelectedRoomUserName={setSelectedRoomUserName} 
-                     setSelectedRoomUserId={setSelectedRoomUserId} 
+            <Sidebar 
                      setSelectedRoomId={setSelectedRoomId} 
-                     userId={user.id} 
-                     setRoomName={setRoomName} 
+                     userId={props.user.id} 
                      setCurrentPage={props.setCurrentPage} 
                      setmessageList={setmessageList} 
                      getChatroomlistSocketio={getChatroomlistSocketio}

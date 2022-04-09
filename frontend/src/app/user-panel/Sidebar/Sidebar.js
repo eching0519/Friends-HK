@@ -40,10 +40,7 @@ const Sidebar = (props) => {
                     <a key={index} href="!#" className="dropdown-item justify-content-center" 
                         onClick={(e) => {
                         e.preventDefault();
-                        props.setSelectedRoomUserId(element.users);
-                        props.setSelectedRoomUserName(element.name);
                         props.setmessageList(element.chatbox);
-                        props.setRoomName(element.name);
                         props.setSelectedRoomId(element._id);
                         props.setCurrentPage('chat');
                     }}>
@@ -78,10 +75,7 @@ const Sidebar = (props) => {
                     <a key={index} href="!#" className="dropdown-item justify-content-center" 
                         onClick={(e) => {
                         e.preventDefault();
-                        props.setSelectedRoomUserId(element.users);
-                        props.setSelectedRoomUserName(element.name);
                         props.setmessageList(element.chatbox);
-                        props.setRoomName(element.name);
                         props.setSelectedRoomId(element._id);
                         props.setCurrentPage('chat');
                     }}>
