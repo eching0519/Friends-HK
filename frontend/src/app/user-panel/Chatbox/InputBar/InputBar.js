@@ -24,18 +24,18 @@ function InputBar(props) {
                         onKeyPress={event => event.key === 'Enter' ? props.sendMessage(event) : null}
                     />
 
-                    <button className="btn btn-rounded btn-gradient-primary col-auto" onClick={e => {
+                    {/* <button className="btn btn-rounded btn-gradient-primary col-auto" onClick={e => {
                         //props.setMessages([...messages, message])
                         props.sendMessage(e);
-                    }}>Send</button>
+                    }}>Send</button> */}
 
-                <button className="btn btn-rounded btn-gradient-primary col-auto" onClick={e => {
-                    //props.setMessages([...messages, message])
-                    e.preventDefault();
-                    console.log("sendMessage inputbar", props.message)
-                    props.sendMessage(props.message, props.roomId);
-                    props.setMessage('')
-                }}>Send</button>
+                    <button className="btn btn-rounded btn-gradient-primary col-auto" onClick={e => {
+                        //props.setMessages([...messages, message])
+                        e.preventDefault();
+                        console.log("sendMessage inputbar", props.message)
+                        props.sendMessage(props.message, props.roomId);
+                        props.setMessage('')
+                    }}>Send</button>
             </div>
                 
             </Form.Group>
