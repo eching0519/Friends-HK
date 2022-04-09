@@ -63,11 +63,13 @@ const Chatbox = require('./models/chatbox')
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
-let specialThemeQueue = {}; //queue for special matching
+const specialThemeQueue = {}; //queue for storing user id in special matching function
+const WURuserCount = {};    //count number of user have answer the WUR question
 
 // Socket
 io.on('connection', (socket) => {
     console.log('New WebSocket connection, id:', socket.id);
+    console.log(io.sockets.allSockets());
 
     socket.on("joinRoom", ({ userId, name, roomId }, callback) => {
         socket.join(roomId);    //add user to romm by room id.
@@ -188,7 +190,7 @@ io.on('connection', (socket) => {
         console.log(`recieved match request: theme: ${theme}, user id: ${userId}`);
         socket.join(theme);
 
-        if (`${theme}` in specialThemeQueue) {
+        if (`${theme}` in specialThemeQueue) {  //save user id to specialThemeQueue.
             console.log("key found")
             specialThemeQueue[`${theme}`].push(userId);
         } else {
@@ -227,11 +229,78 @@ io.on('connection', (socket) => {
         callback(numberofpeople);
     });
 
-    /*     socket.on('connect', () => {
-        }); */
+    socket.on("cancelMatchBySpecialTheme", async (theme, userId, callback) => {
+        console.log(`recieved cancel match request: theme: ${theme}, user id: ${userId}`);
+        socket.leave(theme);    //leave socket room(theme queue)
 
-    socket.on('disconnect', (reason) => {
-        console.log(reason);
+        if (`${theme}` in specialThemeQueue) {
+            console.log("key found");
+            let index = specialThemeQueue[`${theme}`].indexOf(userId);
+            specialThemeQueue[`${theme}`].slice(index, 1);  //remove user id from userid queue.
+        } else {
+            console.log("key not found")
+        }
+
+        console.log(specialThemeQueue); //log
+        callback("success");
+    });
+
+    let roomsize = 2;   //change roomsize here (2 -> 3)
+    socket.on("joinWouldURgame", (userName, roomId, callback) => {
+        socket.join(`wur:${roomId}`)    //join user to WUR session
+        console.log(`user: ${userName} join the would you rather game`)
+
+        callback('join a game successfully!');
+
+        // console.log(questions[0]);
+
+        if (io.sockets.adapter.rooms.get(`wru:${roomId}`).size >= roomsize) {
+            const { questions } = require('./models/wyrQuestion');  //get question bank
+            //create random index
+            let min = Math.ceil(0);
+            let max = Math.floor(70);
+            let i = Math.floor(Math.random() * (max - min) + min);
+
+            //assign random question by index
+            io.to(`wru:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //true indicate client can start
+        }
+
+
+    });
+
+    socket.on("sendWouldURanswer", (userName, roomId, answer, callback) => {
+        //socket.join(`wru:${roomId}`)
+        console.log(`user choice: ${answer}`);
+        callback('answer recieve from user:', userName);
+        if (`wru:${roomId}` in WURuserCount) {  //save user id to specialThemeQueue.
+            console.log("key found");
+            WURuserCount[`wru:${roomId}`]++;
+        } else {
+            console.log("key not found");
+            WURuserCount[`wru:${roomId}`] = 1;
+        }
+        io.to(`wru:${roomId}`).emit("waitResponseUserName", userName, answer);
+
+        if (WURuserCount[`wru:${roomId}`] >= roomsize) {   //if 2(or 3) answers recieved  
+            const { questions } = require('./models/wyrQuestion');  //get question bank
+            WURuserCount[`wru:${roomId}`] = 0;  //reset user count
+
+            //get random index
+            let min = Math.ceil(0); 
+            let max = Math.floor(70);
+            let i = Math.floor(Math.random() * (max - min) + min);
+
+            myTimer = setTimeout(() => {
+                io.to(`wru:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //set new question after 4 second
+            }, 4000)
+            // clearTimeout(myTimer);
+            
+        }
+
+    });
+
+    socket.on('disconnect', (reason) => {   //if there is a socket disconnection
+        console.log(reason);    //log socket disconnect reason.
     });
 })
 

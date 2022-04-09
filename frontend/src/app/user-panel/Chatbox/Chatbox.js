@@ -1,9 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 
 import StatusBar from './StatusBar/StatusBar';
 import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
+import WRUgame from "../WRUgame/WRUgame";
+import SocketContext from "../../SocketContext";
+
 import $ from 'jquery';
 
 import ChatSocketContext from './Chatroom'
@@ -12,87 +15,84 @@ import ChatSocketContext from './Chatroom'
 // });
 
 const Chatbox = (props) => {
-    const socket = useContext(ChatSocketContext)
-
-    const [user, setUser] = useState(props.user)
-    const [chatRoom, setChatRoom] = useState(props.chatRoom);
-    const [messageList, setmessageList] = useState(chatRoom.chatbox);   //store all message.
+    const socket = useContext(SocketContext);
     
+    const [wouldURgame, setWouldURgame] = useState(false);
+
+    const [chatRoom, setChatRoom] = useState(null);
     // const [user1Name, setUser1Name] = useState('');
     // const [user2Name, setUser2Name] = useState('');
-    const [roomId, setRoomId] = useState(chatRoom._id);         //store current room id
-    const [roomName, setRoomName] = useState(chatRoom.name);    //store current room name
-    const [message, setMessage] = useState('');                 //store message from the input box.
+    const [roomId, setRoomId] = useState('');   //store current room id
 
-    const [systemMessage, setSystemMessage] = useState(null);
-    console.log(props)
-    // console.log(systemMessage)
+    const [roomName, setRoomName] = useState('');   //store current room name
 
-    // useEffect(() => {
-    //     socket.connect();   //estiblish socket io connection
-    //     return () => {
-    //         socket.removeAllListeners();    //clean up listener
-    //         socket.disconnect();    //disconnect socket io connection
-    //     }
-    // }, []);
+    const [message, setMessage] = useState(''); //store message from the input box.
+    const [messageList, setmessageList] = useState([]);   //store all message.
+    const [systemMessage, setSystemMessage] = useState('');
 
-    // useEffect(() => {
-    //     if (chatRoom !== null) {
-    //         console.log(chatRoom.chatbox);
-    //         setmessageList(chatRoom.chatbox);
-    //     }
-    // }, [chatRoom]);
+   
 
     useEffect(() => {
-        // setmessageList([]);
-        // props.getChatRoomsocketio(roomId);
+        console.log(socket);
+        //socket.connect();   //estiblish socket io connection
+        // return () => {
+        //     socket.removeAllListeners();    //clean up listener
+        //     socket.disconnect();    //disconnect socket io connection
+        // }
+    }, []);
 
-        // let userName = props.user.name;
+    useEffect(() => {
+        if (chatRoom !== null) {
+            console.log(chatRoom.chatbox);
+            setmessageList(chatRoom.chatbox);
+        }
+    }, [chatRoom]);
 
-        // // props.socket.emit("joinRoom", { userId: props.userId, name: props.userName, roomId: chatRoom._id });
+    useEffect(() => {
+        setmessageList([]);
+        getChatRoomsocketio(props.roomId);
 
-        // props.socket.on("message", (message) => {
-        //     console.log('client recieve:', message)
-        //     // props.setmessageList([...messageList, message]);    //add message to message list
-        // });
+        const { userName, roomId } = { userName: props.userName, roomId: props.roomId }   //get names and room id from Sidebar component.
+        console.log({ userName, roomId });
+        setRoomId(roomId);
 
-        console.log(socket)
+        socket.emit("joinRoom", { userId: props.userId, name: props.userName, roomId: props.roomId });  //join room by given room id
 
-        // socket.on("systemMessage", (message) => {
-        //     console.log("from system:", message)
-        //     setSystemMessage(message);
-        // });
+        socket.on("message", (message) => { //listen to room message
+            console.log('client recieve:', message)
+            setmessageList([...messageList, message]);    //add message to message list
+        });
+
+        socket.on("systemMessage", (message) => {   //listen to system message
+            console.log("from system:", message)
+            setSystemMessage(message);  
+        });
 
         // return () => {
-        //     props.socket.emit("leaveRoom", { name: userName, roomId: roomId });
-        //     props.socket.removeAllListeners();
+        //     socket.emit("leaveRoom", { name: userName, roomId: roomId });
+        //     socket.removeAllListeners();
         // }
-    }, [socket]);   //trigger useEffect if room changed from sidebar
+    }, [props.roomId]);   //trigger useEffect if room changed from sidebar
 
-    // useEffect(() => {
-    //     if (systemMessage === null) return
-    //     console.log("systemMessage", systemMessage);
-    // },[systemMessage])
+    useEffect(() => {
+        if (props.roomId !== '') {
+            getChatRoomsocketio(props.roomId);
+        }
+        if (chatRoom !== null) {
+            setmessageList(chatRoom.chatbox);
+        }
 
-    // useEffect(() => {
-    //     if (props.roomId !== '') {
-    //         getChatRoomsocketio(props.roomId);
-    //     }
-    //     if (chatRoom !== null) {
-    //         setmessageList(chatRoom.chatbox);
-    //     }
+    }, [props.roomId]);
 
-    // }, [props.roomId]);
-
-    // const getChatRoomsocketio = async (id) => {
-    //     let chatroom;
-    //     socket.emit("getChatRoom", id, (data) => {
-    //         chatroom = data;
-    //         setChatRoom(chatroom)
-    //         console.log(chatroom);
-    //         // console.log(chatRoom);
-    //     });
-    // };
+    const getChatRoomsocketio = async (id) => {
+        let chatroom;
+        socket.emit("getChatRoom", id, (data) => {
+            chatroom = data;
+            setChatRoom(chatroom)
+            console.log(chatroom);
+            // console.log(chatRoom);
+        });
+    };
 
     useEffect(() => {
         // socket.on("message", (message) => {
@@ -121,17 +121,24 @@ const Chatbox = (props) => {
 
     return (
         <>
+            <div>
+                {wouldURgame? <WRUgame userName={props.userName} roomId={props.roomId} setWouldURgame={setWouldURgame}/>: <></>}
+            </div>
             <div className="card card-chatbox">
                 <div className="card-header bg-white">
-                    <StatusBar userName={props.user.name} roomId={roomId} roomName={chatRoom.name} />
+                    <StatusBar userName={props.userName} roomId={props.roomId} roomName={props.roomName} />
+                    
                 </div>
                 <div className="card-body bg-white">
                     <Messagesbox systemMessage={systemMessage} messageList={messageList} userName={props.user.name} userId={props.user.id} chatRoom={chatRoom} />
                 </div>
                 <div className="card-footer bg-white">
-                    <InputBar message={message} setMessage={setMessage} sendMessage={sendMessage} />
+                    <InputBar message={message} setMessage={setMessage} sendMessage={sendMessage} setWouldURgame={setWouldURgame}/>
                 </div>
+                
             </div>
+            
+            
         </>
     )
 }

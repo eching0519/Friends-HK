@@ -29,6 +29,14 @@ const Messagesbox = (props) => {
                     return item
                 })
             }
+            {/* {(props.messageList.length > 0) ?
+                props.messageList.map((message, i) =>
+                    <div key={i}>
+                        <Message message={message} userName={props.userName} userId={props.userId} chatRoom={props.chatRoom} />
+                    </div>
+                    //better put system message here:
+                ) : <h2>Loading</h2> // Loading placeholder
+            } */}
         </>
     )
 }

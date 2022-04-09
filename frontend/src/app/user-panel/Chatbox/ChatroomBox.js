@@ -4,6 +4,7 @@ import StatusBar from './StatusBar/StatusBar';
 import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
 import $ from 'jquery';
+import WRUgame from "../WRUgame/WRUgame";
 
 // const socket = io({ //no url: default to localhost:8080
 //     autoConnect: false
@@ -43,6 +44,7 @@ const Box = (props) => {
 
     const hidden = "card card-chatbox d-none"
     const show = "card card-chatbox"
+    const [wouldURgame, setWouldURgame] = useState(false);
     const [myClassName, setClassName] = useState(hidden)
     useEffect(() => {
         setClassName(hidden)
@@ -57,7 +59,9 @@ const Box = (props) => {
     }, [myClassName, props.chatroom])
 
     return (
+        <>
         <div className={myClassName}>
+            {wouldURgame? <WRUgame userName={props.userName} roomId={props.roomId} setWouldURgame={setWouldURgame}/>: <></>}
             <div className="card-header bg-white">
                 <StatusBar userName={props.user.name} roomId={props.chatroom._id} roomName={props.chatroom.name} />
             </div>
@@ -73,9 +77,11 @@ const Box = (props) => {
                           setMessage={props.setMessage} 
                           sendMessage={props.sendMessage}
                           roomId={props.chatroom._id}
-                          userId={props.user.id} />
+                          userId={props.user.id}
+                          setWouldURgame={setWouldURgame} />
             </div>
         </div>
+        </>
     );
 }
 
