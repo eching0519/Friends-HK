@@ -15,7 +15,7 @@ const FriendMatch = (props) => {
     const [matchTheme, setMatchTheme] = useState('default');
     const [matchStatus, setmatchStatus] = useState('wait');
     const [disableInput, setDisableInput] = useState(false);
-    let preferencesIsSet = props.user.preferences != undefined && props.user.preferences != null
+    let preferencesIsSet = props.user != null && props.user.preferences !== undefined && props.user.preferences != null
 
     // Special theme
     const [themes, setThemes] = useState(['Dining', 'Workouts', 'Outdoor Activities', 'Board Games', 'Computer Games', 'Online Games']);
@@ -169,7 +169,7 @@ const FriendMatch = (props) => {
 export default FriendMatch;
 
 const SpecialThemeCard = (props) => {
-    let preferencesIsSet = props.user.preferences != undefined && props.user.preferences != null;
+    let preferencesIsSet = props.user.preferences !== undefined && props.user.preferences != null;
 
     const btnColor = ['btn-gradient-danger', 'btn-gradient-info', 'btn-gradient-success', 'btn-gradient-primary', 'btn-gradient-warning']
     let themes = props.themes;

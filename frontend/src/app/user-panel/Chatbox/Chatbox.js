@@ -42,7 +42,7 @@ const Chatbox = (props) => {
     }, []);
 
     useEffect(() => {
-        if (chatRoom !== null) {
+        if (chatRoom != null) {
             console.log(chatRoom.chatbox);
             setmessageList(chatRoom.chatbox);
         }
@@ -78,7 +78,7 @@ const Chatbox = (props) => {
         if (props.roomId !== '') {
             getChatRoomsocketio(props.roomId);
         }
-        if (chatRoom !== null) {
+        if (chatRoom != null) {
             setmessageList(chatRoom.chatbox);
         }
 

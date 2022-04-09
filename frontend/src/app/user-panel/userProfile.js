@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import LoginVerifier from '../component/common/LoginVerifier'
+// import LoginVerifier from '../component/common/LoginVerifier'
 import { EmptyIcon } from "../shared/Variable"
 const querystring = require('querystring');
 
 const UserProfile = (props) => {
-    LoginVerifier(props)
+    // LoginVerifier(props)
 
     const [infoContent, setInfoContent] = useState({});
     const [preferenceContent, setPreferenceContent] = useState({});
@@ -86,7 +86,7 @@ export const UserProfileSidebar = (props) => {
             "Bio": userInfo.bio
         }
         let lang = [], gender = [], ageRange = "";
-        if(preference != undefined && preference !== null) {
+        if(preference !== undefined && preference != null) {
             console.log(preference)
             lang = (preference.lang === undefined)? [] : preference.lang;
             gender = (preference.gender !== undefined)? preference.gender : [];

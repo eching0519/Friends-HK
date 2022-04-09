@@ -63,7 +63,7 @@ const Sidebar = (props) => {
 
     // const renderChatroomlist = () => {
     //     let divArr = [];
-    //     if (props.groupChatList !== null) {
+    //     if (props.groupChatList != null) {
     //         if (props.groupChatList.length == 0) {
     //             return (<div className='m-4'>You have not joint any chatroom yet.</div>);
     //         }
@@ -95,7 +95,7 @@ const Sidebar = (props) => {
 
     // const renderFriendChatroomlist = () => {
     //     let divArr = [];
-    //     if (props.friendChatList !== null) {
+    //     if (props.friendChatList != null) {
     //         if (props.friendChatList.length == 0) {
     //             return (<div className='m-4'>Your friend list is empty.</div>);
     //         }
