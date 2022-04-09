@@ -236,32 +236,29 @@ io.on('connection', (socket) => {
         callback("success");
     });
 
-    socket.on("wouldURgame", (userName, roomId) => {
+    socket.on("joinWouldURgame", (userName, roomId) => {
         socket.join(`wru:${roomId}`)
         console.log(`user: ${userName} join the would you rather game`)
-        const { questions } = require('./models/wyrQuestion');
+        const { questions } = require('./models/wyrQuestion');  //get question bank
 
-        console.log(questions[0]);
+        // console.log(questions[0]);
 
 
         let min = Math.ceil(0);
         let max = Math.floor(70);
         let i = Math.floor(Math.random() * (max - min) + min);
-        socket.emit("wouldURgameSession", questions[i]);
 
-
-
-
+        socket.emit("wouldURgameQuestion", questions[i]);
         //socket.emit("wouldURgameSession", questions[0]);
 
     });
 
-    /* socket.on("wouldURgame", (userName, roomId) => {
-        socket.join(`wru:${roomId}`)
-        console.log(`user: ${userName} join the would you rather game`)
-        const { questions } = require('./models/wyrQuestion');
-        console.log(questions[0]);
-    }); */
+    socket.on("sendWouldURanswer", (userName, roomId, answer, callback) => {
+        //socket.join(`wru:${roomId}`)
+        console.log(`user choice: ${answer}`);
+        // const { questions } = require('./models/wyrQuestion');
+        // console.log(questions[0]);
+    });
 
     socket.on('disconnect', (reason) => {   //if there is a socket disconnection
         console.log(reason);    //log socket disconnect reason.

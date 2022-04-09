@@ -27,6 +27,12 @@ const WRUgame = (props) => {
         }
     }, []);
 
+    const sendWRUanswer = (answer) => {
+        socket.emit("sendWouldURanswer", props.userName, props.roomId, answer, () => {
+
+        });
+    };
+
     return (
         <div className="alert alert-success" role="alert">
             <h4 className="alert-heading">Would U Rather</h4>
@@ -39,10 +45,10 @@ const WRUgame = (props) => {
                 <h4>Question: {question}</h4>
 
                 <button type="button" className="btn btn-rounded btn-gradient-primary col-auto" onClick={event => {
-
+                    sendWRUanswer('a');
                 }}>{answerA}</button>
                 <button type="button" className="btn btn-rounded btn-gradient-primary col-auto" onClick={event => {
-
+                    sendWRUanswer('b');
                 }}>{answerB}</button>
 
             </div>
