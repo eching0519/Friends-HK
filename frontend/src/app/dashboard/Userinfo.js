@@ -1,13 +1,7 @@
 import { NONAME } from 'dns';
 import React, { useState, useEffect } from 'react';
-// import { ProgressBar } from 'react-bootstrap';
-// import {Bar, Doughnut} from 'react-chartjs-2';
-// import DatePicker from "react-datepicker";
 const querystring = require('querystring'); 
-// import "react-datepicker/dist/react-datepicker.css";
 
-// 해야할것  user status에서 블락을 누르면 unblock 되게 해야한다 백앤드 서버에서도
-// what is the difference between blocekd and unactive?
 
 const Userinfo = (props) => {
 
@@ -21,8 +15,6 @@ const Userinfo = (props) => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [buttonStatus, setButtonStatus] = useState({ status: "", button: "" });
   
-    //buttonStatus status = userInfo.status
-
     useEffect(() => {
       getUserInfo();
     }, []);
@@ -68,14 +60,11 @@ const Userinfo = (props) => {
       let data = await res.json();
       console.log(data);
       getUserInfo();
-      // let inf = userInfo;
-      // setUpdatePassword(data)
       }catch(err){
       console.log(err);
     }
   }
     const blockUser = async (id) => {
-      // const {userId} = props.match.params;
       try{
         let res = await fetch('/admin/block', {
           method: 'POST',
@@ -95,7 +84,6 @@ const Userinfo = (props) => {
     }
     
     const unblockUser = async (id) => {
-      // const {userId} = props.match.params;
       try{
         let res = await fetch('/admin/unblock', {
           method: 'POST',
@@ -136,23 +124,16 @@ const Userinfo = (props) => {
         button: "Unblcok"
       })
     }
-    // setButtonStatus({
-    //   status: userstatus,
-    //   button: "default"
-    // })
   }
   const handleOnPasswordInput = (passwordInput) => {
     setPassword(passwordInput);
-    // this.setState({ password: passwordInput });
   }
 
   const handleOnConfirmPasswordInput = (confirmPasswordInput) => {
       setConfirmPassword(confirmPasswordInput);
-    // this.setState({ confirmPassword: confirmPasswordInput });
   }
 
   const doesPasswordMatch = () => {
-    // const { password, confirmPassword } = this.state;
     return password === confirmPassword;
   }
 
@@ -219,8 +200,6 @@ const Userinfo = (props) => {
                       <span className="float-right">{userInfo.password}</span>
                     </li>
                     <li>
-                      {/*depends on the status*/}
-                      {/*If status is block then button show unblock if status active button shows block */}
                       <span className="legend-dots bg-primary"></span>{userInfo.status}
                       <span className="float-right">
                         <button type="button"  className='btn-auto btn-gradient-primary font-weight-bold' onChange={() => changeMessage(userInfo.status)} onClick={() => blockorUnblock(userInfo.status, userInfo._id)}>{buttonStatus.button}</button>
