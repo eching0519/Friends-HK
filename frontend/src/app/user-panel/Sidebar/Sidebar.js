@@ -121,4 +121,27 @@ const Sidebar = (props) => {
     )
 }
 
+const SidebarItem = (props) => {
+    // index
+    // chatroom
+    // setSelectedRoomId
+    return (
+        <>
+            <div className='preview-list tab-bottonlist'>
+                <a key={props.index} href="!#" className="dropdown-item justify-content-center" 
+                    onClick={(e) => {
+                    e.preventDefault();
+                    props.setSelectedRoomId(props.chatroom._id);
+                }}>
+                    <div className='chatroom-list-content'>
+                        <div className='font-weight-bold'>{props.chatroom.name}</div>
+                        <div className='msgOverview'>{props.chatroom.chatbox.length === 0? '' : props.chatroom.chatbox.at(-1).message}</div>
+                    </div>
+                </a>
+            </div>
+            <div class="dropdown-divider"></div>
+        </>
+    )
+}
+
 export default Sidebar;

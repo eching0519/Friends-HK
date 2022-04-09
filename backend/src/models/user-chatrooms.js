@@ -16,12 +16,14 @@ class UserChatrooms {
                             chatroomList['chatroom'] = []
                             for (let i = 0; i < data.chatroom.length; i++) {
                                 chatroom = await Chatroom.findById(data.chatroom[i])
+                                chatroom.type = 'group'
                                 chatroomList['chatroom'].push(chatroom);
                             }
 
                             chatroomList['friendChatroom'] = []
                             for (let i = 0; i < data.friendChatroom.length; i++) {
                                 chatroom = await Chatroom.findById(data.friendChatroom[i])
+                                chatroom.type = 'direct'
                                 chatroomList['friendChatroom'].push(chatroom);
                             }
 

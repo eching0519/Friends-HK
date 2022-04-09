@@ -181,13 +181,14 @@ const Chatrooms = (props) => {
     return (
         <div className="row">
             <Sidebar 
-                     setSelectedRoomId={setSelectedRoomId} 
-                     userId={props.user.id} 
-                     setCurrentPage={props.setCurrentPage} 
-                     setmessageList={setmessageList} 
-                     getChatroomlistSocketio={getChatroomlistSocketio}
-                     groupChatList={groupChatList}
-                     friendChatList={friendChatList} />
+                    chatroomList={allChatList}
+                    setSelectedRoomId={setSelectedRoomId} 
+                    userId={props.user.id} 
+                    setCurrentPage={props.setCurrentPage} 
+                    setmessageList={setmessageList} 
+                    getChatroomlistSocketio={getChatroomlistSocketio}
+                    groupChatList={groupChatList}
+                    friendChatList={friendChatList} />
 
             <div className="col-md-9 grid-margin stretch-card">
                 <div className='w-100'>

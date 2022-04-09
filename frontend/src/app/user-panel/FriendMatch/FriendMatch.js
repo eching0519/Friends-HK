@@ -52,7 +52,7 @@ const FriendMatch = (props) => {
         matchstatusplaceholder = <h3>group formed!</h3>;
     }
 
-    return (
+    var pageToRender = (
         <div>
             <div class="page-header">
                 <h3 class="page-title"><span class="page-title-icon bg-gradient-primary text-white mr-2"><i class="mdi mdi-account-search"></i></span> Friend Matching </h3>
@@ -101,7 +101,7 @@ const FriendMatch = (props) => {
                             <div>
                                 <SpecialThemeCard
                                             themes={themes}
-                                            languages={props.user.preferences.lang}
+                                            languages={props.user==null?[]:props.user.preferences==null?[]:props.user.preferences.lang}
                                             setMatchTheme={setMatchTheme} 
                                             setDisableInput={setDisableInput} 
                                             setmatchStatus={setmatchStatus} 
@@ -112,7 +112,13 @@ const FriendMatch = (props) => {
                 </div>
             </div>
         </div>
-    )
+    );
+
+    if (props.user.preferences == null) {
+        pageToRender = <></>;
+    }
+
+    return pageToRender;
 }
 
 export default FriendMatch;
