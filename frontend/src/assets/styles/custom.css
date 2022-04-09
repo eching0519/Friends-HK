@@ -259,6 +259,7 @@ tbody[data-test="table-body"] tr:hover {
 .special-theme-container div .stretch-card-custom .card-body {
   width: 270px;
   height: 230px;
+  overflow: hidden;
 }
 
 .special-theme-container div .stretch-card-custom .card-body h2 {

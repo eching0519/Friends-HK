@@ -17,8 +17,8 @@ const UserProfile = (props) => {
 
         <div className="row">
             <div className="col-md-3 grid-margin">
-                {/* <UserProfileSidebar user={props.user} targetId={props.user.id} detailed={true} action={true} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} /> */}
-                <UserProfileSidebar user={props.user} targetId="6238539fd9d1a253646a53f6" detailed={true} action={true} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
+                <UserProfileSidebar user={props.user} targetId={props.user.id} detailed={false} action={false} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
+                {/* <UserProfileSidebar user={props.user} targetId="6238539fd9d1a253646a53f6" detailed={true} action={true} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} furtherInfo={furtherInfo} /> */}
             </div>
             <div className="col-md-9 grid-margin stretch-card">
                 <UserInfo  user={props.user} targetId={props.user.id} infoContent={infoContent} preferenceContent={preferenceContent} targetName={targetName} />
@@ -65,15 +65,18 @@ export const UserProfileSidebar = (props) => {
 
         if (target.picture) setPicture(target.picture);
 
-        let t_sidebarContent = {
+        let t_sidebarContent_minial = {
             "ID": userInfo._id,
             "Name": userInfo.name,
             "Gender": genderDic[userInfo.gender],
             "Nationality": coDic[userInfo.co],
             "First Language": langDic[userInfo.lang],
+        }
+        let t_sidebarContent = {
+            ...t_sidebarContent_minial,
             "Birth": userInfo.dob,
             "Friend list": userInfo.friendlist===undefined? 0 : userInfo.friendlist.length,
-            "Status": capitalize(userInfo.status),
+            "Status": capitalize(userInfo.status)
         }
         let hobbies = (userInfo.hobbies !== undefined)? userInfo.hobbies : [];
         let hashtags = (userInfo.hashtags !== undefined)? userInfo.hashtags : [];
@@ -93,7 +96,7 @@ export const UserProfileSidebar = (props) => {
             "Gender": gender.map(x => <span className={badgeClass[Math.floor(Math.random()*badgeClass.length)]}>{genderDic[x]}</span>),
             "Age": ageRange
         }
-        setSidebarContent(t_sidebarContent);
+        setSidebarContent(props.minimal ? t_sidebarContent_minial : t_sidebarContent);
         setInfoContent(t_infoContent);
         props.setInfoContent(t_infoContent);
         setPreferenceContent(t_preferenceContent);
@@ -104,7 +107,7 @@ export const UserProfileSidebar = (props) => {
 
     const TableItem = (props) => {
         return (
-            <div className='row justify-content-between mt-3 mb-3'>
+            <div className={props.minimal? 'row justify-content-between' : 'row justify-content-between mt-3 mb-3'}>
                 <strong className='text-break'>{props.title}</strong>
                 <div className='text-break'>{props.value===undefined?'N/A':props.value}</div>
             </div>
@@ -190,6 +193,8 @@ export const UserProfileSidebar = (props) => {
     const cancelFriendRequest = async () => {
         let url = '/friend/cancelRequest';
 
+        console.log(friendRequest.id)
+
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -205,16 +210,15 @@ export const UserProfileSidebar = (props) => {
           return;
         }
 
-        getFriendRequest()
-        // if (data.success) {
-        //     setFriendRequest(false);
-        //     setRequestExist(false);
-        //     return;
-        // } else {
-        //     console.log(data.message)
-        //     setFriendRequest(false);
-        //     setRequestExist(false);
-        // }
+        if (data.success) {
+            setFriendRequest(false);
+            setRequestExist(false);
+            return;
+        } else {
+            console.log(data.message)
+            setFriendRequest(false);
+            setRequestExist(false);
+        }
     }
 
     const acceptFriendRequest = async () => {
@@ -236,12 +240,12 @@ export const UserProfileSidebar = (props) => {
           return;
         }
 
-        // if (data.success) {
-        //     setFriendRequest(data.request);
-        //     setRequestExist(true);
-        //     return;
-        // }
-        getFriendRequest()
+        if (data.success) {
+            setFriendRequest(data.request);
+            setRequestExist(true);
+            return;
+        }
+        // getFriendRequest()
     }
 
     const rejectFriendRequest = async (targetId, userId) => {
@@ -289,7 +293,7 @@ export const UserProfileSidebar = (props) => {
                     </>)}
                 </div>
                 {props.detailed && (<>
-                    <p className="card-description mt-5">People I'm willing to meet with</p>
+                    <p className="card-description mt-5">Matching Preferences</p>
                     <div className="pl-4 pr-4">
                         {Object.entries(preferenceContent).map((info, key) => 
                         <>
@@ -298,6 +302,16 @@ export const UserProfileSidebar = (props) => {
                         </>)}
                     </div>
                 </>) }
+
+                {props.furtherInfo &&
+                    <div className='pl-4 pr-4'>
+                        <p className="card-description mt-5">Others</p>
+                        {Object.entries(props.furtherInfo).map((info, key) => 
+                        <>
+                            <TableItem title={info[0]} value={info[1]} />
+                            <div class="dropdown-divider"></div>
+                        </>)}
+                    </div>}
 
                 <div className="pl-4 pr-4">
                 {props.action && 

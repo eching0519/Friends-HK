@@ -47,8 +47,7 @@ exports.SendFriendRequest = async (req, res, next) =>{
     } catch(e) {
     }
 
-    console.log(request)
-    if (request.status === 'pending') {
+    if (request) {
         res.write(JSON.stringify({
             "success": false,
             "message": "Request is pending.",
@@ -70,7 +69,7 @@ exports.SendFriendRequest = async (req, res, next) =>{
     res.write(JSON.stringify({
         "success": true,
         "message": "Friend request sent.",
-        "request": request
+        "request": friend
     }, null, "\t"));
     res.end()
 
@@ -173,7 +172,7 @@ exports.CancelRequest = async (req, res, next) => {
     const reqId = req.body.id;
     var request;
     try {
-        request = await Friend.findById(to, from)
+        request = await Friend.findByRequestId(reqId)
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,

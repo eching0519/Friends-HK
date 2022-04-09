@@ -21,6 +21,23 @@ class Friend {
             });
     }
 
+    static findByRequestId = async (id) =>{
+        const db = getDatabase();
+        return await db
+            .collection('friendRequest')
+            .find({_id: ObjectID(id)})
+            .next()
+            .then(data=>{
+                const friend = new Friend(data.to, data.from)
+                friend.status = data.status
+                friend.id= data._id
+                return friend;
+            })
+            .catch(err=>{
+                throw err;
+            });
+    }
+
     constructor(to, from, status) {
         this.to = to;
         this.from = from;
@@ -51,7 +68,6 @@ class Friend {
     }
 
     async deleteRequest() {
-        console.log("deleteRequest")
         const db = getDatabase();
         return await db.collection('friendRequest').deleteOne( { _id: this.id },
                                                     { upsert: false })

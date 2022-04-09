@@ -46,7 +46,7 @@ const Navbar = (props) => {
         </div> */}
         <ul className="navbar-nav navbar-nav-right">
           <li className="nav-item nav-profile">
-            <div className="nav-link">
+            <div className="nav-link" onClick={() => window.location.pathname = '/userProfile'}>
               <div className="nav-profile-img">
                 <img src={(user==null||user.picture==null)? require("../../assets/images/emptyFace.png") : props.user.picture} alt="user"/>
                 <span className="availability-status online"></span>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { io } from 'socket.io-client';
+import { UserProfileSidebar } from "../userProfile";
 import SpecialThemeCard from "./SpecialThemeCard";
 
 const socket = io({ //no url: default to localhost:8080
@@ -42,14 +43,44 @@ const FriendMatch = (props) => {
 
     // }
 
-    let matchstatusplaceholder = <h3>not send</h3>;
+    let matchstatusplaceholder = <UserProfileSidebar 
+                                    user={props.user} 
+                                    targetId={props.user.id} 
+                                    minimal={true}
+                                    detailed={false} 
+                                    action={false} 
+                                    setInfoContent={()=>{}} setPreferenceContent={()=>{}} setTargetName={()=>{}}
+                                    furtherInfo={{
+                                        "Preference Setting": props.preferences===undefined || props.preferences===null ? "Incomplete" : "Complete",
+                                        "Matching Status": "Not Chosen"
+                                    }} />;
 
     if (matchStatus === 'pending') {
-        matchstatusplaceholder = <h3>not yet find, { }</h3>;
+        matchstatusplaceholder = <UserProfileSidebar 
+                                    user={props.user} 
+                                    targetId={props.user.id} 
+                                    minimal={true}
+                                    detailed={false} 
+                                    action={false} 
+                                    setInfoContent={()=>{}} setPreferenceContent={()=>{}} setTargetName={()=>{}}
+                                    furtherInfo={{
+                                        "Preference Setting": props.preferences===undefined || props.preferences===null ? "Incomplete" : "Complete",
+                                        "Matching Status": <><span class="spinner-border spinner-border text-muted"></span> Matching..</>
+                                    }} />
     }
 
     if (matchStatus === 'success') {
-        matchstatusplaceholder = <h3>group formed!</h3>;
+        matchstatusplaceholder = <UserProfileSidebar 
+                                    user={props.user} 
+                                    targetId={props.user.id} 
+                                    minimal={true}
+                                    detailed={false} 
+                                    action={false} 
+                                    setInfoContent={()=>{}} setPreferenceContent={()=>{}} setTargetName={()=>{}}
+                                    furtherInfo={{
+                                        "Preference Setting": props.preferences===undefined || props.preferences===null ? "Incomplete" : "Complete",
+                                        "Matching Status": "Group found!"
+                                    }} />;
     }
 
     var pageToRender = (
@@ -60,9 +91,7 @@ const FriendMatch = (props) => {
 
             <div className="row">
             <div className="col-md-3 grid-margin">
-                <div className="card">
-                    <div className="card-body">{matchstatusplaceholder}</div>
-                </div>
+                {matchstatusplaceholder}
             </div>
 
                 <div className="col-md-9">
