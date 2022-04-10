@@ -22,7 +22,11 @@ const UserProfile = (props) => {
                 {/* <UserProfileSidebar user={props.user} targetId="6238539fd9d1a253646a53f6" detailed={true} action={true} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} furtherInfo={furtherInfo} /> */}
             </div>
             <div className="col-md-9 grid-margin stretch-card">
-                <UserInfo  user={props.user} targetId={props.user.id} infoContent={infoContent} preferenceContent={preferenceContent} targetName={targetName} />
+                <div className="card">
+                    <div className="card-body">
+                        <UserInfoDetail  user={props.user} targetId={props.user.id} infoContent={infoContent} preferenceContent={preferenceContent} targetName={targetName} />
+                    </div>
+                </div>
             </div>
         </div>
         </>
@@ -53,9 +57,16 @@ export const UserProfileSidebar = (props) => {
     const [friendRequest, setFriendRequest] = useState(null);
     const [requestExist, setRequestExist] = useState(false);
 
+    // useEffect(()=>{
+        
+    // },[target])
     useEffect(()=>{
         console.log(friendRequest)
     },[friendRequest])
+
+    useEffect(() => {
+        setTarget(props.target);
+    }, [props.target])
     
     useEffect(() => {
         if (!target) return;
@@ -75,7 +86,7 @@ export const UserProfileSidebar = (props) => {
         let t_sidebarContent = {
             ...t_sidebarContent_minial,
             "Birth": userInfo.dob,
-            "Friend list": userInfo.friendlist===undefined? 0 : userInfo.friendlist.length,
+            "Friend list": (userInfo.friendlist===undefined? 0 : userInfo.friendlist.length) + ' ppl',
             "Status": capitalize(userInfo.status)
         }
         let hobbies = (userInfo.hobbies !== undefined)? userInfo.hobbies : [];
@@ -278,8 +289,8 @@ export const UserProfileSidebar = (props) => {
 
     return (
         <div className="card" onLoad={()=>{
-            if (target==null) getTargetInfo(props.targetId);
-            getFriendRequest(props.targetId, props.user.id)
+            if (target==null && props.targetId!=null) getTargetInfo(props.targetId);
+            if (props.targetId!=null && props.user!=null) getFriendRequest(props.targetId, props.user.id)
         }}>
             <div className="card-body">
                 <div className="pl-4 pr-4">
@@ -309,7 +320,8 @@ export const UserProfileSidebar = (props) => {
 
                 {props.furtherInfo &&
                     <div className='pl-4 pr-4'>
-                        <p className="card-description mt-5">Others</p>
+                        {/* <p className="card-description mt-5">Others</p> */}
+                        <div class="dropdown-divider"></div>
                         {Object.entries(props.furtherInfo).map((info, key) => 
                         <>
                             <TableItem title={info[0]} value={info[1]} />
@@ -354,7 +366,7 @@ export const UserProfileSidebar = (props) => {
     )
 }
 
-const UserInfo = (props) => {
+export const UserInfoDetail = (props) => {
     // const langDic = {"yue": "Cantonese", "cmn": "Mandarin", "eng": "English"};
     // const genderDic = {"M": "Male", "F": "Female", "TM": "Trans male", "TF": "Trans female", "NB": "Non-binary", "ND": "Not Declare"};
     // const badgeClass = ["badge badge-gradient-success ml-1 mt-1 badge-md", 
@@ -374,28 +386,26 @@ const UserInfo = (props) => {
     }
 
     return (
-        <div className="card">
-            <div className="card-body">
-                <div className="card-title">
-                    {props.targetName}'s profile
-                </div>
-                <p className="card-description">More About Me</p>
-                <div className="pl-4 pr-4">
-                    {Object.entries(props.infoContent).map((info, key) => 
-                    <>
-                        <TableItem title={info[0]} value={info[1]} />
-                        <div class="dropdown-divider"></div>
-                    </>)}
-                </div>
-                <p className="card-description mt-5">People I'm willing to meet with</p>
-                <div className="pl-4 pr-4">
-                    {Object.entries(props.preferenceContent).map((info, key) => 
-                    <>
-                        <TableItem title={info[0]} value={info[1]} />
-                        <div class="dropdown-divider"></div>
-                    </>)}
-                </div>
+        <>
+            <div className="card-title">
+                {props.targetName}'s profile
             </div>
-        </div>
+            <p className="card-description">More About Me</p>
+            <div className="pl-4 pr-4">
+                {Object.entries(props.infoContent).map((info, key) => 
+                <>
+                    <TableItem title={info[0]} value={info[1]} />
+                    <div class="dropdown-divider"></div>
+                </>)}
+            </div>
+            <p className="card-description mt-5">People I'm willing to meet with</p>
+            <div className="pl-4 pr-4">
+                {Object.entries(props.preferenceContent).map((info, key) => 
+                <>
+                    <TableItem title={info[0]} value={info[1]} />
+                    <div class="dropdown-divider"></div>
+                </>)}
+            </div>
+        </>
     )
 }
