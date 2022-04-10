@@ -13,7 +13,7 @@ const socket = io({ //no url: default to localhost:8080
 });
 
 const Home = (props) => {
-    const [preSelectedRoomId, setPreSelectedRoomId] = useState('');
+    const [preSelectedRoomId, setPreSelectedRoomId] = useState(''); //friends match component store new room ID in this state and pass it to chatroom component
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
 

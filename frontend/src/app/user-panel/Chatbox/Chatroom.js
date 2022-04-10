@@ -40,6 +40,9 @@ const Chatrooms = (props) => {
     useEffect(() => {
         console.log('home component just mount');
 
+        //or here?
+        //setSelectedRoomId(props.preSelectedRoomId); //set room id from friend match component
+
         // socket.connect();   //estiblish socket io connection
         // return () => {
         //     socket.removeAllListeners();    //clean up listener
@@ -48,7 +51,7 @@ const Chatrooms = (props) => {
     }, []);
 
     useEffect(() => {
-        setSelectedRoomId(props.preSelectedRoomId);
+        setSelectedRoomId(props.preSelectedRoomId); //set room id from friend match component
     }, [props.preSelectedRoomId])
 
     useEffect(() => {

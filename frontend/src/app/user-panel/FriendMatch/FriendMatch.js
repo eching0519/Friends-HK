@@ -20,19 +20,20 @@ const FriendMatch = (props) => {
     // Special theme
     const [themes, setThemes] = useState(['Dining', 'Workouts', 'Outdoor Activities', 'Board Games', 'Computer Games', 'Online Games']);
 
-    useEffect(() => {
+    // useEffect(() => {
         // socket.connect();   //estiblish socket io connection
         // return () => {
         //     socket.removeAllListeners();    //clean up listener
         //     socket.disconnect();    //disconnect socket io connection
         // }
-    }, []);
+    // }, []);
 
     socket.on("waitMatch", (roomId) => {    //listen to server match result
-        setmatchStatus('success');
-        props.setCurrentPage('chat');
+        //when waitMatch recieved, match success.
+        setmatchStatus('success');  //  set match status to success
+        props.setCurrentPage('chat');   //switch page to chat room page
         console.log(roomId);
-        props.setRoomId(roomId);
+        props.setRoomId(roomId);    //set chat room id as newly created room id
     });
 
     //let waitingMessage = '';
@@ -43,8 +44,9 @@ const FriendMatch = (props) => {
         });
     };
 
-    const sendMatchRequest = () => {
-        socket.emit('sendMatch', props.user, (message) => {
+    //send event by emit
+    const sendMatchRequest = () => {    //emit match event to socket io
+        socket.emit('sendMatch', props.user, (message) => { //send user object
             console.log(message);
         });
     };

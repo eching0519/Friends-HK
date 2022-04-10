@@ -190,23 +190,27 @@ io.on('connection', (socket) => {
         callback({ userName: userObject.name, picture: userObject.picture });
     });
 
-    socket.on("sendMatch", (user, callback) => {
+    //havent test it... coz i cant...
+    socket.on("sendMatch", (user, callback) => {    //listen to match event emit...
         console.log(`match recieve from ${user.id}`);
-        socket.join('randommatch');
-        matchUserQueue.push({ userId: user.id, socket: socket });   //save user id into queue
+        socket.join('randommatch'); //may not useful
+        matchUserQueue.push({ userId: user.id, socket: socket });   //save user id and its socket into queue for bookkeeping
 
-        callback("match request recieved");
+        callback("match request recieved"); //send recieve event success message back to client
 
-        if (matchTimerFlag) {
-            matchTimerFlag = false;
-            matchInterval = setInterval(async () => {
+        //match algorithm placeholder. dont know wheather its work...
+        if (matchTimerFlag) {   //flag, avoid duplicate set interval being setup...
+            matchTimerFlag = false; //so that other emit event would not run this block of code.
+            matchInterval = setInterval(async () => {   //check matching for every 10s
 
                 console.log("start grouping user");
                 console.log("current user queue length:", matchUserQueue.length);
 
 
-                if (matchUserQueue.length >= 3) {
+                if (matchUserQueue.length >= 3) {   // if there are enough user request,
                     console('got enough user, start grouping');
+
+                    //gernerate 3 random index base on user queue array
                     let i = 0;
                     let j = 0;
                     let k = 0;
@@ -216,20 +220,21 @@ io.on('connection', (socket) => {
 
                     i = Math.floor(Math.random() * (max - min) + min);
 
-                    while (i == j) {
+                    while (i == j) {    //avoid duplicate index
                         j = Math.floor(Math.random() * (max - min) + min);
                     }
 
-                    while (k == i || k == j) {
+                    while (k == i || k == j) {  //avoid duplicate index
                         k = Math.floor(Math.random() * (max - min) + min);
                     }
 
+                    //store {user, socket} pair.
                     let user1 = matchUserQueue[i];
                     let user2 = matchUserQueue[j];
                     let user3 = matchUserQueue[k];
 
 
-                    let cr = new Chatrooms([user1.userId, user2.userId, user3.userId],
+                    let cr = new Chatrooms([user1.userId, user2.userId, user3.userId],  //create new chatroom.
                         `${user1.userId},${user2.userId},${user3.userId}`);
 
                     await cr.saveAsGroupChatroom();
@@ -244,17 +249,18 @@ io.on('connection', (socket) => {
                     matchUserQueue = matchUserQueue.slice(index, 1);
 
 
-                    user1.socket.emit("waitMatch", roomId);
-                    user2.socket.emit("waitMatch", roomId);
-                    user3.socket.emit("waitMatch", roomId);
+                    user1.socket.emit("waitMatch", roomId); //emit room id back to client
+                    user2.socket.emit("waitMatch", roomId); //emit room id back to client
+                    user3.socket.emit("waitMatch", roomId); //emit room id back to client
 
-                    matchTimerFlag = true;  //
-                    clearInterval(matchInterval);
+                    // may not need to reset interval...
+                    //matchTimerFlag = true;  
+                    //clearInterval(matchInterval);
                 } else {
-                    console('not enough user');
+                    console('not enough user'); //if there are <3 user.
                 }
                 
-            }, 10000);
+            }, 10000);  //10s interval
         }
 
 
