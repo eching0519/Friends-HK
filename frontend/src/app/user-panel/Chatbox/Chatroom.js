@@ -27,7 +27,7 @@ const Chatrooms = (props) => {
 
     const getChatroomlistSocketio = (id) => {
         socket.emit("getChatRoomList", id, (data) => {
-            console.log(data)
+            // console.log(data)
             setGroupChatList(data.chatroom);
             setFriendChatList(data.friendChatroom);
             var jointData = [...data.chatroom, ...data.friendChatroom];
@@ -93,7 +93,7 @@ const Chatrooms = (props) => {
     }, [socket]);   //trigger useEffect if room changed from sidebar
 
     useEffect(() => {
-        console.log("System message", systemMsgList);
+        // console.log("System message", systemMsgList);
 
         if (!allChatList) return
         Object.entries(systemMsgList).map((value, key) => {
@@ -109,7 +109,7 @@ const Chatrooms = (props) => {
     useEffect(() => {
         if (!allChatList) return
         Object.entries(incomingMsgList).map((value, key) => {
-            console.log("allChatList incoming", value);
+            // console.log("allChatList incoming", value);
             var roomId = value[0];
             var msg = value[1];
             if (allChatList && roomId in allChatList) {

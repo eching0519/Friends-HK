@@ -24,7 +24,6 @@ const FriendList = (props) => {
     const [userProfileModal, setUserProfileModal] = useState(null)
 
     useEffect(() => {
-        console.log("TargetId", target)
         setUserProfileModal(<UserInfoModal content={<UserProfileSidebar 
                                                         user={props.user} 
                                                         target={target} 
@@ -61,11 +60,6 @@ const FriendList = (props) => {
     useEffect(()=>{
         getRequestList();
     }, [props.location])
-
-    // useEffect(() => {
-    //     console.log("inRequest", inRequest)
-    //     console.log("outRequest", outRequest)
-    // }, [inRequest, outRequest])
 
     return (
         <>
@@ -221,7 +215,6 @@ const FriendListTable = (props) => {
 
     let friendList;
     useEffect(() => {
-        console.log(props.user.id)
         PostRequestSender("/friend//listfriendinfo", {id: props.user.id}, (e, data) => {
             if (e) {
                 console.log(e);
@@ -254,12 +247,9 @@ const FriendListTable = (props) => {
         $(".rdt_TableRow").attr('data-target', '#userInfoModal')
         $(".rdt_TableRow").css('cursor', 'pointer')
         $(".rdt_TableRow").on('click', (event) => {
-            console.log("setRowOnClickEvent", $(event.target).parent().attr("id"))
             let rowId = $(event.target).parent().attr("id");
             let targetId = rowId.split('-').at(-1)
-            console.log("setRowOnClickEvent", targetId)
             let targetUser = friendList.find(e=>e._id == targetId)
-            console.log("setRowOnClickEvent", targetUser)
             props.setTarget(targetUser)
         })
     }
@@ -278,8 +268,8 @@ const FriendListTable = (props) => {
             pagination
             highlightOnHover
             progressPending={pending}
-            onChangeRowsPerPage={(e)=>console.log("onChangeRowsPerPage",e)}
-            onChangePage={(e)=>console.log("onChangePage",e)}
+            onChangeRowsPerPage={setRowOnClickEvent}
+            onChangePage={setRowOnClickEvent}
           />
         </DataTableExtensions>
       );

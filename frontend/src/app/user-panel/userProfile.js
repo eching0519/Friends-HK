@@ -85,9 +85,9 @@ export const UserProfileSidebar = (props) => {
     // useEffect(()=>{
         
     // },[target])
-    useEffect(()=>{
-        console.log(friendRequest)
-    },[friendRequest])
+    // useEffect(()=>{
+    //     console.log(friendRequest)
+    // },[friendRequest])
 
     useEffect(() => {
         setTarget(props.target);
@@ -100,7 +100,6 @@ export const UserProfileSidebar = (props) => {
     
     useEffect(() => {
         if (!target) return;
-        console.log(target)
         let userInfo = target;
         let preference = target.preferences;
 
@@ -128,7 +127,6 @@ export const UserProfileSidebar = (props) => {
         }
         let lang = [], gender = [], ageRange = "";
         if(preference !== undefined && preference != null) {
-            console.log(preference)
             lang = (preference.lang === undefined)? [] : preference.lang;
             gender = (preference.gender !== undefined)? preference.gender : [];
             ageRange = (preference.ageFrom===undefined)? '' : preference.ageFrom + " ~ " + preference.ageTo;
@@ -235,8 +233,6 @@ export const UserProfileSidebar = (props) => {
     const cancelFriendRequest = async () => {
         let url = '/friend/cancelRequest';
 
-        console.log(friendRequest.id)
-
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -257,7 +253,6 @@ export const UserProfileSidebar = (props) => {
             setRequestExist(false);
             return;
         } else {
-            console.log(data.message)
             setFriendRequest(false);
             setRequestExist(false);
         }
@@ -368,27 +363,27 @@ export const UserProfileSidebar = (props) => {
                         {props.user.id != props.target._id && props.user.friendlist!=null && !props.user.friendlist.includes(props.target._id) && !requestExist && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             sendFriendRequest();
-                            console.log("requestExist", requestExist)
-                            console.log(friendRequest)
+                            // console.log("requestExist", requestExist)
+                            // console.log(friendRequest)
                             window.alert("Friend request is sent");
                         }}>Add Friend</button>}
                         {requestExist && friendRequest.from===props.user.id && friendRequest.status==='pending' && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             cancelFriendRequest();
-                            console.log(requestExist)
-                            console.log(friendRequest)
+                            // console.log(requestExist)
+                            // console.log(friendRequest)
                         }}>Cancel Friend Request</button>}
                         {requestExist && friendRequest.to===props.user.id && friendRequest.status==='pending' && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             acceptFriendRequest();
-                            console.log(requestExist)
-                            console.log(friendRequest)
+                            // console.log(requestExist)
+                            // console.log(friendRequest)
                         }}>Accept Friend Request</button>}
                         {requestExist && friendRequest.to===props.user.id && friendRequest.status==='pending' && <button className="btn btn-light w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             rejectFriendRequest();
-                            console.log(requestExist)
-                            console.log(friendRequest)
+                            // console.log(requestExist)
+                            // console.log(friendRequest)
                         }}>Reject Friend Request</button>}
                         {/* <button className="btn btn-gradient-dark w-100 mt-2">Blacklisting</button> */}
                     </>

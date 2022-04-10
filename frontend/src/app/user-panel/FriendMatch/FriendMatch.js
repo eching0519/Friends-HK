@@ -9,7 +9,6 @@ import SocketContext from "../../SocketContext";
 //     autoConnect: false
 // });
 const isSet = (val) => {
-    console.log(val)
     return !(val === undefined || val == null || val == '')
 }
 
