@@ -1,27 +1,19 @@
 import React, { Component, useState } from 'react';
-import { ProgressBar } from 'react-bootstrap';
-import { Bar, Doughnut } from 'react-chartjs-2';
-import DatePicker from "react-datepicker";
-// import React, { Component, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Form } from 'react-bootstrap';
 import { MDBDataTableV5 } from 'mdbreact';
 import { useEffect } from 'react';
-import { type } from 'os';
 import $ from 'jquery';
 const querystring = require('querystring');
 
-// import "react-datepicker/dist/react-datepicker.css";
+
 
 const Userlist = (props) => {
 	const [userName, setUserName] = useState('');
 	const [userPassword, setUserPassword] = useState('');
-	//const [trigger, setTrigger] = useState(1);
 	const [datatable, setDatatable] = useState('');
 
 
 	useEffect(() => {
-		sendGetAllUserRequest();	//fetch user list from server when component first rendered.
+		sendGetAllUserRequest();	
 	}, []);
 
 
@@ -42,9 +34,9 @@ const Userlist = (props) => {
 		let tableObject = {
 			columns: [
 				{
-					label: 'user id',
+					label: 'ID',
 					field: '_id',
-					width: 100,
+					width: 50,
 					sort: 'asc',
 					attributes: {
 						'aria-controls': 'DataTable',
@@ -52,17 +44,17 @@ const Userlist = (props) => {
 					},
 				},
 				{
-					label: 'email',
+					label: 'Email',
 					field: 'email',
-					width: 150,
+					width: 200,
 				},
 				{
-					label: 'name',
+					label: 'Name',
 					field: 'name',
 					width: 150,
 				},
 				{
-					label: 'status',
+					label: 'Status',
 					field: 'status',
 					width: 150,
 				},
@@ -98,10 +90,17 @@ const Userlist = (props) => {
 				<i className="mdi mdi-account-multiple"></i>
 				</span> Users </h3>
 			</div>
-			<button type="button" className="btn btn-gradient-primary mr-2 mb-2" onClick={() => {
+			{/* <button type="button" className="btn btn-gradient-primary mr-2 mb-2" onClick={() => {
 				sendGetAllUserRequest();
-			}}>refresh</button>
-			<MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={datatable} searchTop searchBottom={false} />
+			}}>refresh</button> */}
+			<MDBDataTableV5 
+				hover 
+				entriesOptions={[10]} 
+				entries={10} 
+				pagesAmount={4} 
+				data={datatable} 
+				searchTop 
+				searchBottom={false} />
 		</>
 
 	)

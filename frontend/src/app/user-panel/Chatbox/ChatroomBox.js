@@ -62,7 +62,7 @@ const Box = (props) => {
     return (
         <>
         <div className={myClassName}>
-            {wouldURgame? <WRUgame userName={props.userName} roomId={props.roomId} setWouldURgame={setWouldURgame}/>: <></>}
+            {wouldURgame? <WRUgame userName={props.user.name} roomId={props.chatroom._id} setWouldURgame={setWouldURgame}/>: <></>}
             <div className="card-header bg-white">
                 <StatusBar userName={props.user.name} roomId={props.chatroom._id} roomName={props.chatroom.name} />
             </div>
