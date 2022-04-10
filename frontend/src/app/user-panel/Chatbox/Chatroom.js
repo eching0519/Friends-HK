@@ -39,12 +39,17 @@ const Chatrooms = (props) => {
 
     useEffect(() => {
         console.log('home component just mount');
+
         // socket.connect();   //estiblish socket io connection
         // return () => {
         //     socket.removeAllListeners();    //clean up listener
         //     socket.disconnect();    //disconnect socket io connection
         // }
     }, []);
+
+    useEffect(() => {
+        setSelectedRoomId(props.preSelectedRoomId);
+    }, [props.preSelectedRoomId])
 
     useEffect(() => {
         console.log("socket useEffect")

@@ -13,7 +13,7 @@ const socket = io({ //no url: default to localhost:8080
 });
 
 const Home = (props) => {
-    const [roomId, setRoomId] = useState('');
+    const [preSelectedRoomId, setPreSelectedRoomId] = useState('');
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
 
@@ -33,19 +33,19 @@ const Home = (props) => {
 
     if (props.currentPage === 'chat') {
         console.log("Chat")
-        pageplaceholder = <Chatrooms setCurrentPage={props.setCurrentPage} user={props.user} />
+        pageplaceholder = <Chatrooms setCurrentPage={props.setCurrentPage} user={props.user} preSelectedRoomId={preSelectedRoomId} />
     }
 
     if (props.currentPage === 'matchFriends') {
         console.log("MatchFriends")
-        pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setRoomId} user={props.user} />;
+        pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setPreSelectedRoomId} user={props.user} />;
     }
 
     return (
         <>
-        <SocketContext.Provider value={socket}>
-            {pageplaceholder}
-        </SocketContext.Provider>
+            <SocketContext.Provider value={socket}>
+                {pageplaceholder}
+            </SocketContext.Provider>
         </>
     );
 }

@@ -206,7 +206,7 @@ io.on('connection', (socket) => {
 
 
                 if (matchUserQueue.length >= 3) {
-                    console('got enough user, start grouping'); 
+                    console('got enough user, start grouping');
                     let i = 0;
                     let j = 0;
                     let k = 0;
@@ -224,27 +224,36 @@ io.on('connection', (socket) => {
                         k = Math.floor(Math.random() * (max - min) + min);
                     }
 
-                    const Chatroom = require('./models/chatroom');
-                    let cr = new Chatroom([matchUserQueue[i].userId, matchUserQueue[j].userId, matchUserQueue[k].userId],
-                        `${matchUserQueue[i].userId},${matchUserQueue[j].userId},${matchUserQueue[k].userId}`);
-                    
-                        await cr.saveAsGroupChatroom();
+                    let user1 = matchUserQueue[i];
+                    let user2 = matchUserQueue[j];
+                    let user3 = matchUserQueue[k];
+
+
+                    let cr = new Chatrooms([user1.userId, user2.userId, user3.userId],
+                        `${user1.userId},${user2.userId},${user3.userId}`);
+
+                    await cr.saveAsGroupChatroom();
                     let roomId = cr._id.toString();
+                    
+                    //remove matched user from user queue
+                    let index = matchUserQueue.indexOf(user1);
+                    matchUserQueue = matchUserQueue.slice(index, 1);
+                    index = matchUserQueue.indexOf(user2);
+                    matchUserQueue = matchUserQueue.slice(index, 1);
+                    index = matchUserQueue.indexOf(user3);
+                    matchUserQueue = matchUserQueue.slice(index, 1);
 
-                    matchUserQueue = matchUserQueue.slice(i, 1);
-                    matchUserQueue = matchUserQueue.slice(j, 1);
-                    matchUserQueue = matchUserQueue.slice(k, 1);
 
-
-                    matchUserQueue[i].socket.emit("waitMatch", roomId);
-                    matchUserQueue[j].socket.emit("waitMatch", roomId);
-                    matchUserQueue[k].socket.emit("waitMatch", roomId);
+                    user1.socket.emit("waitMatch", roomId);
+                    user2.socket.emit("waitMatch", roomId);
+                    user3.socket.emit("waitMatch", roomId);
 
                     matchTimerFlag = true;  //
                     clearInterval(matchInterval);
                 } else {
                     console('not enough user');
                 }
+                
             }, 10000);
         }
 
@@ -302,7 +311,7 @@ io.on('connection', (socket) => {
         if (`${theme}` in specialThemeQueue) {
             console.log("key found");
             let index = specialThemeQueue[`${theme}`].indexOf(userId);
-            specialThemeQueue[`${theme}`].slice(index, 1);  //remove user id from userid queue.
+            specialThemeQueue[`${theme}`] = specialThemeQueue[`${theme}`].slice(index, 1);  //remove user id from userid queue.
         } else {
             console.log("key not found")
         }
