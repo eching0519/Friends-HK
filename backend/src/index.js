@@ -63,7 +63,9 @@ const Chatbox = require('./models/chatbox')
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
-const matchUserQueue = [];
+let matchUserQueue = [];
+let matchTimerFlag = false; //indicate start the 10s countdown
+let matchInterval;
 const specialThemeQueue = {}; //queue for storing user id in special matching function
 const WURuserCount = {};    //count number of user have answer the WUR question
 
@@ -190,35 +192,62 @@ io.on('connection', (socket) => {
 
     socket.on("sendMatch", (user, callback) => {
         console.log(`match recieve from ${user.id}`);
-        matchUserQueue.push(user.id);
+        socket.join('randommatch');
+        matchUserQueue.push({ userId: user.id, socket: socket });   //save user id into queue
+
         callback("match request recieved");
 
-        setInterval(() => {
-            console.log("start grouping user");
-            console.log("current user queue length:", matchUserQueue.length);
-            let i = 0;
-            let j = 0;
-            let k = 0;
+        if (matchTimerFlag) {
+            matchTimerFlag = false;
+            matchInterval = setInterval(async () => {
 
-            let min = Math.ceil(0);
-            let max = Math.floor(matchUserQueue.length);
+                console.log("start grouping user");
+                console.log("current user queue length:", matchUserQueue.length);
 
-            i = Math.floor(Math.random() * (max - min) + min);
 
-            while (i == j) {
-                j = Math.floor(Math.random() * (max - min) + min);
-            }
+                if (matchUserQueue.length >= 3) {
+                    console('got enough user, start grouping'); 
+                    let i = 0;
+                    let j = 0;
+                    let k = 0;
 
-            while (k == i || k ==j) {
-                k = Math.floor(Math.random() * (max - min) + min);
-            }
+                    let min = Math.ceil(0);
+                    let max = Math.floor(matchUserQueue.length);
 
-            if (matchUserQueue.length >= 3) {
-                matchUserQueue = matchUserQueue.slice(i, 1);
-                matchUserQueue = matchUserQueue.slice(j, 1);
-                matchUserQueue = matchUserQueue.slice(k, 1);
-            }
-        }, 10000);
+                    i = Math.floor(Math.random() * (max - min) + min);
+
+                    while (i == j) {
+                        j = Math.floor(Math.random() * (max - min) + min);
+                    }
+
+                    while (k == i || k == j) {
+                        k = Math.floor(Math.random() * (max - min) + min);
+                    }
+
+                    const Chatroom = require('./models/chatroom');
+                    let cr = new Chatroom([matchUserQueue[i].userId, matchUserQueue[j].userId, matchUserQueue[k].userId],
+                        `${matchUserQueue[i].userId},${matchUserQueue[j].userId},${matchUserQueue[k].userId}`);
+                    
+                        await cr.saveAsGroupChatroom();
+                    let roomId = cr._id.toString();
+
+                    matchUserQueue = matchUserQueue.slice(i, 1);
+                    matchUserQueue = matchUserQueue.slice(j, 1);
+                    matchUserQueue = matchUserQueue.slice(k, 1);
+
+
+                    matchUserQueue[i].socket.emit("waitMatch", roomId);
+                    matchUserQueue[j].socket.emit("waitMatch", roomId);
+                    matchUserQueue[k].socket.emit("waitMatch", roomId);
+
+                    matchTimerFlag = true;  //
+                    clearInterval(matchInterval);
+                } else {
+                    console('not enough user');
+                }
+            }, 10000);
+        }
+
 
     });
 
@@ -305,7 +334,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on("sendWouldURanswer", (userName, roomId, answer, result, callback) => {
-        result = {...result, [userName]: answer};
+        result = { ...result, [userName]: answer };
         //socket.join(`wur:${roomId}`)
         console.log(`${userName} choice: ${answer}`);
         callback('answer recieve from user:', userName);
@@ -319,7 +348,7 @@ io.on('connection', (socket) => {
         io.to(`wur:${roomId}`).emit("waitResponseUserName", userName, answer, result);
 
         if (Object.values(result).length >= roomsize) {
-        // if (WURuserCount[`wur:${roomId}`] >= roomsize) {   //if 2(or 3) answers recieved  
+            // if (WURuserCount[`wur:${roomId}`] >= roomsize) {   //if 2(or 3) answers recieved  
             const { questions } = require('./models/wyrQuestion');  //get question bank
             WURuserCount[`wur:${roomId}`] = 0;  //reset user count
 
