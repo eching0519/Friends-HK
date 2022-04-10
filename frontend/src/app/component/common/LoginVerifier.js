@@ -39,7 +39,6 @@ const LoginVerifier = async (props) => {
         }
     }
 
-    console.log("Pass")
 }
 
 export default LoginVerifier;

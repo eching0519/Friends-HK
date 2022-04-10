@@ -117,7 +117,9 @@ const Navbar = (props) => {
               </Dropdown.Menu> */}
             </div>
           </li>
-          <li className="nav-item">
+
+          {/* --- Notification --- */}
+          {/* <li className="nav-item">
             <Dropdown alignRight>
               <Dropdown.Toggle className="nav-link count-indicator">
                 <i className="mdi mdi-bell-outline"></i>
@@ -171,7 +173,7 @@ const Navbar = (props) => {
                 <h6 className="p-3 mb-0 text-center cursor-pointer"><Trans>See all notifications</Trans></h6>
               </Dropdown.Menu>
             </Dropdown>
-          </li>
+          </li> */}
           <li className="nav-item">
             <Dropdown alignRight>
               <Dropdown.Toggle className="nav-link count-indicator">

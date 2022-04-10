@@ -16,6 +16,7 @@ const Home = (props) => {
     const [preSelectedRoomId, setPreSelectedRoomId] = useState(''); //friends match component store new room ID in this state and pass it to chatroom component
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
+    const [roomId, setRoomId] = useState('');
 
     useEffect(() => {
         console.log('Home component mounted, load required infomation');
@@ -32,13 +33,13 @@ const Home = (props) => {
     let pageplaceholder;    //placeholder for chatbox or friend match
 
     if (props.currentPage === 'chat') {
-        console.log("Chat")
-        pageplaceholder = <Chatrooms setCurrentPage={props.setCurrentPage} user={props.user} preSelectedRoomId={preSelectedRoomId} />
+        // console.log("Chat")
+        pageplaceholder = <Chatrooms setCurrentPage={props.setCurrentPage} user={props.user} />
     }
 
     if (props.currentPage === 'matchFriends') {
-        console.log("MatchFriends")
-        pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setPreSelectedRoomId} user={props.user} />;
+        // console.log("MatchFriends")
+        pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setRoomId} user={props.user} />;
     }
 
     return (

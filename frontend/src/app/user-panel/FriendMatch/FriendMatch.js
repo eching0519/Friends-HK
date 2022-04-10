@@ -8,6 +8,9 @@ import SocketContext from "../../SocketContext";
 // const socket = io({ //no url: default to localhost:8080
 //     autoConnect: false
 // });
+const isSet = (val) => {
+    return !(val === undefined || val == null || val == '')
+}
 
 const FriendMatch = (props) => {
     const socket = useContext(SocketContext);
@@ -66,7 +69,7 @@ const FriendMatch = (props) => {
                                     action={false} 
                                     setInfoContent={()=>{}} setPreferenceContent={()=>{}} setTargetName={()=>{}}
                                     furtherInfo={{
-                                        "Preference Setting": props.preferences===undefined || props.preferences===null ? "Incomplete" : "Complete",
+                                        "Preference Setting": !isSet(props.user.preferences)? "Incomplete" : "Complete",
                                         "Matching Status": "Not Chosen"
                                     }} />;
 
@@ -79,7 +82,7 @@ const FriendMatch = (props) => {
                                     action={false} 
                                     setInfoContent={()=>{}} setPreferenceContent={()=>{}} setTargetName={()=>{}}
                                     furtherInfo={{
-                                        "Preference Setting": props.preferences===undefined || props.preferences===null ? "Incomplete" : "Complete",
+                                        "Preference Setting": !isSet(props.user.preferences)? "Incomplete" : "Complete",
                                         "Matching Status": <><span class="spinner-border spinner-border text-muted"></span> Matching..</>
                                     }} />
     }
@@ -93,7 +96,7 @@ const FriendMatch = (props) => {
                                     action={false} 
                                     setInfoContent={()=>{}} setPreferenceContent={()=>{}} setTargetName={()=>{}}
                                     furtherInfo={{
-                                        "Preference Setting": props.preferences===undefined || props.preferences===null ? "Incomplete" : "Complete",
+                                        "Preference Setting": !isSet(props.user.preferences)? "Incomplete" : "Complete",
                                         "Matching Status": "Group found!"
                                     }} />;
     }

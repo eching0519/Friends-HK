@@ -8,7 +8,7 @@ const UserProfile = (props) => {
 
     const [infoContent, setInfoContent] = useState({});
     const [preferenceContent, setPreferenceContent] = useState({});
-    const [targetName, setTargetName] = useState("N/A");
+    const [targetName, setTargetName] = useState("--");
 
     
 
@@ -31,11 +31,33 @@ const UserProfile = (props) => {
                 </div>
             </div>
         </div>
+        {/* <UserProfileSidebar user={props.user} target={props.user} targetId={props.user.id} detailed={false} action={false} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
+        <UserInfoModalButton triggerBtn={<div>Hi</div>}></UserInfoModalButton>
+        <UserInfoModal content={userProfile} /> */}
         </>
     );
 }
 
 export default UserProfile
+
+export const UserInfoModal = (props) => {
+    return (
+        <>
+            <div class="modal fade modal-custom" id="userInfoModal" tabindex="-1" role="dialog" aria-labelledby="userInfoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content modal-user-profile">
+                    {props.content}
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export const UserInfoModalButton = (props) => {
+    return (<a href='#' onClick={(e)=>e.preventDefault()} data-toggle="modal" data-target="#userInfoModal">{props.triggerBtn}</a>)
+}
+
 export const UserProfileSidebar = (props) => {
     // props.detailed       <- display detailed
     // props.friendRequest  <- Has friend request
@@ -49,7 +71,10 @@ export const UserProfileSidebar = (props) => {
                         "badge badge-gradient-warning ml-1 mt-1 badge-sm", 
                         "badge badge-gradient-info ml-1 mt-1 badge-sm", 
                         "badge badge-gradient-danger ml-1 mt-1 badge-sm"];
-    const capitalize = (str) => { return str.charAt(0).toUpperCase() + str.slice(1); }
+    const capitalize = (str) => { 
+        if (typeof(str) !== 'string') return str
+        return str.charAt(0).toUpperCase() + str.slice(1); 
+    }
 
     const [target, setTarget] = useState(props.target);
     const [sidebarContent, setSidebarContent] = useState({});
@@ -62,17 +87,21 @@ export const UserProfileSidebar = (props) => {
     // useEffect(()=>{
         
     // },[target])
-    useEffect(()=>{
-        console.log(friendRequest)
-    },[friendRequest])
+    // useEffect(()=>{
+    //     console.log(friendRequest)
+    // },[friendRequest])
 
     useEffect(() => {
         setTarget(props.target);
     }, [props.target])
+
+    useEffect(() => {
+        // setTarget(props.targetId);
+        getTargetInfo(props.targetId);
+    }, [props.targetId])
     
     useEffect(() => {
         if (!target) return;
-        console.log(target)
         let userInfo = target;
         let preference = target.preferences;
 
@@ -100,7 +129,6 @@ export const UserProfileSidebar = (props) => {
         }
         let lang = [], gender = [], ageRange = "";
         if(preference !== undefined && preference != null) {
-            console.log(preference)
             lang = (preference.lang === undefined)? [] : preference.lang;
             gender = (preference.gender !== undefined)? preference.gender : [];
             ageRange = (preference.ageFrom===undefined)? '' : preference.ageFrom + " ~ " + preference.ageTo;
@@ -123,7 +151,7 @@ export const UserProfileSidebar = (props) => {
         return (
             <div className={props.minimal? 'row justify-content-between' : 'row justify-content-between mt-3 mb-3'}>
                 <strong className='text-break'>{props.title}</strong>
-                <div className='text-break'>{props.value===undefined?'N/A':props.value}</div>
+                <div className='text-break'>{props.value===undefined?'--':props.value}</div>
             </div>
         )
     }
@@ -207,8 +235,6 @@ export const UserProfileSidebar = (props) => {
     const cancelFriendRequest = async () => {
         let url = '/friend/cancelRequest';
 
-        console.log(friendRequest.id)
-
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -229,7 +255,6 @@ export const UserProfileSidebar = (props) => {
             setRequestExist(false);
             return;
         } else {
-            console.log(data.message)
             setFriendRequest(false);
             setRequestExist(false);
         }
@@ -289,9 +314,13 @@ export const UserProfileSidebar = (props) => {
         getFriendRequest()
     }
 
+    useEffect(() => {
+        if (target==null && props.targetId!=null) getTargetInfo(props.targetId);
+        if (props.targetId!=null && props.user!=null) getFriendRequest(props.targetId, props.user.id)
+    }, [])
+
     return (
         <>
-        <div class="modal-backdrop fade show"></div>
         <div className="card" onLoad={()=>{
             if (target==null && props.targetId!=null) getTargetInfo(props.targetId);
             if (props.targetId!=null && props.user!=null) getFriendRequest(props.targetId, props.user.id)
@@ -331,35 +360,36 @@ export const UserProfileSidebar = (props) => {
                             <TableItem title={info[0]} value={info[1]} />
                             <div class="dropdown-divider"></div>
                         </>)}
-                    </div>}
+                    </div>
+                }
 
                 <div className="pl-4 pr-4">
                 {props.action && 
                     <>
-                        {props.user.id != props.targetId && !requestExist && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
+                        {props.user.id != props.target._id && props.user.friendlist!=null && !props.user.friendlist.includes(props.target._id) && !requestExist && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             sendFriendRequest();
-                            console.log(requestExist)
-                            console.log(friendRequest)
+                            // console.log("requestExist", requestExist)
+                            // console.log(friendRequest)
                             window.alert("Friend request is sent");
                         }}>Add Friend</button>}
                         {requestExist && friendRequest.from===props.user.id && friendRequest.status==='pending' && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             cancelFriendRequest();
-                            console.log(requestExist)
-                            console.log(friendRequest)
+                            // console.log(requestExist)
+                            // console.log(friendRequest)
                         }}>Cancel Friend Request</button>}
                         {requestExist && friendRequest.to===props.user.id && friendRequest.status==='pending' && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             acceptFriendRequest();
-                            console.log(requestExist)
-                            console.log(friendRequest)
+                            // console.log(requestExist)
+                            // console.log(friendRequest)
                         }}>Accept Friend Request</button>}
                         {requestExist && friendRequest.to===props.user.id && friendRequest.status==='pending' && <button className="btn btn-light w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             rejectFriendRequest();
-                            console.log(requestExist)
-                            console.log(friendRequest)
+                            // console.log(requestExist)
+                            // console.log(friendRequest)
                         }}>Reject Friend Request</button>}
                         {/* <button className="btn btn-gradient-dark w-100 mt-2">Blacklisting</button> */}
                     </>
@@ -385,7 +415,7 @@ export const UserInfoDetail = (props) => {
         return (
             <div className='row justify-content-between mt-3 mb-3'>
                 <strong className='text-break'>{props.title}</strong>
-                <div className='d-flex flex-wrap text-break'>{props.value===undefined?'N/A':props.value}</div>
+                <div className='d-flex flex-wrap text-break'>{props.value===undefined?'--':props.value}</div>
             </div>
         )
     }

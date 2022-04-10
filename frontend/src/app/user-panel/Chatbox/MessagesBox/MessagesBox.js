@@ -22,7 +22,8 @@ const Messagesbox = (props) => {
                                     userName={props.userName} 
                                     userId={props.userId} 
                                     chatRoom={props.chatRoom}
-                                    lastMsgSender={lastMsgSender} />
+                                    lastMsgSender={lastMsgSender}
+                                    setTarget={props.setTarget} />
                         </div>
                     );
                     lastMsgSender = value.senderId

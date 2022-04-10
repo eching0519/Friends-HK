@@ -4,8 +4,6 @@ const querystring = require('querystring');
 const PrivacySettings = (props) => {
 
     let user = props.user
-    console.log("PrivacySettings:")
-    console.log(user)
 
     const sendResetPwRequest = async () => {
         let url = '/user/forgotPassword/reset';

@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const path = require("path");
 const { type } = require('os');
 const Chatroom = require('../models/chatroom');
+const { array } = require('../util/fileEngine');
 
 
 
@@ -29,17 +30,19 @@ exports.SendFriendRequest = async (req, res, next) =>{
     }
     user_from = await User.findById(from, 'query')
     friendlist = user_from.friendlist
-    for(let i=0;i <friendlist.length; i++){
-        if (friendlist[i]==to){
-            res.write(JSON.stringify({
-                "success": false,
-                "message": "Already in friendlist."
-            }, null, "\t"));
-            res.end();
-            return;
+    if (friendlist!=null){
+        for(let i=0;i <friendlist.length; i++){
+            if (friendlist[i]==to){
+                res.write(JSON.stringify({
+                    "success": false,
+                    "message": "Already in friendlist."
+                }, null, "\t"));
+                res.end();
+                return;
 
+            }
         }
-    }
+    }   
 
     var request;
     try {
@@ -240,3 +243,85 @@ exports.FindUserFriendRequest = async (req, res, next) => {
     res.end();
     return;
 }
+
+exports.ListFriendInfo = async(req, res, next) => {
+    const userId = req.body.id;
+    var user;
+    var frienduser;
+    var listinfo = [];
+    user = await User.findById(userId, 'query')
+    friendlist = user.friendlist
+    if (friendlist==null){
+        res.write(JSON.stringify({
+            "success": true,
+            "message": "No friend in friendlist"
+        }, null, "\t"));
+        res.end();
+        return;
+    } else{
+        for(let i=0;i <friendlist.length; i++){
+            try {
+                frienduser = await User.findById(friendlist[i], 'query')
+            } catch (e) {
+                res.write(JSON.stringify({
+                    "success": false,
+                    "message": "Unknown error. " + e.message
+                }, null, "\t"));
+                res.end();
+                return;
+            }
+
+            // listinfo = listinfo.concat(JSON.stringify({
+            //     "user": frienduser
+            // }, null, "\t"))
+            listinfo.push(frienduser)
+            // frienduser = JSON.stringify({
+            //     "user": frienduser
+            // }, null, "\t")
+
+            // console.log(JSON.stringify({
+            //     friendlist: frienduser
+            // }, null, "\t"))
+                
+            
+        }
+        // console.log(listinfo)
+        res.write(JSON.stringify({
+                            "success": true,
+                            "user": listinfo
+                        }, null, "\t"));
+        res.end();
+        return;
+    }
+
+
+
+
+
+
+
+}
+
+
+// else{
+//     for(let i=0;i <friendlist.length; i++){
+//         try {
+//             frienduser = await User.findById(friendlist[i], 'query')
+//         } catch (e) {
+//             res.write(JSON.stringify({
+//                 "success": false,
+//                 "message": "Unknown error. " + e.message
+//             }, null, "\t"));
+//             res.end();
+//             return;
+//         }
+//         res.write(JSON.stringify({
+//                 "success": true,
+//                 "user": frienduser
+//             }, null, "\t"));
+            
+        
+//     }
+//     res.end();
+//     return;
+// }

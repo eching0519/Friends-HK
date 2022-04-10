@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
 
         console.log(`socket: ${socket.id}\n\n`);
 
-        socket.emit('systemMessage', { roomId: roomId, message: { message: `: You(${name}) are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() } });
+        socket.emit('systemMessage', { roomId: roomId, message: { message: `You(${name}) are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() } });
         socket.broadcast.to(roomId).emit('systemMessage', { roomId: roomId, message: { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() } });
 
     });
@@ -342,7 +342,7 @@ io.on('connection', (socket) => {
             let i = Math.floor(Math.random() * (max - min) + min);
 
             //assign random question by index
-            io.to(`wuu:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //true indicate client can start
+            io.to(`wur:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //true indicate client can start
         }
 
 
@@ -362,6 +362,7 @@ io.on('connection', (socket) => {
         }
         io.to(`wur:${roomId}`).emit("waitResponseUserName", userName, answer, result);
 
+        // Next question
         if (Object.values(result).length >= roomsize) {
             // if (WURuserCount[`wur:${roomId}`] >= roomsize) {   //if 2(or 3) answers recieved  
             const { questions } = require('./models/wyrQuestion');  //get question bank

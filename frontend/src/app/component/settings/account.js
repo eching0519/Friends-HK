@@ -21,7 +21,6 @@ const AccountSettings = (props) => {
             return
         }
 
-        console.log("Form has changed")
         props.setFormChanged(true)
         $("#submitBtn").removeClass('disabled')
     }, [email, uname, password, newPassword]);

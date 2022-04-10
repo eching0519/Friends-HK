@@ -28,7 +28,7 @@ const Settings = (props) => {
     useEffect(() => {
         sessionStorage.setItem('UserProfile', JSON.stringify(props.user));
         setFormChanged(false);
-        console.log("User changed")
+        // console.log("User changed")
         window.scrollTo(0, 0);
     }, [props.user])
 
