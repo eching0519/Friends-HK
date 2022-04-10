@@ -86,14 +86,15 @@ const AppRoutes = (props) => {
         <Route path="/verify" component={ Verify } />
 
         {/* Admin page */}
-        <Route exact path="/admin/login" component={ AdminLogin } />
-        <Route exact path="/admin" component={ AdminHome } /> {/*/admin to /admin/home */}
+        <Route path="/admin/login" component={ AdminLogin } />
+        
 {/* Once the API success we have to change this */}
         {/* <Route exact path="/admin/changepassword" component={ Changepassword } /> */}
         {/* <Route exact path="/admin/blockuser" component={ Blockuser } /> */}
-        <Route exact path="/admin/userlist" component={ Userlist } />
+        <Route path="/admin/userlist" component={ Userlist } />
         
-        <Route exact path="/admin/userinfo/:userId" component={ Userinfo } />
+        <Route path="/admin/userinfo/:userId" component={ Userinfo } />
+        <Route path="/admin" component={ AdminHome } /> {/*/admin to /admin/home */}
         
         {/* <Route exact path="/admin/userinfo/ + userId"  /> */}
         {/* Root page */}
