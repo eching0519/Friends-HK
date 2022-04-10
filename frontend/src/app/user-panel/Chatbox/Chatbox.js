@@ -65,7 +65,8 @@ const Chatbox = (props) => {
 
         socket.on("systemMessage", (message) => {   //listen to system message
             console.log("from system:", message)
-            setSystemMessage(message);  
+            // setSystemMessage(message);  
+            setmessageList([...messageList, message]);
         });
 
         // return () => {
@@ -122,7 +123,7 @@ const Chatbox = (props) => {
     return (
         <>
             <div>
-                {wouldURgame? <WRUgame userName={props.userName} roomId={props.roomId} setWouldURgame={setWouldURgame}/>: <></>}
+                {wouldURgame? <WRUgame userName={props.userName} roomId={props.roomId} setWouldURgame={setWouldURgame} setmessageList={setmessageList}/>: <></>}
             </div>
             <div className="card card-chatbox">
                 <div className="card-header bg-white">

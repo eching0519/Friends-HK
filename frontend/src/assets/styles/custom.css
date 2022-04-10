@@ -305,3 +305,8 @@ tbody[data-test="table-body"] tr:hover {
   max-width: 300px;
   margin: auto;
 }
+
+.bg-inverse-danger {
+  background-color: #FFE5EA;
+  color: #FE7C96;
+}

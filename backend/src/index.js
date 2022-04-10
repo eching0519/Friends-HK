@@ -281,8 +281,9 @@ io.on('connection', (socket) => {
         }
         io.to(`wur:${roomId}`).emit("waitResponseUserName", userName, answer, result);
 
+        // Next question
         if (Object.values(result).length >= roomsize) {
-        // if (WURuserCount[`wur:${roomId}`] >= roomsize) {   //if 2(or 3) answers recieved  
+            // if (WURuserCount[`wur:${roomId}`] >= roomsize) {   //if 2(or 3) answers recieved  
             const { questions } = require('./models/wyrQuestion');  //get question bank
             WURuserCount[`wur:${roomId}`] = 0;  //reset user count
 

@@ -24,6 +24,7 @@ const Message = (props) => {
     const getSenderName = () => {
         let senderId = props.message.senderId;
         if (senderId === 'admin') return ''
+        if (senderId === 'wur') return ''
 
         try {
             console.log("getSenderName", userList[senderId])
@@ -34,7 +35,8 @@ const Message = (props) => {
     }
     const getUserPicture = () => {
         let senderId = props.message.senderId;
-        if (senderId === 'admin') return ''
+        if (senderId == 'admin') return ''
+        if (senderId === 'wur') return ''
 
         if (chatRoom.usersInfo[senderId].picture !== undefined) {
             return chatRoom.usersInfo[senderId].picture;
@@ -65,13 +67,22 @@ const Message = (props) => {
     const pic = getUserPicture();
 
     return (
-        (props.message.senderId === "admin") ? (
-            <div className="text-center">
-                <div className="system-message">
-                    <div> {props.message.message} </div>
+        (props.message.senderId == "admin") ? (
+                <div className="text-center">
+                    <div className="system-message">
+                        <div> {props.message.message} </div>
+                    </div>
                 </div>
-            </div>
-        ) : ( 
+            ) : (
+                props.message.senderId == "wur")? (
+                <div className="mb-2">
+                    <div className='bg-inverse-danger rounded p-4'> 
+                        {props.message.message.split('<br />').map((val, key) => <div className='mb-2'>{val}</div>)}
+                    </div>
+                </div>
+            )
+    
+         : ( 
             isSentByCurrentUser? (
                 <div className="messageContainer justifyEnd">
                     <div className="messageBox bg-gradient-primary">

@@ -13,8 +13,6 @@ const WRUgame = (props) => {
     const [question, setQuestion] = useState('');
     const [answerA, setanswerA] = useState('');
     const [answerB, setanswerB] = useState('');
-    const [answerAuserName, setAnswerAuserName] = useState([]); //store user who choose answer A
-    const [answerBuserName, setAnswerBuserName] = useState([]); //store user who choose answer B
     const [gameStart, setGameStart] = useState(false)   //indicate whether the game shall start
     const [result, setResult] = useState({});
 
@@ -27,8 +25,6 @@ const WRUgame = (props) => {
 
         socket.on("assignWouldURgameQuestion", (question, start_flag) => {  //set question set
             setResult({});
-            setAnswerAuserName([]);
-            setAnswerBuserName([]);
             setQuestion(question.question);
             setanswerA(question.a);
             setanswerB(question.b);
@@ -36,31 +32,31 @@ const WRUgame = (props) => {
                 console.log("Game Start!");
                 setGameStart(true);
             }
+
+            // let message = { message: question.question, senderId: 'wur', timeElapse: Date.now() }
+            // props.setSystemMsgList(prevList => ({...prevList, [props.roomId]: {...message}}));
         });
 
         socket.on("waitResponseUserName", (name, answer, sysResult) => {   //listen to other users answer.
             setResult(sysResult)
             console.log(name, answer)
-            if (answer === 'A') {
-                console.log("answerAuserName before:", answerAuserName);
-                setAnswerAuserName([...answerAuserName, name]);
-                // console.log("answerAuserName after:", answerAuserName);
-            }
-
-            if (answer === 'B') {
-                console.log("answerBuserName before:", answerBuserName);
-                setAnswerBuserName([...answerBuserName, name]);
-                // console.log("answerBuserName:", answerBuserName);
-            }
-
         });
     }, []);
 
     useEffect(()=>{
-        console.log("answerAuserName:", answerAuserName);
-        console.log("answerBuserName:", answerBuserName);
         console.log("result", result)
-    }, [answerAuserName, answerBuserName, result])
+
+        let message;
+
+        if ( props.userCount == Object.values(result).length ) {
+            let message = question
+            Object.entries(result).map((element, index) => 
+                message += `<br />${element[0]} would rather ${(element[1] == 'A')? answerA:answerB}`
+            )
+            let messageObj = { message: message, senderId: 'wur', timeElapse: Date.now() }
+            props.setSystemMsgList(prevList => ({...prevList, [props.roomId]: {...messageObj}}));
+        }
+    }, [result])
 
     const sendWRUanswer = (answer) => { //send user's answer
         socket.emit("sendWouldURanswer", props.userName, props.roomId, answer, result, (message) => {
@@ -70,47 +66,47 @@ const WRUgame = (props) => {
 
 
     return (
-        <Card>
-            <Card.Body>
-                <Card.Title>
-                    Would U Rather:
-                </Card.Title>
-                {
-                    gameStart ? //if the game can start render question and answer button
-                        <>
-                            <Card.Text> 
-                                {question}
-                                {
-                                    Object.entries(result).map((element, index) => 
-                                        <div key={index} className="">{element[0]}: choose {element[1]}</div>
-                                    )
-                                }
-                                {/* {answerAuserName.map((element, index) =>
-                                    <div key={index} className="">{element}: choose A</div>
-                                )}
-                                {answerBuserName.map((element, index) =>
-                                    <div key={index} className=""> {element}: choose B</div>
-                                )} */}
-                            </Card.Text>
-
+        <div className="row">
+            <div className="col-12 grid-margin">
+            <Card>
+                <Card.Body>
+                    <Card.Title>
+                        Would You Rather...
+                        { gameStart &&
                             <button type="button" className="close" onClick={() => {
                                 props.setWouldURgame(false) //leave WUR game
                             }}>
                                 <span>&times;</span>
                             </button>
+                        }
+                    </Card.Title>
+                    {
+                        gameStart ? //if the game can start render question and answer button
+                            <>
+                                <Card.Text> 
+                                    {question}
+                                    {
+                                        Object.entries(result).map((element, index) => 
+                                            <div key={index} className="">{element[0]}: choose {element[1]}</div>
+                                        )
+                                    }
+                                </Card.Text>
 
-                            <button type="button" className="btn btn-rounded btn-gradient-primary" onClick={event => {
-                                sendWRUanswer('A');
-                            }}>A: {answerA}</button>
-                            <button type="button" className="btn btn-rounded btn-gradient-primary" onClick={event => {
-                                sendWRUanswer('B');
-                            }}>B: {answerB}</button>
-                        </> :
-                        //  if not (not enough user) render wait message
-                        <Card.Text>Waiting other user...</Card.Text>
-                }
-            </Card.Body>
-        </Card>
+                                <button type="button" className="btn btn-rounded btn-gradient-primary w-100 mb-2" onClick={event => {
+                                    sendWRUanswer('A');
+                                }}>A: {answerA}</button>
+                                <button type="button" className="btn btn-rounded btn-gradient-primary w-100" onClick={event => {
+                                    sendWRUanswer('B');
+                                }}>B: {answerB}</button>
+                            </> :
+                            //  if not (not enough user) render wait message
+                            <Card.Text>Waiting other user...</Card.Text>
+                    }
+                        
+                </Card.Body>
+            </Card>
+            </div>
+        </div>
     )
 }
 

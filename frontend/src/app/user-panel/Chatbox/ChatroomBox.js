@@ -46,7 +46,9 @@ const ChatroomBox = (props) => {
                     setMessage={setMessage}
                     sendMessage={props.sendMessage}
                     selectedRoomId={props.selectedRoomId}
-                    setTarget={setTarget} />
+                    setTarget={setTarget}
+                    setSystemMsgList={props.setSystemMsgList}
+                    userCount={chatroom.users.length} />
             )})
         }
         
@@ -66,8 +68,8 @@ const Box = (props) => {
     // sendMessage
     console.log("ChatroomBox box", props)
 
-    const hidden = "card card-chatbox d-none"
-    const show = "card card-chatbox"
+    const hidden = "d-none"
+    const show = ""
     const [wouldURgame, setWouldURgame] = useState(false);
     const [myClassName, setClassName] = useState(hidden)
     useEffect(() => {
@@ -85,26 +87,33 @@ const Box = (props) => {
     return (
         <>
         <div className={myClassName}>
-            {wouldURgame? <WRUgame userName={props.user.name} roomId={props.chatroom._id} setWouldURgame={setWouldURgame}/>: <></>}
-            <div className="card-header bg-white">
-                <StatusBar userName={props.user.name} roomId={props.chatroom._id} roomName={props.chatroom.name} />
-            </div>
-            <div className="card-body bg-white" id={props.chatroom._id}>
-                <Messagesbox 
-                            user={props.user}
-                            messageList={props.chatroom.chatbox} 
+            {wouldURgame? <WRUgame 
                             userName={props.user.name} 
-                            userId={props.user.id} 
-                            chatRoom={props.chatroom}
-                            setTarget={props.setTarget} />
-            </div>
-            <div className="card-footer bg-white">
-                <InputBar message={props.message} 
-                          setMessage={props.setMessage} 
-                          sendMessage={props.sendMessage}
-                          roomId={props.chatroom._id}
-                          userId={props.user.id}
-                          setWouldURgame={setWouldURgame} />
+                            roomId={props.chatroom._id} 
+                            setWouldURgame={setWouldURgame} 
+                            setSystemMsgList={props.setSystemMsgList}
+                            userCount={props.userCount} />: <></>}
+            <div className="card card-chatbox">
+                <div className="card-header bg-white">
+                    <StatusBar userName={props.user.name} roomId={props.chatroom._id} roomName={props.chatroom.name} />
+                </div>
+                <div className="card-body bg-white" id={props.chatroom._id}>
+                    <Messagesbox 
+                                user={props.user}
+                                messageList={props.chatroom.chatbox} 
+                                userName={props.user.name} 
+                                userId={props.user.id} 
+                                chatRoom={props.chatroom}
+                                setTarget={props.setTarget} />
+                </div>
+                <div className="card-footer bg-white">
+                    <InputBar message={props.message} 
+                            setMessage={props.setMessage} 
+                            sendMessage={props.sendMessage}
+                            roomId={props.chatroom._id}
+                            userId={props.user.id}
+                            setWouldURgame={setWouldURgame} />
+                </div>
             </div>
         </div>
         </>
