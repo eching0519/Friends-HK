@@ -104,6 +104,8 @@ exports.adminChangePassword = async (req, res, next) => {
 exports.adminBlockUser = async (req, res, next) => {
 
     //check reqsession
+    // console.log("Halloooo")
+    // console.log(id)
     if (!adminIsVerified(req, res)) return;
 
     //the following id is userid(want to block that one)
@@ -115,7 +117,7 @@ exports.adminBlockUser = async (req, res, next) => {
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Fail to block!",
+            "message": "Fail to block! " + e.message,
         }, null, "\t"));
         res.end();
         console.log(e);
@@ -136,16 +138,18 @@ exports.adminUnblockUser = async (req, res, next) => {
     //check reqsession
     if (!adminIsVerified(req, res)) return;
 
+    console.log(id)
     //the following id is userid(want to unblock that one)
     var id = req.body.id;
     // var admin;
     try {
         // admin = await Admin.remove_Blocklist(id);
         await User.changeStatus(id, 'active');
+        
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Fail to unblock!",
+            "message": "Fail to unblock! " + e.message,
         }, null, "\t"));
         res.end();
         console.log(e);
@@ -246,6 +250,7 @@ exports.setUserPassword = async (req, res, next) => {
 
     // Get user information
     var user;
+    console.log(req.body)
     try {
         user = await User.findByEmail(email, 'login')
     } catch (e) {

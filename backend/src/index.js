@@ -285,12 +285,11 @@ io.on('connection', (socket) => {
     let roomsize = 2;   //change roomsize here (2 -> 3)
     socket.on("joinWouldURgame", (userName, roomId, callback) => {
         socket.join(`wur:${roomId}`)    //join user to WUR session
-        console.log(`user: ${userName} join the would you rather game`)
+        console.log(`user: ${userName} join the would you rather game. ${roomId}`)
 
         callback('join a game successfully!');
 
         // console.log(questions[0]);
-
         if (io.sockets.adapter.rooms.get(`wur:${roomId}`).size >= roomsize) {
             const { questions } = require('./models/wyrQuestion');  //get question bank
             //create random index
@@ -305,22 +304,24 @@ io.on('connection', (socket) => {
 
     });
 
-    socket.on("sendWouldURanswer", (userName, roomId, answer, callback) => {
-        //socket.join(`wru:${roomId}`)
-        console.log(`user choice: ${answer}`);
+    socket.on("sendWouldURanswer", (userName, roomId, answer, result, callback) => {
+        result = {...result, [userName]: answer};
+        //socket.join(`wur:${roomId}`)
+        console.log(`${userName} choice: ${answer}`);
         callback('answer recieve from user:', userName);
-        if (`wru:${roomId}` in WURuserCount) {  //save user id to specialThemeQueue.
+        if (`wur:${roomId}` in WURuserCount) {  //save user id to specialThemeQueue.
             console.log("key found");
-            WURuserCount[`wru:${roomId}`]++;
+            WURuserCount[`wur:${roomId}`]++;
         } else {
             console.log("key not found");
-            WURuserCount[`wru:${roomId}`] = 1;
+            WURuserCount[`wur:${roomId}`] = 1;
         }
-        io.to(`wru:${roomId}`).emit("waitResponseUserName", userName, answer);
+        io.to(`wur:${roomId}`).emit("waitResponseUserName", userName, answer, result);
 
-        if (WURuserCount[`wru:${roomId}`] >= roomsize) {   //if 2(or 3) answers recieved  
+        if (Object.values(result).length >= roomsize) {
+        // if (WURuserCount[`wur:${roomId}`] >= roomsize) {   //if 2(or 3) answers recieved  
             const { questions } = require('./models/wyrQuestion');  //get question bank
-            WURuserCount[`wru:${roomId}`] = 0;  //reset user count
+            WURuserCount[`wur:${roomId}`] = 0;  //reset user count
 
             //get random index
             let min = Math.ceil(0);
@@ -328,7 +329,7 @@ io.on('connection', (socket) => {
             let i = Math.floor(Math.random() * (max - min) + min);
 
             myTimer = setTimeout(() => {
-                io.to(`wru:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //set new question after 4 second
+                io.to(`wur:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //set new question after 4 second
             }, 4000)
             // clearTimeout(myTimer);
 

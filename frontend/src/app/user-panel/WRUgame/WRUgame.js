@@ -16,6 +16,7 @@ const WRUgame = (props) => {
     const [answerAuserName, setAnswerAuserName] = useState([]); //store user who choose answer A
     const [answerBuserName, setAnswerBuserName] = useState([]); //store user who choose answer B
     const [gameStart, setGameStart] = useState(false)   //indicate whether the game shall start
+    const [result, setResult] = useState({});
 
     useEffect(() => {
         console.log(socket);    //DEBUG
@@ -25,6 +26,7 @@ const WRUgame = (props) => {
         });
 
         socket.on("assignWouldURgameQuestion", (question, start_flag) => {  //set question set
+            setResult({});
             setAnswerAuserName([]);
             setAnswerBuserName([]);
             setQuestion(question.question);
@@ -36,24 +38,32 @@ const WRUgame = (props) => {
             }
         });
 
-        socket.on("waitResponseUserName", (name, answer) => {   //listen to other users answer.
-            if (answer === 'a') {
+        socket.on("waitResponseUserName", (name, answer, sysResult) => {   //listen to other users answer.
+            setResult(sysResult)
+            console.log(name, answer)
+            if (answer === 'A') {
                 console.log("answerAuserName before:", answerAuserName);
                 setAnswerAuserName([...answerAuserName, name]);
-                console.log("answerAuserName after:", answerAuserName);
+                // console.log("answerAuserName after:", answerAuserName);
             }
 
-            if (answer === 'b') {
-
+            if (answer === 'B') {
+                console.log("answerBuserName before:", answerBuserName);
                 setAnswerBuserName([...answerBuserName, name]);
-                console.log("answerBuserName:", answerBuserName);
+                // console.log("answerBuserName:", answerBuserName);
             }
 
         });
     }, []);
 
+    useEffect(()=>{
+        console.log("answerAuserName:", answerAuserName);
+        console.log("answerBuserName:", answerBuserName);
+        console.log("result", result)
+    }, [answerAuserName, answerBuserName, result])
+
     const sendWRUanswer = (answer) => { //send user's answer
-        socket.emit("sendWouldURanswer", props.userName, props.roomId, answer, (message) => {
+        socket.emit("sendWouldURanswer", props.userName, props.roomId, answer, result, (message) => {
             console.log(message);
         });
     };
@@ -70,12 +80,17 @@ const WRUgame = (props) => {
                         <>
                             <Card.Text> 
                                 {question}
-                                {answerAuserName.map((element, index) =>
+                                {
+                                    Object.entries(result).map((element, index) => 
+                                        <div key={index} className="">{element[0]}: choose {element[1]}</div>
+                                    )
+                                }
+                                {/* {answerAuserName.map((element, index) =>
                                     <div key={index} className="">{element}: choose A</div>
                                 )}
                                 {answerBuserName.map((element, index) =>
                                     <div key={index} className=""> {element}: choose B</div>
-                                )}
+                                )} */}
                             </Card.Text>
 
                             <button type="button" className="close" onClick={() => {
@@ -85,10 +100,10 @@ const WRUgame = (props) => {
                             </button>
 
                             <button type="button" className="btn btn-rounded btn-gradient-primary" onClick={event => {
-                                sendWRUanswer('a');
+                                sendWRUanswer('A');
                             }}>A: {answerA}</button>
                             <button type="button" className="btn btn-rounded btn-gradient-primary" onClick={event => {
-                                sendWRUanswer('b');
+                                sendWRUanswer('B');
                             }}>B: {answerB}</button>
                         </> :
                         //  if not (not enough user) render wait message

@@ -42,9 +42,11 @@ const Home = (props) => {
     }
 
     return (
+        <>
         <SocketContext.Provider value={socket}>
             {pageplaceholder}
         </SocketContext.Provider>
+        </>
     );
 }
 

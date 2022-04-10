@@ -8,10 +8,16 @@ function InputBar(props) {
         <Form className="form-sample">
             <Form.Group className="m-2">
                 <div className="row justfiy">
-                    <button type="button" className="btn btn-rounded btn-gradient-primary col-auto" onClick={event => {
+                    {/* <button type="button" className="btn btn-rounded btn-gradient-primary col-auto" onClick={event => {
                         //props.setMessages([...messages, message])
                         props.setWouldURgame(true)
-                    }}>Would U rather</button>
+                    }}>Would U rather</button> */}
+                    <button type="button" className="btn btn-inverse-danger btn-rounded btn-icon mr-3" onClick={event => {
+                        //props.setMessages([...messages, message])
+                        props.setWouldURgame(true)
+                    }}>
+                        <i className="mdi mdi-dice-6"></i>
+                    </button>
 
                     <Form.Control
                         type="text"
