@@ -4,13 +4,15 @@ import { io, Socket } from 'socket.io-client';
 import Sidebar from '../Sidebar/Sidebar';
 import { createContext } from "react";
 import ChatroomBox from "./ChatroomBox";
+import SocketContext from "../../SocketContext";
+// const socket = io({ //no url: default to localhost:8080
+//     autoConnect: false
+// });
 
-const socket = io({ //no url: default to localhost:8080
-    autoConnect: false
-});
-export const ChatSocketContext = createContext<Socket>(socket);
+// export const ChatSocketContext = createContext<Socket>(socket);
 
 const Chatrooms = (props) => {
+    const socket = useContext(SocketContext);
     const [selectedRoomId, setSelectedRoomId] = useState('');   //store current room id
     const [messageList, setmessageList] = useState([]);   //store all message.
 
@@ -37,11 +39,11 @@ const Chatrooms = (props) => {
 
     useEffect(() => {
         console.log('home component just mount');
-        socket.connect();   //estiblish socket io connection
-        return () => {
-            socket.removeAllListeners();    //clean up listener
-            socket.disconnect();    //disconnect socket io connection
-        }
+        // socket.connect();   //estiblish socket io connection
+        // return () => {
+        //     socket.removeAllListeners();    //clean up listener
+        //     socket.disconnect();    //disconnect socket io connection
+        // }
     }, []);
 
     useEffect(() => {
@@ -85,7 +87,7 @@ const Chatrooms = (props) => {
         return () => {
             for (let i = 0; i < chatList.length; i++) {
                 socket.emit("leaveRoom", { name: userName, roomId: chatList[i]._id });
-                socket.removeAllListeners();
+                // socket.removeAllListeners();
             }
         }
     }, [socket]);   //trigger useEffect if room changed from sidebar

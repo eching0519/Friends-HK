@@ -29,6 +29,7 @@ const Userinfo = (props) => { //Function for admin
       changeMessage(userInfo.status) //to change the name of the button regards to the user's status 
       setFurtherInfo({
         "Action": <button className='btn btn-gradient-primary btn-rounded btn-sm' onClick={()=>{blockorUnblock(userInfo.status, userInfo._id)}}>{userInfo.status=='active'?"Block":"Unblock"}</button>, 
+        "Email": userInfo.email,
         "Password": userInfo.password})
     }, [userInfo]) //use the userInfo
     

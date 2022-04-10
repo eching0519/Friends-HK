@@ -289,3 +289,19 @@ tbody[data-test="table-body"] tr:hover {
 .badge-md {
   font-size: medium;
 }
+
+.modal {
+  -ms-transform: translate(-5%, 0%);
+  transform: translate(-5%, 0%);
+}
+
+.modal-user-profile {
+  height: 80vh;
+  overflow: scroll;
+}
+
+.userSidebar-img {
+  width: 100%;
+  max-width: 300px;
+  margin: auto;
+}

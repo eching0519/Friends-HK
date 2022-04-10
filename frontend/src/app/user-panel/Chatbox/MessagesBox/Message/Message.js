@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { EmptyIcon } from '../../../../shared/Variable'
 import './Message.css';
+import { UserInfoModalButton } from '../../../userProfile'
 
 const Message = (props) => {
     let isSentByCurrentUser = false;
@@ -82,7 +83,8 @@ const Message = (props) => {
             : (
                 <>
                     <div className="row">
-                        {(props.lastMsgSender === props.message.senderId)? '' : <img className="rounded-circle chatbox-icon" src={getUserPicture()} />}
+                        {(props.lastMsgSender === props.message.senderId)? '' : 
+                            <UserInfoModalButton triggerBtn={<img className="rounded-circle chatbox-icon" src={getUserPicture()} onClick={()=>{props.setTarget(chatRoom.usersInfo[props.message.senderId])}} />} />}
                         <div className={(props.lastMsgSender === props.message.senderId)? 'next-chatbox' : 'first-chatbox'}>
                             {(props.lastMsgSender === props.message.senderId)? '' : <div className="nameText">{getSenderName()}</div>}
                             <div className="messageContainer justifyStart">
