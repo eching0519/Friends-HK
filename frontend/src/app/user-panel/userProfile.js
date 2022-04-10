@@ -29,11 +29,33 @@ const UserProfile = (props) => {
                 </div>
             </div>
         </div>
+        {/* <UserProfileSidebar user={props.user} target={props.user} targetId={props.user.id} detailed={false} action={false} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
+        <UserInfoModalButton triggerBtn={<div>Hi</div>}></UserInfoModalButton>
+        <UserInfoModal content={userProfile} /> */}
         </>
     );
 }
 
 export default UserProfile
+
+export const UserInfoModal = (props) => {
+    return (
+        <>
+            <div class="modal fade modal-custom" id="userInfoModal" tabindex="-1" role="dialog" aria-labelledby="userInfoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content modal-user-profile">
+                    {props.content}
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export const UserInfoModalButton = (props) => {
+    return (<a href='#' onClick={(e)=>e.preventDefault()} data-toggle="modal" data-target="#userInfoModal">{props.triggerBtn}</a>)
+}
+
 export const UserProfileSidebar = (props) => {
     // props.detailed       <- display detailed
     // props.friendRequest  <- Has friend request
@@ -47,7 +69,10 @@ export const UserProfileSidebar = (props) => {
                         "badge badge-gradient-warning ml-1 mt-1 badge-sm", 
                         "badge badge-gradient-info ml-1 mt-1 badge-sm", 
                         "badge badge-gradient-danger ml-1 mt-1 badge-sm"];
-    const capitalize = (str) => { return str.charAt(0).toUpperCase() + str.slice(1); }
+    const capitalize = (str) => { 
+        if (typeof(str) !== 'string') return str
+        return str.charAt(0).toUpperCase() + str.slice(1); 
+    }
 
     const [target, setTarget] = useState(props.target);
     const [sidebarContent, setSidebarContent] = useState({});
@@ -67,6 +92,11 @@ export const UserProfileSidebar = (props) => {
     useEffect(() => {
         setTarget(props.target);
     }, [props.target])
+
+    useEffect(() => {
+        // setTarget(props.targetId);
+        getTargetInfo(props.targetId);
+    }, [props.targetId])
     
     useEffect(() => {
         if (!target) return;
@@ -287,11 +317,13 @@ export const UserProfileSidebar = (props) => {
         getFriendRequest()
     }
 
+    useEffect(() => {
+        if (target==null && props.targetId!=null) getTargetInfo(props.targetId);
+        if (props.targetId!=null && props.user!=null) getFriendRequest(props.targetId, props.user.id)
+    }, [])
+
     return (
-        <div className="card" onLoad={()=>{
-            if (target==null && props.targetId!=null) getTargetInfo(props.targetId);
-            if (props.targetId!=null && props.user!=null) getFriendRequest(props.targetId, props.user.id)
-        }}>
+        <div className="card">
             <div className="card-body">
                 <div className="pl-4 pr-4">
                     <img className="rounded-circle userSidebar-img" src={picture} />
@@ -332,7 +364,7 @@ export const UserProfileSidebar = (props) => {
                 <div className="pl-4 pr-4">
                 {props.action && 
                     <>
-                        {props.user.id != props.targetId && !requestExist && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
+                        {props.user.id != props.target._id && !props.user.friendlist.includes(props.target._id) && !requestExist && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             sendFriendRequest();
                             console.log(requestExist)

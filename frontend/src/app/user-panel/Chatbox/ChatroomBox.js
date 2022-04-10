@@ -5,6 +5,7 @@ import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
 import $ from 'jquery';
 import WRUgame from "../WRUgame/WRUgame";
+import { UserProfileSidebar, UserInfoModal } from "../userProfile";
 
 // const socket = io({ //no url: default to localhost:8080
 //     autoConnect: false
@@ -16,19 +17,42 @@ const ChatroomBox = (props) => {
     // user
     // sendMessage
     const [message, setMessage] = useState('');
+    const [target, setTarget] = useState(props.user.id)
+    const [userProfileModal, setUserProfileModal] = useState(null)
 
-    return Object.entries(props.chatroomList).map(([roomId, chatroom]) => {
-        return (
-            <Box 
-                // key={index} 
-                chatroom={chatroom} 
-                user={props.user}
-                // systemMessage={chatroom.systemMessage}
-                message={message}
-                setMessage={setMessage}
-                sendMessage={props.sendMessage}
-                selectedRoomId={props.selectedRoomId} />
-        )});
+    useEffect(() => {
+        console.log("TargetId", target)
+        setUserProfileModal(<UserInfoModal content={<UserProfileSidebar 
+                                                        user={props.user} 
+                                                        target={target} 
+                                                        detailed={true} 
+                                                        action={true} 
+                                                        setInfoContent={()=>{}} 
+                                                        setPreferenceContent={()=>{}} 
+                                                        setTargetName={()=>{}} />} />)
+    }, [target])
+
+    return (
+        <>
+        {
+            Object.entries(props.chatroomList).map(([roomId, chatroom]) => {
+            return (
+                <Box 
+                    // key={index} 
+                    chatroom={chatroom} 
+                    user={props.user}
+                    // systemMessage={chatroom.systemMessage}
+                    message={message}
+                    setMessage={setMessage}
+                    sendMessage={props.sendMessage}
+                    selectedRoomId={props.selectedRoomId}
+                    setTarget={setTarget} />
+            )})
+        }
+        
+        {userProfileModal}
+        </>
+    )
 
     
 }
@@ -67,10 +91,12 @@ const Box = (props) => {
             </div>
             <div className="card-body bg-white" id={props.chatroom._id}>
                 <Messagesbox 
-                             messageList={props.chatroom.chatbox} 
-                             userName={props.user.name} 
-                             userId={props.user.id} 
-                             chatRoom={props.chatroom} />
+                            user={props.user}
+                            messageList={props.chatroom.chatbox} 
+                            userName={props.user.name} 
+                            userId={props.user.id} 
+                            chatRoom={props.chatroom}
+                            setTarget={props.setTarget} />
             </div>
             <div className="card-footer bg-white">
                 <InputBar message={props.message} 
