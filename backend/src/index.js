@@ -63,6 +63,7 @@ const Chatbox = require('./models/chatbox')
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
+const matchUserQueue = [];
 const specialThemeQueue = {}; //queue for storing user id in special matching function
 const WURuserCount = {};    //count number of user have answer the WUR question
 
@@ -88,7 +89,7 @@ io.on('connection', (socket) => {
         console.log(io.in(roomId).allSockets());  //log sockets remain in room
         console.log(`user: ${name} leave room: ${roomId}`);
 
-        var returnMsg = new Chatbox('admin', `From system: ${name} left.`, Date.now())
+        var returnMsg = new Chatbox('admin', `From system: ${name} left.`, Date.now());
         io.to(roomId).emit('message', { roomId: roomId, message: returnMsg });
     });
 
@@ -185,6 +186,40 @@ io.on('connection', (socket) => {
         let userObject = await User.findById(userId);
 
         callback({ userName: userObject.name, picture: userObject.picture });
+    });
+
+    socket.on("sendMatch", (user, callback) => {
+        console.log(`match recieve from ${user.id}`);
+        matchUserQueue.push(user.id);
+        callback("match request recieved");
+
+        setInterval(() => {
+            console.log("start grouping user");
+            console.log("current user queue length:", matchUserQueue.length);
+            let i = 0;
+            let j = 0;
+            let k = 0;
+
+            let min = Math.ceil(0);
+            let max = Math.floor(matchUserQueue.length);
+
+            i = Math.floor(Math.random() * (max - min) + min);
+
+            while (i == j) {
+                j = Math.floor(Math.random() * (max - min) + min);
+            }
+
+            while (k == i || k ==j) {
+                k = Math.floor(Math.random() * (max - min) + min);
+            }
+
+            if (matchUserQueue.length >= 3) {
+                matchUserQueue = matchUserQueue.slice(i, 1);
+                matchUserQueue = matchUserQueue.slice(j, 1);
+                matchUserQueue = matchUserQueue.slice(k, 1);
+            }
+        }, 10000);
+
     });
 
     //match by special theme

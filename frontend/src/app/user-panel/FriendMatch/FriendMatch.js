@@ -38,8 +38,14 @@ const FriendMatch = (props) => {
     //let waitingMessage = '';
     const sendSpecialThemeMatchRequest = (matchTheme) => {  //emit special match event to socket io
         socket.emit('matchBySpecialTheme', matchTheme, props.userId, (numberofpeople) => {
-            console.log(`Still need ${3 - numberofpeople} people.`)
+            console.log(`Still need ${3 - numberofpeople} people.`);
             //waitingMessage = `Still need ${3 - numberofpeople} people.`;
+        });
+    };
+
+    const sendMatchRequest = () => {
+        socket.emit('sendMatch', props.user, (message) => {
+            console.log(message);
         });
     };
     
@@ -122,11 +128,12 @@ const FriendMatch = (props) => {
                                         var lang;
                                         for(let i = 0; i < languages.length; i++) {
                                             lang = languages[i];
-                                            props.setMatchTheme('default-' + lang);
-                                            props.setDisableInput(true);
-                                            props.setmatchStatus('pending');
-                                            props.sendSpecialThemeMatchRequest('default-' + lang);
+                                            setMatchTheme('default-' + lang);
+                                            setDisableInput(true);
+                                            setmatchStatus('pending');
+                                            sendSpecialThemeMatchRequest('default-' + lang);
                                         }
+                                        sendMatchRequest();
                                     }}>
                                     <img src={require("../../../assets/images/dashboard/circle.svg")} className="card-img-absolute" alt="circle" />
                                     <h4 class="font-weight-normal mb-3">Preferences Matching</h4>
