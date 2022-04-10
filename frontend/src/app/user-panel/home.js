@@ -9,7 +9,7 @@ import SocketContext from '../SocketContext'
 import { io } from 'socket.io-client';
 
 const socket = io({ //no url: default to localhost:8080
-    autoConnect: true
+    autoConnect: false
 });
 
 const Home = (props) => {

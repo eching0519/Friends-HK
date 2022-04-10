@@ -5,13 +5,14 @@ import Messagesbox from './MessagesBox/MessagesBox';
 import InputBar from './InputBar/InputBar';
 import $ from 'jquery';
 import WRUgame from "../WRUgame/WRUgame";
+import SocketContext from "../../SocketContext";
 
 // const socket = io({ //no url: default to localhost:8080
 //     autoConnect: false
 // });
 
 const ChatroomBox = (props) => {
-    console.log("ChatroomBox", props.chatroomList)
+    //console.log("ChatroomBox", props.chatroomList)
     // chatroomList
     // user
     // sendMessage
@@ -40,7 +41,7 @@ const Box = (props) => {
     // message
     // setMessage
     // sendMessage
-    console.log("ChatroomBox box", props)
+    //console.log("ChatroomBox box", props)
 
     const hidden = "card card-chatbox d-none"
     const show = "card card-chatbox"

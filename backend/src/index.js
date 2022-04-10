@@ -76,8 +76,10 @@ io.on('connection', (socket) => {
         console.log(`user: ${name} assign to ${roomId}`);
         console.log(io.in(roomId).allSockets());    //log all socket in room
 
-        socket.emit('systemMessage', {roomId: roomId, message: { message: `You are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() }});
-        socket.broadcast.to(roomId).emit('systemMessage', { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() });
+        console.log(`socket: ${socket.id}\n\n`);
+
+        socket.emit('systemMessage', { roomId: roomId, message: { message: `: You(${name}) are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() } });
+        socket.broadcast.to(roomId).emit('systemMessage', { roomId: roomId, message: { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() } });
 
     });
 
@@ -87,7 +89,7 @@ io.on('connection', (socket) => {
         console.log(`user: ${name} leave room: ${roomId}`);
 
         var returnMsg = new Chatbox('admin', `From system: ${name} left.`, Date.now())
-        io.to(roomId).emit('message', { roomId: roomId ,message: returnMsg });
+        io.to(roomId).emit('message', { roomId: roomId, message: returnMsg });
     });
 
     /* socket.on("pingRoom", ({ name, roomId }, callback) => {
@@ -108,7 +110,7 @@ io.on('connection', (socket) => {
         cr.addChatBox(cb);
 
         // io.to(roomId).emit('message', { message: message.message, senderId: message.senderId, timeElapse: message.timeElapse });
-        io.to(roomId).emit('message', { roomId: roomId ,message: cb });
+        io.to(roomId).emit('message', { roomId: roomId, message: cb });
 
         callback(message);
     });
@@ -152,7 +154,7 @@ io.on('connection', (socket) => {
             }
 
             allChatrooms.chatroom[index].usersInfo = usersInfo;
-            allChatrooms.chatroom[index].name = names.toString().replace(',',', ');
+            allChatrooms.chatroom[index].name = names.toString().replace(',', ', ');
         }
         // --- Friend chatroom ---
         for (let index = 0; index < allChatrooms.friendChatroom.length; index++) {
@@ -171,7 +173,7 @@ io.on('connection', (socket) => {
             }
 
             allChatrooms.friendChatroom[index].usersInfo = usersInfo;
-            allChatrooms.friendChatroom[index].name = names.toString().replace(',',', ');
+            allChatrooms.friendChatroom[index].name = names.toString().replace(',', ', ');
         }
 
         callback(allChatrooms);
@@ -254,7 +256,7 @@ io.on('connection', (socket) => {
 
         // console.log(questions[0]);
 
-        if (io.sockets.adapter.rooms.get(`wru:${roomId}`).size >= roomsize) {
+        if (io.sockets.adapter.rooms.get(`wur:${roomId}`).size >= roomsize) {
             const { questions } = require('./models/wyrQuestion');  //get question bank
             //create random index
             let min = Math.ceil(0);
@@ -262,7 +264,7 @@ io.on('connection', (socket) => {
             let i = Math.floor(Math.random() * (max - min) + min);
 
             //assign random question by index
-            io.to(`wru:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //true indicate client can start
+            io.to(`wuu:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //true indicate client can start
         }
 
 
@@ -286,7 +288,7 @@ io.on('connection', (socket) => {
             WURuserCount[`wru:${roomId}`] = 0;  //reset user count
 
             //get random index
-            let min = Math.ceil(0); 
+            let min = Math.ceil(0);
             let max = Math.floor(70);
             let i = Math.floor(Math.random() * (max - min) + min);
 
@@ -294,7 +296,7 @@ io.on('connection', (socket) => {
                 io.to(`wru:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //set new question after 4 second
             }, 4000)
             // clearTimeout(myTimer);
-            
+
         }
 
     });

@@ -7,7 +7,7 @@ const Message = (props) => {
     let chatRoom = props.chatRoom;
     let userList = chatRoom.usersInfo;
 
-    console.log("Message", props)
+    // console.log("Message", props)
 
     /**
     useEffect(() => {
@@ -25,7 +25,7 @@ const Message = (props) => {
         if (senderId === 'admin') return ''
 
         try {
-            console.log("getSenderName", userList[senderId])
+            //console.log("getSenderName", userList[senderId])
             return chatRoom.usersInfo[senderId].name;
         } catch(e) {
             return senderId;

@@ -5,7 +5,7 @@ import Message from './Message/Message';
 import './MessageBox.css'
 
 const Messagesbox = (props) => {
-    console.log("Messagesbox", props)
+    //console.log("Messagesbox", props)
 
     var lastMsgSender = 'admin';
     return (
@@ -13,8 +13,8 @@ const Messagesbox = (props) => {
             {
                 props.messageList.map((value, i) => 
                 { 
-                    console.log("Messagesbox", value)
-                    console.log("Messagesbox", i)
+                    //console.log("Messagesbox", value)
+                    //console.log("Messagesbox", i)
                     let item = (
                         <div key={i}>
                             <Message 
