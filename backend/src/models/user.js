@@ -23,6 +23,7 @@ class User {
                         var user = new User(data.email, data.name);
                         user.id = data._id;
                         user.status = data.status;
+                        user.preferences = data.preferences;
                         user.picture = data.picture;
                         if (data.lang != null) user.lang = data.lang;
                         if (data.co != null) user.co = data.co;
@@ -36,8 +37,7 @@ class User {
 
                     default:
                         let myData = JSON.parse(JSON.stringify(data));
-                        console.log(myData)
-                        delete myData[password];
+                        delete myData.password;
                         return myData;
                 }
                 
@@ -59,6 +59,7 @@ class User {
                         var user = new User(data.email, data.name);
                         user.id = data._id;
                         user.status = data.status;
+                        user.preferences = data.preferences;
                         user.picture = data.picture;
                         if (data.lang != null) user.lang = data.lang;
                         if (data.co != null) user.co = data.co;
@@ -90,6 +91,7 @@ class User {
                 const user = new User(data.email, data.name);
                 user.id = data._id;
                 user.status = data.status;
+                user.preferences = data.preferences;
                 user.picture = data.picture;
                 if (data.lang != null) user.lang = data.lang;
                 if (data.co != null) user.co = data.co;
@@ -154,11 +156,8 @@ class User {
 
     update() {
         const db = getDatabase();
-        let cloned = JSON.parse(JSON.stringify(this))
-        if ('id' in cloned)
-            delete cloned['id']
         return db.collection('user').updateOne( { _id: this.id },
-                                                { $set: cloned },
+                                                { $set: this },
                                                 { upsert: false })
     }
 

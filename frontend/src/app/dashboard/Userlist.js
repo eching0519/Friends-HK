@@ -36,9 +36,6 @@ const Userlist = (props) => {
 			})
 		});
 		let data = await res.json();
-		console.log("Look here");
-		console.log(typeof (data));
-		console.log(data);
 
 		let tableObject = {
 			columns: [
@@ -85,7 +82,6 @@ const Userlist = (props) => {
 		// Add link to table
 		$('tbody').children('tr').on('click', (event) => {
 			let userId = $(event.target).parent().children(0).prop("innerText");
-			console.log(userId);
 			window.location.pathname = '/admin/userinfo/' + userId
 		})
 	};

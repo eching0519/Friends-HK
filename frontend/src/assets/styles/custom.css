@@ -89,6 +89,7 @@
   
   .upload_image_form {
       position: relative;
+      height: 170px;
   }
 
 #upload_image {
@@ -162,10 +163,129 @@
     transform: translate(-50%, -50%);
 }
 
+/* .card, .card-body {
+  height: 100%;
+} */
+.card-fit-screen > .card-body {
+  height: calc(100vh - 70px - 128px);
+}
+
+.tab-content {
+  padding: 0px;
+  height: calc(100% - 140px);
+  /* height: 100%; */
+  overflow-y: auto;
+  /* overflow-y: scroll; */
+}
+
+.tab-bottonlist {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.tab-bottonlist .dropdown-item {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.tab-bottonlist a {
+  padding: 10px;
+}
+
+.inline-spinner-wrapper {
+  margin: 15px;
+  text-align: center;
+}
 .cursor-text {
   cursor: text;
 }
 
 tbody[data-test="table-body"] tr:hover {
   cursor: pointer;
+}
+
+.chatroom-list-content {
+  margin: 0px 20px;
+}
+
+.chatroom-list-content .msgOverview {
+  height: 34px;
+  white-space: initial;
+  word-break: break-all;
+  overflow: hidden;
+}
+
+.system-message {
+  padding: 5px 20px;
+  text-align: center;
+}
+
+.system-message div {
+  margin: auto;
+  padding: 20px;
+  width: 50%;
+  word-break: break-all;
+}
+
+.chatroom-homepage {
+  /* padding: 70px 0; */
+  text-align: center;
+  
+}
+
+.chatroom-homepage div {
+  padding: 80px 0px;
+}
+
+.chatroom-homepage div .brand-logo {
+  text-align: center;
+  padding: 0px 80px;
+}
+
+.special-theme-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  height: 245px;
+}
+
+.special-theme-container div {
+  display: inline-block;
+  /* white-space: nowrap; */
+  padding-right: 10px;
+  vertical-align:top;
+}
+
+.special-theme-container div .stretch-card-custom .card-body {
+  width: 270px;
+  height: 230px;
+  overflow: hidden;
+}
+
+.special-theme-container div .stretch-card-custom .card-body h2 {
+  white-space: normal;
+  /* height: 73px; */
+}
+
+/* Scroll bar */
+.special-theme-container::-webkit-scrollbar, .tab-content::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #e4e4e9; /* or add it to the track */
+}
+
+.special-theme-container::-webkit-scrollbar-thumb, .tab-content::-webkit-scrollbar-thumb {
+  background: #868e96;
+}
+
+.card-body {
+  overflow: auto;
+}
+
+.badge-sm {
+  font-size:small;
+}
+
+.badge-md {
+  font-size: medium;
 }

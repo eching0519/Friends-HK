@@ -3,7 +3,7 @@
 /* === Plugin styles === */
 
 @import "~react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
-// @import "~nouislider/distribute/nouislider.min.css";
+@import "~nouislider/distribute/nouislider.min.css";
 @import '~react-bootstrap-typeahead/css/Typeahead.css';
 @import '~react-bootstrap-typeahead/css/Typeahead-bs4.css';
 @import '~react-datepicker/dist/react-datepicker.css';
@@ -114,3 +114,4 @@
 // @import "~react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 @import "../assets/styles/custom.css";
+@import "../assets/styles/custom";

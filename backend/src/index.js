@@ -55,11 +55,256 @@ mongoConnect(() => {
 
 // Model
 const Message = require('./models/message')
+const UserChatrooms = require('./models/user-chatrooms');
+const User = require('./models/user');
+const Chatrooms = require('./models/chatroom');
+const Chatbox = require('./models/chatbox')
 
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
+const specialThemeQueue = {}; //queue for storing user id in special matching function
+const WURuserCount = {};    //count number of user have answer the WUR question
+
 // Socket
+io.on('connection', (socket) => {
+    console.log('New WebSocket connection, id:', socket.id);
+    console.log(io.sockets.allSockets());
+
+    socket.on("joinRoom", ({ userId, name, roomId }, callback) => {
+        socket.join(roomId);    //add user to romm by room id.
+        console.log(`user: ${name} assign to ${roomId}`);
+        console.log(io.in(roomId).allSockets());    //log all socket in room
+
+        socket.emit('systemMessage', {roomId: roomId, message: { message: `You are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() }});
+        socket.broadcast.to(roomId).emit('systemMessage', { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() });
+
+    });
+
+    socket.on("leaveRoom", ({ userId, name, roomId }, callback) => {
+        socket.leave(roomId);
+        console.log(io.in(roomId).allSockets());  //log sockets remain in room
+        console.log(`user: ${name} leave room: ${roomId}`);
+
+        var returnMsg = new Chatbox('admin', `From system: ${name} left.`, Date.now())
+        io.to(roomId).emit('message', { roomId: roomId ,message: returnMsg });
+    });
+
+    /* socket.on("pingRoom", ({ name, roomId }, callback) => {
+        console.log(io.in(roomId).allSockets());
+
+        socket.emit('message', { text: `You are now in room: ${room}` });
+        io.to(room).emit('message', { text: `From system: ${name} left.`, name: 'admin' });
+    }); */
+
+    socket.on("sendMessage", async (roomId, message, callback) => {
+        //console.log('sockets in room before force join:', io.in(room).allSockets());
+        const Chatroom = require('./models/chatroom');
+        const Chatbox = require('./models/chatbox');
+
+        let cb = new Chatbox(message.senderId, message.message, message.timeElapse);
+        let cr = await Chatroom.findById(roomId);
+        console.log("chatroom:", cr);
+        cr.addChatBox(cb);
+
+        // io.to(roomId).emit('message', { message: message.message, senderId: message.senderId, timeElapse: message.timeElapse });
+        io.to(roomId).emit('message', { roomId: roomId ,message: cb });
+
+        callback(message);
+    });
+
+    socket.on("getChatRoom", async (roomId, callback) => {
+        let cr = await Chatrooms.findById(roomId);
+        let usersInfo = {};
+        var uId, user;
+        for (let i = 0; i < cr.users.length; i++) {
+            uId = cr.users[i];
+            user = await User.findById(uId);
+            usersInfo[uId] = user;
+        }
+        cr.usersInfo = usersInfo;
+        callback(cr);
+    });
+
+    socket.on("getChatRoomList", async (userId, callback) => {
+        console.log("getChatRoomList requiest recieved, user id:", userId);
+
+        let allChatrooms = await UserChatrooms.findAllChatroomsByUserId(userId);
+
+        // Find friend's name by their Id
+        var participants;
+        var participantId;
+        var user;
+        // --- Group chatroom ---
+        for (let index = 0; index < allChatrooms.chatroom.length; index++) {
+            //const element = array[index];
+            //console.log('object element:', allChatrooms[index]);
+            participants = allChatrooms.chatroom[index].users;
+
+            let names = [];
+            let usersInfo = {};
+            for (let i = 0; i < participants.length; i++) {
+                participantId = participants[i];
+                user = await User.findById(participantId);
+                usersInfo[participantId] = user;
+                // Not going to find current user's name
+                if (userId != participantId) names.push(user.name);
+            }
+
+            allChatrooms.chatroom[index].usersInfo = usersInfo;
+            allChatrooms.chatroom[index].name = names.toString().replace(',',', ');
+        }
+        // --- Friend chatroom ---
+        for (let index = 0; index < allChatrooms.friendChatroom.length; index++) {
+            //const element = array[index];
+            //console.log('object element:', allChatrooms[index]);
+            participants = allChatrooms.friendChatroom[index].users;
+
+            let names = [];
+            let usersInfo = {};
+            for (let i = 0; i < participants.length; i++) {
+                participantId = participants[i];
+                user = await User.findById(participantId);
+                usersInfo[participantId] = user;
+                // Not going to find current user's name
+                if (userId != participantId) names.push(user.name);
+            }
+
+            allChatrooms.friendChatroom[index].usersInfo = usersInfo;
+            allChatrooms.friendChatroom[index].name = names.toString().replace(',',', ');
+        }
+
+        callback(allChatrooms);
+    });
+
+    socket.on("getUserInfo", async (userId, callback) => {
+        console.log("getUserInfo requiest recieved, user id:", userId);
+
+        let userObject = await User.findById(userId);
+
+        callback({ userName: userObject.name, picture: userObject.picture });
+    });
+
+    //match by special theme
+    socket.on("matchBySpecialTheme", async (theme, userId, callback) => {
+        console.log(`recieved match request: theme: ${theme}, user id: ${userId}`);
+        socket.join(theme);
+
+        if (`${theme}` in specialThemeQueue) {  //save user id to specialThemeQueue.
+            console.log("key found")
+            specialThemeQueue[`${theme}`].push(userId);
+        } else {
+            console.log("key not found")
+            specialThemeQueue[`${theme}`] = [userId];
+        }
+
+        console.log(specialThemeQueue);
+
+        if (io.sockets.adapter.rooms.get(theme).size >= 3) {
+            console.log(specialThemeQueue[`${theme}`]);
+            console.log(`able to form group for special theme: ${theme}`);
+            console.log(io.sockets.adapter.rooms.get(theme));
+
+
+
+            const Chatroom = require('./models/chatroom');
+            let cr = new Chatroom([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
+                `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
+
+            await cr.saveAsGroupChatroom();
+
+            io.sockets.adapter.rooms.get(theme).forEach(element => {
+                console.log(element);
+
+                let roomId = cr._id.toString();
+                console.log("room id:", roomId);
+                io.sockets.sockets.get(element).emit("waitMatch", roomId);
+                //io.sockets.sockets.get(element).leave(theme); //leave the queue after matching
+            });
+
+            delete specialThemeQueue[`${theme}`];
+            console.log(specialThemeQueue);
+        }
+        let numberofpeople = io.sockets.adapter.rooms.get(theme).size;
+        callback(numberofpeople);
+    });
+
+    socket.on("cancelMatchBySpecialTheme", async (theme, userId, callback) => {
+        console.log(`recieved cancel match request: theme: ${theme}, user id: ${userId}`);
+        socket.leave(theme);    //leave socket room(theme queue)
+
+        if (`${theme}` in specialThemeQueue) {
+            console.log("key found");
+            let index = specialThemeQueue[`${theme}`].indexOf(userId);
+            specialThemeQueue[`${theme}`].slice(index, 1);  //remove user id from userid queue.
+        } else {
+            console.log("key not found")
+        }
+
+        console.log(specialThemeQueue); //log
+        callback("success");
+    });
+
+    let roomsize = 2;   //change roomsize here (2 -> 3)
+    socket.on("joinWouldURgame", (userName, roomId, callback) => {
+        socket.join(`wur:${roomId}`)    //join user to WUR session
+        console.log(`user: ${userName} join the would you rather game`)
+
+        callback('join a game successfully!');
+
+        // console.log(questions[0]);
+
+        if (io.sockets.adapter.rooms.get(`wru:${roomId}`).size >= roomsize) {
+            const { questions } = require('./models/wyrQuestion');  //get question bank
+            //create random index
+            let min = Math.ceil(0);
+            let max = Math.floor(70);
+            let i = Math.floor(Math.random() * (max - min) + min);
+
+            //assign random question by index
+            io.to(`wru:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //true indicate client can start
+        }
+
+
+    });
+
+    socket.on("sendWouldURanswer", (userName, roomId, answer, callback) => {
+        //socket.join(`wru:${roomId}`)
+        console.log(`user choice: ${answer}`);
+        callback('answer recieve from user:', userName);
+        if (`wru:${roomId}` in WURuserCount) {  //save user id to specialThemeQueue.
+            console.log("key found");
+            WURuserCount[`wru:${roomId}`]++;
+        } else {
+            console.log("key not found");
+            WURuserCount[`wru:${roomId}`] = 1;
+        }
+        io.to(`wru:${roomId}`).emit("waitResponseUserName", userName, answer);
+
+        if (WURuserCount[`wru:${roomId}`] >= roomsize) {   //if 2(or 3) answers recieved  
+            const { questions } = require('./models/wyrQuestion');  //get question bank
+            WURuserCount[`wru:${roomId}`] = 0;  //reset user count
+
+            //get random index
+            let min = Math.ceil(0); 
+            let max = Math.floor(70);
+            let i = Math.floor(Math.random() * (max - min) + min);
+
+            myTimer = setTimeout(() => {
+                io.to(`wru:${roomId}`).emit("assignWouldURgameQuestion", questions[i], true);   //set new question after 4 second
+            }, 4000)
+            // clearTimeout(myTimer);
+            
+        }
+
+    });
+
+    socket.on('disconnect', (reason) => {   //if there is a socket disconnection
+        console.log(reason);    //log socket disconnect reason.
+    });
+})
+
+/**
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
@@ -79,3 +324,6 @@ io.on('connection', (socket) => {
         io.to(room).emit('message', new Message('System', user + ' has left!'))
     })
 })
+ */
+
+

@@ -1,6 +1,7 @@
 const { ObjectID } = require('mongodb');
 
 const getDatabase = require('../util/database').getDatabase;
+const User = require('./user');
 
 class Friend {
 
@@ -11,7 +12,7 @@ class Friend {
             .find({'to': id1, 'from': id2})
             .next()
             .then(data=>{
-                const friend = new Friend(data.from, data.to)
+                const friend = new Friend(data.to, data.from)
                 friend.status = data.status
                 friend.id= data._id
                 return friend;
@@ -19,6 +20,51 @@ class Friend {
             .catch(err=>{
                 throw err;
             });
+    }
+
+    static findByRequestId = async (id) =>{
+        const db = getDatabase();
+        return await db
+            .collection('friendRequest')
+            .find({_id: ObjectID(id)})
+            .next()
+            .then(data=>{
+                const friend = new Friend(data.to, data.from)
+                friend.status = data.status
+                friend.id= data._id
+                return friend;
+            })
+            .catch(err=>{
+                throw err;
+            });
+    }
+
+    static findFriendRequestsOfUser = async (id) =>{
+        const db = getDatabase();
+        let incomingRequest = await db
+                                .collection('friendRequest')
+                                .find({to: id, status: 'pending'}).toArray();
+
+        let fromId;
+        let from;
+        for (let i = 0 ; i < incomingRequest.length; i++) {
+            fromId = incomingRequest[i].from;
+            from = await User.findById(fromId);
+            incomingRequest[i].from = from;
+        }
+
+        let outgoingRequest = await db
+                                .collection('friendRequest')
+                                .find({from: id, status: 'pending'}).toArray();
+        let toId;
+        let to;
+        for (let i = 0 ; i < outgoingRequest.length; i++) {
+            toId = outgoingRequest[i].to;
+            to = await User.findById(toId);
+            outgoingRequest[i].to = to;
+        }
+
+        return {'incoming': incomingRequest, 'outgoing': outgoingRequest};
     }
 
     constructor(to, from, status) {
@@ -41,27 +87,20 @@ class Friend {
                                                 { upsert: false })
     }
 
-    acceptRequest() {
+    async acceptRequest() {
         const db = getDatabase();
-        return db.collection('friendRequest').updateOne( { _id: this.id },
+        return await db.collection('friendRequest').updateOne( { _id: this.id },
                                                 { $set: {
                                                     'status': 'accept'
                                                 } },
                                                 { upsert: false })
     }
 
-    deleteRequest() {
+    async deleteRequest() {
         const db = getDatabase();
-        return db.collection('friendRequest').deleteOne( { _id: this.id },
-                                                { upsert: false })
+        return await db.collection('friendRequest').deleteOne( { _id: this.id },
+                                                    { upsert: false })
     }
-
-
-
-
-
-
-
 
 }
 

@@ -1,26 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import Signout from '../component/common/Signout'
+import { EmptyIcon } from './Variable'
+import LoginVerifier from '../component/common/LoginVerifier'
 
 const Navbar = (props) => {
+  const history = useHistory();
   const [user, setUser] = useState(props.user)
-  const [userPic, setUserPic] = useState((user==null||user.picture==null)? require("../../assets/images/emptyFace.png") : props.user.picture)
+  console.log(user)
+  const [userPic, setUserPic] = useState((user==null||user.picture==null)? EmptyIcon : props.user.picture)
+
+  useEffect(() => {
+    LoginVerifier(props);   //verify user session when Home component rendered
+  }, [props.location]);
 
   useEffect(()=>{
     setUser(props.user)
-    console.log(user)
     setUserPic((user==null||user.picture==null)? 
-                require("../../assets/images/emptyFace.png") : 
+                EmptyIcon : 
                 props.user.picture +"?" + + new Date().getTime()) // Add time so that the image source must updated immediately
   }, [props.user])
 
   return (
     <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <Link className="navbar-brand brand-logo" to="/home"><img src={require('../../assets/images/logo.svg')} alt="logo" /></Link>
-        <Link className="navbar-brand brand-logo-mini" to="/home"><img src={require('../../assets/images/logo-mini.svg')} alt="logo" /></Link>
+        <a className="navbar-brand brand-logo" href="#"><img src={require('../../assets/images/logo.svg')} alt="logo" onClick={(e) => {
+                // Redirect to homepage
+                e.preventDefault();
+                props.setHomepageState('matchFriends');
+                history.push({pathname: '/home'});
+              }}/></a>
+        <a className="navbar-brand brand-logo-mini" href="#"><img src={require('../../assets/images/logo-mini.svg')} alt="logo" onClick={(e) => {
+                // Redirect to homepage
+                e.preventDefault();
+                props.setHomepageState('matchFriends');
+                history.push({pathname: '/home'});
+              }}/></a>
       </div>
       <div className="navbar-menu-wrapper d-flex align-items-stretch">
         {/* <div className="search-field d-none d-md-block">
@@ -35,46 +52,29 @@ const Navbar = (props) => {
         </div> */}
         <ul className="navbar-nav navbar-nav-right">
           <li className="nav-item nav-profile">
-            <div className="nav-link">
+            <div className="nav-link" onClick={() => window.location.pathname = '/userProfile'}>
               <div className="nav-profile-img">
-                <img src={userPic} alt="user"/>
+                <img src={(user==null||user.picture==null)? EmptyIcon : props.user.picture} alt="user"/>
                 <span className="availability-status online"></span>
               </div>
               <div className="nav-profile-text">
                 <p className="mb-1 text-black">{props.user==null? 'N/A': props.user.name}</p>
               </div>
             </div>
-            {/* <Dropdown alignRight>
-              <Dropdown.Toggle className="nav-link">
-                <div className="nav-profile-img">
-                  <img src={require("../../assets/images/faces/face1.jpg")} alt="user"/>
-                  <span className="availability-status online"></span>
-                </div>
-                <div className="nav-profile-text">
-                  <p className="mb-1 text-black">David Greymaax</p>
-                </div>
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu className="navbar-dropdown">
-                <Dropdown.Item href="!#" onClick={evt =>evt.preventDefault()}>
-                  <i className="mdi mdi-cached mr-2 text-success"></i>
-                  <Trans>Activity Log</Trans>
-                </Dropdown.Item>
-                <Dropdown.Item href="!#" onClick={evt =>evt.preventDefault()}>
-                  <i className="mdi mdi-logout mr-2 text-primary"></i>
-                  <Trans>Signout</Trans>
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown> */}
           </li>
           <li className="nav-item">
-            <Dropdown alignRight>
-              <Dropdown.Toggle className="nav-link count-indicator">
+            <div alignRight>
+              <button className="nav-link btn" onClick={(e) => {
+                // Redirect to homepage
+                e.preventDefault();
+                props.setHomepageState('chat');
+                history.push({pathname: '/home'});
+              }}>
                 <i className="mdi mdi-message-text-outline"></i>
                 <span className="count-symbol bg-warning"></span>
-              </Dropdown.Toggle>
+              </button>
 
-              <Dropdown.Menu className="preview-list navbar-dropdown">
+              {/* <Dropdown.Menu className="preview-list navbar-dropdown">
                 <h6 className="p-3 mb-0"><Trans>Messages</Trans></h6>
                 <div className="dropdown-divider"></div>
                 <Dropdown.Item className="dropdown-item preview-item" onClick={evt =>evt.preventDefault()}>
@@ -114,8 +114,8 @@ const Navbar = (props) => {
                 </Dropdown.Item>
                 <div className="dropdown-divider"></div>
                 <h6 className="p-3 mb-0 text-center cursor-pointer">4 <Trans>new messages</Trans></h6>
-              </Dropdown.Menu>
-            </Dropdown>
+              </Dropdown.Menu> */}
+            </div>
           </li>
           <li className="nav-item">
             <Dropdown alignRight>
@@ -179,7 +179,7 @@ const Navbar = (props) => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="navbar-dropdown">
-                <Dropdown.Item href="!#" onClick={evt =>evt.preventDefault()}>
+                <Dropdown.Item href="/friend">
                   <i className="mdi mdi-account-multiple mr-2 text-danger"></i>
                   <Trans>Friends</Trans>
                 </Dropdown.Item>

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-const querystring = require('querystring');
+import { EmptyIcon } from "../../shared/Variable";
 
+const querystring = require('querystring');
 const UploadPicture = (props) => {
     const [user, setUser] = useState(props.user);
     const [userPic, setUserPic] = useState(props.user===null?null:props.user.picture);
@@ -125,7 +126,7 @@ const UploadPicture = (props) => {
             <div className="image_area d-flex justify-content-center">
                 <div className="upload_image_form">
                     <label for="upload_image" className="image-wrapper">
-                        <img src={(userPic==null)? require("../../../assets/images/emptyFace.png") : userPic} id="uploaded_image" className="img-responsive rounded-circle" width="200px" height="200px" />
+                        <img src={(userPic==null)? EmptyIcon : userPic} id="uploaded_image" className="img-responsive rounded-circle" width="200px" height="200px" />
                         <div className="overlay">
                             <div className="text">Change Image</div>
                         </div>

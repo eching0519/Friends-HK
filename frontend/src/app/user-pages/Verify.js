@@ -14,9 +14,6 @@ const Verify = () => {
         let m = queryData.get('m');
         let id = queryData.get('id');
 
-        console.log("m:"+m)
-        console.log(id)
-
         let url = '/user/activate' + urlData
         let res = await fetch(url);
         
@@ -27,11 +24,10 @@ const Verify = () => {
             setErrorMessage(`Unknown error. (${error.message})`);
         }
 
-        console.log(JSON.stringify(data))
+        // console.log(JSON.stringify(data))
 
         if (!data.success) {
             setErrorMessage(data.message);
-            console.log(errorMessage)
         } else {
             setErrorMessage('');
         }

@@ -56,7 +56,7 @@ class Chatroom {
         this.chatbox = [];
     }
 
-    async create() {
+    async saveAsGroupChatroom() {
         const db = getDatabase();
         await db.collection('chatroom').insertOne(this).then(result => {this._id = result.insertedId});
 
@@ -66,6 +66,21 @@ class Chatroom {
             // UserChatrooms.addRoom(user, this._id);
             await db.collection('user-chatrooms').updateOne( { _id: ObjectID(userId) },
                                                              { $push: { 'chatroom': this._id} },
+                                                             { upsert: false })
+        }
+        return this;
+    }
+
+    async saveAsFriendChatroom() {
+        const db = getDatabase();
+        await db.collection('chatroom').insertOne(this).then(result => {this._id = result.insertedId});
+
+        var userId;
+        for (let i = 0; i < this.users.length; i++) {
+            userId = this.users[i];
+            // UserChatrooms.addRoom(user, this._id);
+            await db.collection('user-chatrooms').updateOne( { _id: ObjectID(userId) },
+                                                             { $push: { 'friendChatroom': this._id} },
                                                              { upsert: false })
         }
         return this;

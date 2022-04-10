@@ -117,7 +117,7 @@ exports.adminBlockUser = async (req, res, next) => {
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Fail to block!",
+            "message": "Fail to block! " + e.message,
         }, null, "\t"));
         res.end();
         console.log(e);
@@ -138,6 +138,7 @@ exports.adminUnblockUser = async (req, res, next) => {
     //check reqsession
     if (!adminIsVerified(req, res)) return;
 
+    console.log(id)
     //the following id is userid(want to unblock that one)
     var id = req.body.id;
     // var admin;
@@ -148,7 +149,7 @@ exports.adminUnblockUser = async (req, res, next) => {
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Fail to unblock!",
+            "message": "Fail to unblock! " + e.message,
         }, null, "\t"));
         res.end();
         console.log(e);

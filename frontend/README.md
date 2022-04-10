@@ -1,6 +1,12 @@
+## Node version problem
+
 Frontend is develop by node v12.22.11
 If use have any error, please change your node version.
 Also, Python2.7 may require for `npm install`
+
+## Socket io:
+
+Socket instance is now store in React context, avoid duplicated connection on a same account
 <!-- This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

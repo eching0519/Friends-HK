@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import LoginVerifier from '../component/common/LoginVerifier'
 import AccountSettings from '../component/settings/account';
 import ProfileSettings from '../component/settings/profile';
-import PrivacySettings from '../component/settings/privacy'
+// import PrivacySettings from '../component/settings/privacy'
 import AlertMessage from '../component/common/AlertMessage';
 import { Trans } from 'react-i18next';
-import $ from 'jquery';
 
 const Settings = (props) => {
-    LoginVerifier(props)
     const [formChanged, setFormChanged] = useState(false)
-    const [settingType, setType] = useState(props.type==null? 'account': props.type);
+    const [settingType, setType] = useState('profile');
     const [alert, setAlert] = useState({visible:false});
 
     if (props.settingType != null)
@@ -38,7 +35,7 @@ const Settings = (props) => {
     return (
         <>
         <div className="page-header">
-            <h3 className="page-title" onClick={trial}>Settings</h3>
+            <h3 className="page-title" onClick={trial}><span class="page-title-icon bg-gradient-primary text-white mr-2"><i class="mdi mdi-settings"></i></span> Settings</h3>
             {/* <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item">
@@ -55,7 +52,19 @@ const Settings = (props) => {
             <div className="col-md-3 grid-margin">
                 <div className="card">
                     <div className="bottonlist preview-list">
-                        
+                        {/* Profile Button */}
+                        <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e)=>{
+                            e.preventDefault();
+                            if (settingType!=='profile' && formChanged) {
+                                var leave = window.confirm("Leave this page without saving changes?")
+                                if (!leave) return
+                            }
+                            setType('profile');
+                        }}>
+                            <i className="mdi mdi-file-document-box mr-2 text-success h3"></i><span className={settingType!=='profile'? '' : 'font-weight-bold'}><Trans>Profile</Trans></span>
+                        </a>
+                        <div className="dropdown-divider"></div>
+                        {/* Account Button */}
                         <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e)=>{
                             e.preventDefault();
                             if (settingType!=='account' && formChanged) {
@@ -66,19 +75,6 @@ const Settings = (props) => {
                         }}>
                             <i className="mdi mdi-account-outline mr-2 text-danger h3"></i><span className={settingType!=='account'? '' : 'font-weight-bold'}><Trans>Account</Trans></span>
                         </a>
-                        {/* ---- Profile Button ---- */}
-                        <div className="dropdown-divider"></div>
-                        <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e)=>{
-                            e.preventDefault();
-                            if (settingType!=='profile' && formChanged) {
-                                var leave = window.confirm("Leave this page without saving changes?")
-                                if (!leave) return
-                            }
-                            setType('profile');
-                        }}>
-                            <i className="mdi mdi-heart-box-outline mr-2 text-success h3"></i><span className={settingType!=='profile'? '' : 'font-weight-bold'}><Trans>Profile</Trans></span>
-                        </a>
-                        {/* ---- Privacy Button ---- */}
                         {/* <div className="dropdown-divider"></div>
                         <a href="!#" className="dropdown-item d-flex justify-content-center" onClick={(e)=>{
                             e.preventDefault();
@@ -98,9 +94,11 @@ const Settings = (props) => {
                 <div className='w-100'>
                     {alert.visible === true && <AlertMessage alert={alert} setAlert={setAlert}/>}
                     <div className="card">
-                        {settingType==='account' && <AccountSettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />}
-                        {settingType==='profile' && <ProfileSettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />}
-                        {/* {settingType==='privacy' && <PrivacySettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />} */}
+                        <div className="card-body">
+                            {settingType==='account' && <AccountSettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />}
+                            {settingType==='profile' && <ProfileSettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />}
+                            {/* {settingType==='privacy' && <PrivacySettings user={props.user} setAlert={setAlert} setUser={props.setUser} setFormChanged={setFormChanged} />} */}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -2,7 +2,8 @@ const querystring = require('querystring');
 
 const LoginVerifier = async (props) => {
     if (props.user === null) {
-        window.location.replace("/login");
+        // window.location.replace("/login");
+        window.location.pathname = "/login";
         return
     }
 
