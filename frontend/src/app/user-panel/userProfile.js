@@ -8,7 +8,7 @@ const UserProfile = (props) => {
 
     const [infoContent, setInfoContent] = useState({});
     const [preferenceContent, setPreferenceContent] = useState({});
-    const [targetName, setTargetName] = useState("N/A");
+    const [targetName, setTargetName] = useState("--");
 
     return (
         <>
@@ -151,7 +151,7 @@ export const UserProfileSidebar = (props) => {
         return (
             <div className={props.minimal? 'row justify-content-between' : 'row justify-content-between mt-3 mb-3'}>
                 <strong className='text-break'>{props.title}</strong>
-                <div className='text-break'>{props.value===undefined?'N/A':props.value}</div>
+                <div className='text-break'>{props.value===undefined?'--':props.value}</div>
             </div>
         )
     }
@@ -359,15 +359,16 @@ export const UserProfileSidebar = (props) => {
                             <TableItem title={info[0]} value={info[1]} />
                             <div class="dropdown-divider"></div>
                         </>)}
-                    </div>}
+                    </div>
+                }
 
                 <div className="pl-4 pr-4">
                 {props.action && 
                     <>
-                        {props.user.id != props.target._id && !props.user.friendlist.includes(props.target._id) && !requestExist && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
+                        {props.user.id != props.target._id && props.user.friendlist!=null && !props.user.friendlist.includes(props.target._id) && !requestExist && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             sendFriendRequest();
-                            console.log(requestExist)
+                            console.log("requestExist", requestExist)
                             console.log(friendRequest)
                             window.alert("Friend request is sent");
                         }}>Add Friend</button>}
@@ -412,7 +413,7 @@ export const UserInfoDetail = (props) => {
         return (
             <div className='row justify-content-between mt-3 mb-3'>
                 <strong className='text-break'>{props.title}</strong>
-                <div className='d-flex flex-wrap text-break'>{props.value===undefined?'N/A':props.value}</div>
+                <div className='d-flex flex-wrap text-break'>{props.value===undefined?'--':props.value}</div>
             </div>
         )
     }

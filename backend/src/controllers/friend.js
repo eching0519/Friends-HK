@@ -285,7 +285,7 @@ exports.ListFriendInfo = async(req, res, next) => {
                 
             
         }
-        console.log(listinfo)
+        // console.log(listinfo)
         res.write(JSON.stringify({
                             "success": true,
                             "user": listinfo
