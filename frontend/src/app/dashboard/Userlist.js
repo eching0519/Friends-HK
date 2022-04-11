@@ -2,14 +2,63 @@ import React, { Component, useState } from 'react';
 import { MDBDataTableV5 } from 'mdbreact';
 import { useEffect } from 'react';
 import $ from 'jquery';
+import DataTable from 'react-data-table-component';
+import DataTableExtensions from 'react-data-table-component-extensions';
+import 'react-data-table-component-extensions/dist/index.css';
+import { EmptyIcon } from "../shared/Variable"
 const querystring = require('querystring');
 
+const langDic = {"yue": "Cantonese", "cmn": "Mandarin", "eng": "English"};
+const coDic = {"NA": "North America", "SA": "South America", "ER": "Europe", "AS": "Asia", "AU": "Australia", "AF": "Africa", "CN": "China", "HK": "Hong Kong", "IN": "India", "ID": "Indonesia", "JP": "Japan", "KR": "South Korea", "MY": "Malaysia", "PH": "Philippines", "TW": "Taiwan", "TH": "Thailand", "VN": "Vietnam"};
+const genderDic = {"M": "Male", "F": "Female", "TM": "Trans male", "TF": "Trans female", "NB": "Non-binary", "ND": "Not Declare"};
 
+const isSet = (val) => {
+    return !(val === undefined || val == null || val == '')
+}
+
+const capitalize = (str) => { 
+	if (typeof(str) !== 'string') return str
+	return str.charAt(0).toUpperCase() + str.slice(1); 
+}
 
 const Userlist = (props) => {
 	const [userName, setUserName] = useState('');
 	const [userPassword, setUserPassword] = useState('');
-	const [datatable, setDatatable] = useState('');
+	const [pending, setPending] = useState(true);
+	const [datatable, setDatatable] = useState({
+		columns: [
+            { 
+                name: "", 
+                selector: "picture", 
+                sortable: false , 
+                maxWidth:"100px", 
+                style: { margin:"10px" },
+                cell: (info) => <img src={isSet(info.picture)?info.picture:EmptyIcon} className='rounded-circle mx-auto' />
+            },
+            { name: "Name", selector: "name", sortable: true },
+            { 
+                name: "Gender", selector: "gender", sortable: true , 
+                defaultContent: "--",
+                cell: (info) => isSet(info.gender)? genderDic[info.gender] : "--"
+            },
+            { 
+                name: "Nationality", selector: "co", sortable: true,
+                cell: (info) => isSet(info.co)? coDic[info.co] : "--" 
+            },
+            { 
+                name: "Language", selector: "lang", sortable: true,
+                cell: (info) => isSet(info.lang)? langDic[info.lang] : "--" 
+            },
+            { 
+                name: "Status", selector: "status", sortable: true,
+                cell: (info) => capitalize(info.status)
+            }
+        ],
+		rows: [
+
+		],
+
+	});
 
 
 	useEffect(() => {
@@ -31,54 +80,73 @@ const Userlist = (props) => {
 		});
 		let data = await res.json();
 
-		let tableObject = {
-			columns: [
-				{
-					label: 'ID',
-					field: '_id',
-					width: 50,
-					sort: 'asc',
-					attributes: {
-						'aria-controls': 'DataTable',
-						'aria-label': 'Name',
-					},
-				},
-				{
-					label: 'Email',
-					field: 'email',
-					width: 200,
-				},
-				{
-					label: 'Name',
-					field: 'name',
-					width: 150,
-				},
-				{
-					label: 'Status',
-					field: 'status',
-					width: 150,
-				},
-			],
-			rows: [
+		// let tableObject = {
+		// 	columns: [
+		// 		{
+		// 			name: 'ID',
+		// 			selector: '_id',
+		// 			width: 50,
+		// 			sort: 'asc',
+		// 			attributes: {
+		// 				'aria-controls': 'DataTable',
+		// 				'aria-label': 'Name',
+		// 			},
+		// 		},
+		// 		{
+		// 			name: 'Email',
+		// 			selector: 'email',
+		// 			width: 200,
+		// 		},
+		// 		{
+		// 			name: 'Name',
+		// 			selector: 'name',
+		// 			width: 150,
+		// 		},
+		// 		{
+		// 			name: 'Status',
+		// 			selector: 'status',
+		// 			width: 150,
+		// 		},
+		// 	],
+		// 	data: [
 
-			],
+		// 	],
 
-		};
+		// };
 
+		let userData = []
 		if (data.success) {	// if data retreive success
-			data.userList.forEach((element) => {
+			data.userList.forEach((val) => {
 				// console.log(element);
-				tableObject.rows.push(element);
+				userData.push({...val, 
+					"id": val._id,
+					"lang": isSet(val.lang)?val.lang:"",
+					"co": isSet(val.co)?val.co:"",
+					"gender": isSet(val.gender)?val.gender:"",
+				});
 			})
 		}
 
-		setDatatable(tableObject);
+		setDatatable({...datatable, "data": userData});
+		setPending(false);
 		// Add link to table
-		$('tbody').children('tr').on('click', (event) => {
-			let userId = $(event.target).parent().children(0).prop("innerText");
-			window.location.pathname = '/admin/userinfo/' + userId
-		})
+		setRowOnClickEvent();
+		// $('tbody').children('tr').on('click', (event) => {
+		// 	let userId = $(event.target).parent().children(0).prop("innerText");
+		// 	window.location.pathname = '/admin/userinfo/' + userId
+		// })
 	};
+
+	const setRowOnClickEvent = () => {
+        $(".rdt_TableRow").attr('data-toggle', 'modal')
+        $(".rdt_TableRow").attr('data-target', '#userInfoModal')
+        $(".rdt_TableRow").css('cursor', 'pointer')
+        $(".rdt_TableRow").on('click', (event) => {
+            let rowId = $(event.target).parent().attr("id");
+            let targetId = rowId.split('-').at(-1)
+            window.location.pathname = '/admin/userinfo/' + targetId
+        })
+    }
 
 	return (
 		<>
@@ -93,14 +161,23 @@ const Userlist = (props) => {
 			{/* <button type="button" className="btn btn-gradient-primary mr-2 mb-2" onClick={() => {
 				sendGetAllUserRequest();
 			}}>refresh</button> */}
-			<MDBDataTableV5 
-				hover 
-				entriesOptions={[10]} 
-				entries={10} 
-				pagesAmount={4} 
-				data={datatable} 
-				searchTop 
-				searchBottom={false} />
+			<DataTableExtensions
+				{...datatable}
+				export={false}
+				print={false}
+        	>
+			<DataTable
+				noHeader
+				// noDataComponent="No friend in the list"
+				defaultSortFieldId="2"
+				// defaultSortAsc={true}
+				pagination
+				highlightOnHover
+				progressPending={pending}
+				onChangeRowsPerPage={setRowOnClickEvent}
+				onChangePage={setRowOnClickEvent}
+			/>
+				</DataTableExtensions>
 		</>
 
 	)
