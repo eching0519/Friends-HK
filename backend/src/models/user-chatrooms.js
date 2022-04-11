@@ -12,6 +12,8 @@ class UserChatrooms {
                         .find({ '_id': ObjectID(id) })
                         .next()
                         .then(async (data) => {
+                            if (data == null)
+                                return {'chatroom': [], 'friendChatroom': []}
 
                             chatroomList['chatroom'] = []
                             for (let i = 0; i < data.chatroom.length; i++) {

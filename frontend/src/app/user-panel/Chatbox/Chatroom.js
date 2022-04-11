@@ -28,6 +28,7 @@ const Chatrooms = (props) => {
 
     const getChatroomlistSocketio = (id) => {
         socket.emit("getChatRoomList", id, (data) => {
+            console.log("getChatRoomList", data)
             setGroupChatList(data.chatroom);
             setFriendChatList(data.friendChatroom);
             var jointData = [...data.chatroom, ...data.friendChatroom];
@@ -40,6 +41,7 @@ const Chatrooms = (props) => {
     useEffect(() => {
         console.log('home component just mount');
         socket.connect();   //estiblish socket io connection
+        console.log("getChatRoomList Call")
         getChatroomlistSocketio(props.user.id);
 
         return () => {
@@ -96,9 +98,11 @@ const Chatrooms = (props) => {
 
     // --- After get all chatroom's data ---
     useEffect(()=>{
+        console.log(allChatList)
         if (!allChatList) return
         // Check if the page is loaded before. If yes, no need to set selected room again
-        if (!loading) return    
+        console.log(loading)
+        if (!loading) return
         setLoading(false)
         console.log("allChatList", allChatList);
         console.log("allChatList", Object.entries({}));
