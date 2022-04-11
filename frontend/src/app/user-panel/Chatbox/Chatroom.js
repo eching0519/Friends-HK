@@ -97,6 +97,8 @@ const Chatrooms = (props) => {
     // --- After get all chatroom's data ---
     useEffect(()=>{
         if (!allChatList) return
+        // Check if the page is loaded before. If yes, no need to set selected room again
+        if (!loading) return    
         setLoading(false)
         console.log("allChatList", allChatList);
         console.log("allChatList", Object.entries({}));
