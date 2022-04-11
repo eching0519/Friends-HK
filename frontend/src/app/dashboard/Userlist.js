@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { MDBDataTableV5 } from 'mdbreact';
+// import { MDBDataTableV5 } from 'mdbreact';
 import { useEffect } from 'react';
 import $ from 'jquery';
 import DataTable from 'react-data-table-component';
@@ -36,8 +36,8 @@ const Userlist = (props) => {
                 cell: (info) => <img src={isSet(info.picture)?info.picture:EmptyIcon} className='rounded-circle mx-auto' />
             },
 			{ name: "ID", selector: "_id", minWidth: "200", sortable: true },
+			{ name: "Name", selector: "name", sortable: true },
 			{ name: "Email", selector: "email", sortable: true },
-            { name: "Name", selector: "name", sortable: true },
             // { 
             //     name: "Gender", selector: "gender", sortable: true , 
             //     defaultContent: "--",
@@ -132,23 +132,23 @@ const Userlist = (props) => {
 		setDatatable({...datatable, "data": userData});
 		setPending(false);
 		// Add link to table
-		setRowOnClickEvent();
+		// setRowOnClickEvent();
 		// $('tbody').children('tr').on('click', (event) => {
 		// 	let userId = $(event.target).parent().children(0).prop("innerText");
 		// 	window.location.pathname = '/admin/userinfo/' + userId
 		// })
 	};
 
-	const setRowOnClickEvent = () => {
-        $(".rdt_TableRow").attr('data-toggle', 'modal')
-        $(".rdt_TableRow").attr('data-target', '#userInfoModal')
-        $(".rdt_TableRow").css('cursor', 'pointer')
-        $(".rdt_TableRow").on('click', (event) => {
-            let rowId = $(event.target).parent().attr("id");
-            let targetId = rowId.split('-').at(-1)
-            window.location.pathname = '/admin/userinfo/' + targetId
-        })
-    }
+	// const setRowOnClickEvent = () => {
+    //     $(".rdt_TableRow").attr('data-toggle', 'modal')
+    //     $(".rdt_TableRow").attr('data-target', '#userInfoModal')
+    //     // $(".rdt_TableRow").css('cursor', 'pointer')
+    //     // $(".rdt_TableRow").on('click', (event) => {
+    //     //     let rowId = $(event.target).parent().attr("id");
+    //     //     let targetId = rowId.split('-').at(-1)
+    //     //     window.location.pathname = '/admin/userinfo/' + targetId
+    //     // })
+    // }
 
 	return (
 		<>
@@ -175,8 +175,14 @@ const Userlist = (props) => {
 				pagination
 				highlightOnHover
 				progressPending={pending}
-				onChangeRowsPerPage={setRowOnClickEvent}
-				onChangePage={setRowOnClickEvent}
+				// onChangeRowsPerPage={setRowOnClickEvent}
+				// onChangePage={setRowOnClickEvent}
+				pointerOnHover={true}
+				onRowClicked={(row, event) => {
+					let rowId = $(event.target).parent().attr("id");
+					let targetId = rowId.split('-').at(-1)
+					window.location.pathname = '/admin/userinfo/' + targetId
+				}}
 			/>
 				</DataTableExtensions>
 		</>
