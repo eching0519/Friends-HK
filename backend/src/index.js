@@ -47,9 +47,10 @@ app.get('/checkSession', (req, res, next) => {
 })
 // Connection of mongDB
 mongoConnect(() => {
-    server.listen(port, () => {
+    var listener = server.listen(port, () => {
         console.log(`Server is up on port ${port}!`)
     })
+    console.log(app.address())
 })
 
 

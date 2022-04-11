@@ -29,7 +29,7 @@ const ProfileSettings = (props) => {
     const [hashtags , setHashtags] = useState(user.hashtags==null? [] : user.hashtags);
 
     const [plang , setPLang ] = useState(user.preferences==null? ["yue", "cmn", "eng"] : user.preferences.lang);
-    const [pgender , setPGender ] = useState(user.preferences==null? ["M", "F", "TM", "TF", "NB", "ND"] : user.preferences.gender);
+    // const [pgender , setPGender ] = useState(user.preferences==null? ["M", "F", "TM", "TF", "NB", "ND"] : user.preferences.gender);
     const [ageFrom, setAgeFrom] = useState(user.preferences==null? 18 : user.preferences.ageFrom);
     const [ageTo, setAgeTo] = useState(user.preferences==null? 40 : user.preferences.ageTo);
 
@@ -53,10 +53,17 @@ const ProfileSettings = (props) => {
         
         props.setFormChanged(true)
         $("#submitBtn").removeClass('disabled')
-    }, [ulang, uco, ugender, dob, uhobbies, bio, hashtags, plang, pgender, ageFrom, ageTo]);
+    }, [ulang, uco, ugender, dob, uhobbies, bio, hashtags, plang, ageFrom, ageTo]);
 
     const sendUpdatePreferenceRequest = async (d) => {
         let url = '/user/profile/preferences/update';
+
+        var dateOfBirth;
+        try {
+            dateOfBirth = dob.toLocaleDateString('en-GB', {
+                day: 'numeric', month: 'short', year: 'numeric'
+            }).replace(/ /g, '-')
+        } catch (error) {}
 
         let res = await fetch(url, {
             method: 'POST',
@@ -65,9 +72,7 @@ const ProfileSettings = (props) => {
                 lang: ulang,
                 co: uco,
                 gender: ugender,
-                dob: dob.toLocaleDateString('en-GB', {
-                    day: 'numeric', month: 'short', year: 'numeric'
-                  }).replace(/ /g, '-'),
+                dob: dateOfBirth,
                 hobbies: uhobbies,
                 bio: bio,
                 hashtags: hashtags,
@@ -99,6 +104,8 @@ const ProfileSettings = (props) => {
             return;
         }
 
+        console.log(data.user)
+
         setUser(data.user)
         props.setUser(data.user)
         window.alert("Your information is updated")
@@ -114,7 +121,7 @@ const ProfileSettings = (props) => {
         setBio(user.bio==null? '' : user.bio);
         setHashtags(user.hashtags==null? [] : user.hashtags);
         setPLang(user.preferences==null? ["yue", "cmn", "eng"] : user.preferences.lang);
-        setPGender(user.preferences==null? ["M", "F", "TM", "TF", "NB", "ND"] : user.preferences.gender);
+        // setPGender(user.preferences==null? ["M", "F", "TM", "TF", "NB", "ND"] : user.preferences.gender);
         setAgeFrom(user.preferences==null? 18 : user.preferences.ageFrom);
         setAgeTo(user.preferences==null? 40 : user.preferences.ageTo);
         $('#submitBtn').addClass('disabled').promise().then("class added")
@@ -221,6 +228,7 @@ const ProfileSettings = (props) => {
                             selected={dob}
                             dateFormat="dd-MMM-yyyy"
                             onChange={e => setDOB(e)}
+                            required
                         />
                         </div>
                         </Form.Group>

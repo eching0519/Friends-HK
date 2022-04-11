@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import Signout from '../component/common/Signout'
 import { EmptyIcon } from './Variable'
 import LoginVerifier from '../component/common/LoginVerifier'
 
 const Navbar = (props) => {
-  const history = useHistory();
+  // const history = useHistory();
   const [user, setUser] = useState(props.user)
   console.log(user)
   const [userPic, setUserPic] = useState((user==null||user.picture==null)? EmptyIcon : props.user.picture)
@@ -26,17 +25,17 @@ const Navbar = (props) => {
   return (
     <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a className="navbar-brand brand-logo" href="#"><img src={require('../../assets/images/logo.svg')} alt="logo" onClick={(e) => {
+        <a className="navbar-brand brand-logo" href="/home"><img src={require('../../assets/images/logo.svg')} alt="logo" onClick={(e) => {
                 // Redirect to homepage
-                e.preventDefault();
-                props.setHomepageState('matchFriends');
-                history.push({pathname: '/home'});
+                // e.preventDefault();
+                // props.setHomepageState('matchFriends');
+                // history.push({pathname: '/home'});
               }}/></a>
-        <a className="navbar-brand brand-logo-mini" href="#"><img src={require('../../assets/images/logo-mini.svg')} alt="logo" onClick={(e) => {
+        <a className="navbar-brand brand-logo-mini" href="/home"><img src={require('../../assets/images/logo-mini.svg')} alt="logo" onClick={(e) => {
                 // Redirect to homepage
-                e.preventDefault();
-                props.setHomepageState('matchFriends');
-                history.push({pathname: '/home'});
+                // e.preventDefault();
+                // props.setHomepageState('matchFriends');
+                // history.push({pathname: '/home'});
               }}/></a>
       </div>
       <div className="navbar-menu-wrapper d-flex align-items-stretch">

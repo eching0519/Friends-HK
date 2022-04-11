@@ -31,17 +31,22 @@ const Home = (props) => {
         }
     }, []);
 
-    let pageplaceholder;    //placeholder for chatbox or friend match
+    let pageplaceholder = <FriendMatch 
+                            userId={userId} 
+                            userName={userName} 
+                            setRoomId={setRoomId} 
+                            user={props.user}
+                            setSelectedRoomId={props.setSelectedRoomId} />;
 
-    if (props.currentPage === 'chat') {
-        // console.log("Chat")
-        pageplaceholder = <Chatrooms setCurrentPage={props.setCurrentPage} user={props.user} />
-    }
+    // if (props.currentPage === 'chat') {
+    //     // console.log("Chat")
+    //     pageplaceholder = <Chatrooms setCurrentPage={props.setCurrentPage} user={props.user} />
+    // }
 
-    if (props.currentPage === 'matchFriends') {
+    // if (props.currentPage === 'matchFriends') {
         // console.log("MatchFriends")
-        pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setRoomId} user={props.user} />;
-    }
+    //     pageplaceholder = <FriendMatch userId={userId} userName={userName} setCurrentPage={props.setCurrentPage} setRoomId={setRoomId} user={props.user} />;
+    // }
 
     return (
         <>

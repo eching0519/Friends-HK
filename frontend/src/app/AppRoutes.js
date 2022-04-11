@@ -56,11 +56,11 @@ const AppRoutes = (props) => {
         {/* <Route path="/general-pages/blank-page" component={ BlankPage } /> */}
 
         {/* Our UI */}
-        <Route path="/home"><Home currentPage={props.homepageState} setCurrentPage={props.setHomepageState} user={props.user} /></Route>
+        <Route path="/home"><Home setSelectedRoomId={props.setSelectedRoomId} user={props.user} /></Route>
+        <Route path="/chat"><Chatrooms user={props.user} selectedRoomId={props.selectedRoomId} /></Route>
         <Route path="/settings"><Settings user={props.user} setUser={props.setUser} /></Route>
         <Route path="/userProfile"><UserProfile user={props.user} /></Route>
         <Route path="/friend"><FriendList user={props.user} /></Route>
-        <Route path="/chat"><Chatrooms user={props.user} /></Route>
 
         <Route path="/login" component={ Login } />
         <Route path="/register" component={ Register } />

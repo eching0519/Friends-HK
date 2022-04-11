@@ -17,6 +17,7 @@ const Chatrooms = (props) => {
     const [messageList, setmessageList] = useState([]);   //store all message.
 
     // Function from Sidebar
+    const [loading, setLoading] = useState(true)
     const [groupChatList, setGroupChatList] = useState(null);
     const [friendChatList, setFriendChatList] = useState(null);
     let chatList = [];
@@ -37,9 +38,10 @@ const Chatrooms = (props) => {
     };
 
     useEffect(() => {
-        socket.connect(); //estiblish socket io connection
         console.log('home component just mount');
-        // socket.connect();   //estiblish socket io connection
+        socket.connect();   //estiblish socket io connection
+        getChatroomlistSocketio(props.user.id);
+
         return () => {
             socket.removeAllListeners();    //clean up listener
             socket.disconnect();    //disconnect socket io connection
@@ -92,6 +94,22 @@ const Chatrooms = (props) => {
         }
     }, [socket]);   //trigger useEffect if room changed from sidebar
 
+    // --- After get all chatroom's data ---
+    useEffect(()=>{
+        if (!allChatList) return
+        setLoading(false)
+        console.log("allChatList", allChatList);
+        console.log("allChatList", Object.entries({}));
+        console.log("allChatList", );
+        if (props.selectedRoomId) {
+            setSelectedRoomId(props.selectedRoomId);
+        } else {
+            if (Object.entries(allChatList).length==0) return
+            // Change to the first chatroom
+            setSelectedRoomId(Object.entries(allChatList)[0][0]);
+        }
+    }, [allChatList]);
+
     useEffect(() => {
         // console.log("System message", systemMsgList);
 
@@ -124,13 +142,6 @@ const Chatrooms = (props) => {
     //         setmessageList([...messageList, message]);
     //     });
     // });
-
-    useEffect(() => {
-        if (props.user.id !== '') {
-            getChatroomlistSocketio(props.user.id);
-        }
-    }, [props.user])  //when user id changed, fetch chat room list from server.
-
 
     // handle chat list
     useEffect(() => {
@@ -165,8 +176,6 @@ const Chatrooms = (props) => {
     }, [selectedRoomId])
 
     // useEffect(() => { console.log("chatbox", chatbox); }, [chatbox]);
-
-    useEffect(()=>{if(allChatList) console.log("allChatList", allChatList);}, [allChatList]);
     useEffect(()=>{if(incomingMsgList) console.log("incomingMsgList", incomingMsgList);}, [incomingMsgList]);
 
 
@@ -184,12 +193,14 @@ const Chatrooms = (props) => {
         <div className="row">
             <Sidebar 
                     chatroomList={allChatList}
+                    selectedRoomId={selectedRoomId}
                     setSelectedRoomId={setSelectedRoomId} 
                     userId={props.user.id} 
                     setCurrentPage={props.setCurrentPage} 
                     setmessageList={setmessageList} 
                     groupChatList={groupChatList}
-                    friendChatList={friendChatList} />
+                    friendChatList={friendChatList}
+                    loading={loading} />
 
             <div className="col-md-9 grid-margin stretch-card">
                 <div className='w-100'>
