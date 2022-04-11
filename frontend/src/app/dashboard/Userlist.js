@@ -35,12 +35,14 @@ const Userlist = (props) => {
                 style: { margin:"10px" },
                 cell: (info) => <img src={isSet(info.picture)?info.picture:EmptyIcon} className='rounded-circle mx-auto' />
             },
+			{ name: "ID", selector: "_id", minWidth: "200", sortable: true },
+			{ name: "Email", selector: "email", sortable: true },
             { name: "Name", selector: "name", sortable: true },
-            { 
-                name: "Gender", selector: "gender", sortable: true , 
-                defaultContent: "--",
-                cell: (info) => isSet(info.gender)? genderDic[info.gender] : "--"
-            },
+            // { 
+            //     name: "Gender", selector: "gender", sortable: true , 
+            //     defaultContent: "--",
+            //     cell: (info) => isSet(info.gender)? genderDic[info.gender] : "--"
+            // },
             { 
                 name: "Nationality", selector: "co", sortable: true,
                 cell: (info) => isSet(info.co)? coDic[info.co] : "--" 
@@ -168,7 +170,6 @@ const Userlist = (props) => {
         	>
 			<DataTable
 				noHeader
-				// noDataComponent="No friend in the list"
 				defaultSortFieldId="2"
 				// defaultSortAsc={true}
 				pagination
