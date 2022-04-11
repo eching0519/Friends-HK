@@ -67,6 +67,7 @@ app.use(express.static(publicDirectoryPath))
 let matchUserQueue = [];
 let matchTimerFlag = true; //indicate start the 10s countdown
 let matchInterval;
+let duplicateMatchQueue = false;
 const specialThemeQueue = {}; //queue for storing user id in special matching function
 const WURuserCount = {};    //count number of user have answer the WUR question
 
@@ -280,6 +281,9 @@ io.on('connection', (socket) => {
             }
         }
         console.log('there is duplcation.');
+        console.log('remove duplicatedd theme queue');
+        delete specialThemeQueue[`${theme}-cmn`];
+        delete specialThemeQueue[`${theme}-eng`];
         return true;
     };
 
@@ -301,54 +305,26 @@ io.on('connection', (socket) => {
         if (io.sockets.adapter.rooms.get(theme).size >= 3) {
 
             console.log("themename:", theme.split("-")[0], theme.split("-")[1]);
+            checkduplicate(theme.split("-")[0])
 
-            if (checkduplicate(theme.split("-")[0])) {   //check if there is duplication
-                if (theme.split("-")[1] === 'yue') {
+            console.log(specialThemeQueue[`${theme}`]);
+            console.log(`able to form group for special theme: ${theme}`);
+            console.log(io.sockets.adapter.rooms.get(theme));
 
-                    console.log(specialThemeQueue[`${theme}`]);
-                    console.log(`able to form group for special theme: ${theme}`);
-                    console.log(io.sockets.adapter.rooms.get(theme));
+            // const Chatroom = require('./models/chatroom');
+            let cr = new Chatrooms([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
+                `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
 
+            await cr.saveAsGroupChatroom();
 
+            io.sockets.adapter.rooms.get(theme).forEach(element => {
+                console.log(element);
 
-                    // const Chatroom = require('./models/chatroom');
-                    let cr = new Chatrooms([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
-                        `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
-
-                    await cr.saveAsGroupChatroom();
-
-                    io.sockets.adapter.rooms.get(theme).forEach(element => {
-                        console.log(element);
-
-                        let roomId = cr._id.toString();
-                        console.log("room id:", roomId);
-                        io.sockets.sockets.get(element).emit("waitMatch", roomId);
-                        //io.sockets.sockets.get(element).leave(theme); //leave the queue after matching
-                    });
-                }
-            } else {
-                console.log(specialThemeQueue[`${theme}`]);
-                    console.log(`able to form group for special theme: ${theme}`);
-                    console.log(io.sockets.adapter.rooms.get(theme));
-
-
-
-                    // const Chatroom = require('./models/chatroom');
-                    let cr = new Chatrooms([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
-                        `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
-
-                    await cr.saveAsGroupChatroom();
-
-                    io.sockets.adapter.rooms.get(theme).forEach(element => {
-                        console.log(element);
-
-                        let roomId = cr._id.toString();
-                        console.log("room id:", roomId);
-                        io.sockets.sockets.get(element).emit("waitMatch", roomId);
-                        //io.sockets.sockets.get(element).leave(theme); //leave the queue after matching
-                    });
-            }
-
+                let roomId = cr._id.toString();
+                console.log("room id:", roomId);
+                io.sockets.sockets.get(element).emit("waitMatch", roomId);
+                //io.sockets.sockets.get(element).leave(theme); //leave the queue after matching
+            });
             delete specialThemeQueue[`${theme}`];
             console.log(specialThemeQueue);
         }
