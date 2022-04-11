@@ -64,7 +64,7 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
 let matchUserQueue = [];
-let matchTimerFlag = false; //indicate start the 10s countdown
+let matchTimerFlag = true; //indicate start the 10s countdown
 let matchInterval;
 const specialThemeQueue = {}; //queue for storing user id in special matching function
 const WURuserCount = {};    //count number of user have answer the WUR question
@@ -199,7 +199,9 @@ io.on('connection', (socket) => {
         callback("match request recieved"); //send recieve event success message back to client
 
         //match algorithm placeholder. dont know wheather its work...
+        console.log('flag:', matchTimerFlag);
         if (matchTimerFlag) {   //flag, avoid duplicate set interval being setup...
+            console.log('start counting');
             matchTimerFlag = false; //so that other emit event would not run this block of code.
             matchInterval = setInterval(async () => {   //check matching for every 10s
 
@@ -208,7 +210,7 @@ io.on('connection', (socket) => {
 
 
                 if (matchUserQueue.length >= 3) {   // if there are enough user request,
-                    console('got enough user, start grouping');
+                    console.log('got enough user, start grouping');
 
                     //gernerate 3 random index base on user queue array
                     let i = 0;
@@ -257,7 +259,7 @@ io.on('connection', (socket) => {
                     //matchTimerFlag = true;  
                     //clearInterval(matchInterval);
                 } else {
-                    console('not enough user'); //if there are <3 user.
+                    console.log('not enough user'); //if there are <3 user.
                 }
                 
             }, 10000);  //10s interval
