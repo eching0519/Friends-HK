@@ -8,6 +8,12 @@ import AdminSidebar from './admin-pages/AdminSidebar';
 import SettingsPanel from './shared/SettingsPanel';
 import Footer from './shared/Footer';
 import { withTranslation } from "react-i18next";
+import SocketContext from './SocketContext';
+import { io } from 'socket.io-client';
+
+const socket = io({ //no url: default to localhost:8080
+    autoConnect: false
+});
 
 
 const App = (props) => {
@@ -66,7 +72,9 @@ const App = (props) => {
 					{sidebarComponent}
 					<div className="main-panel">
 						<div className="content-wrapper">
-							<AppRoutes user={user} setUser={setUser} homepageState={homepageState} setHomepageState={setHomepageState} />
+							<SocketContext.Provider value={socket}>
+								<AppRoutes user={user} setUser={setUser} homepageState={homepageState} setHomepageState={setHomepageState} />
+							</SocketContext.Provider>
 							{SettingsPanelComponent}
 						</div>
 						{/* { footerComponent } */}

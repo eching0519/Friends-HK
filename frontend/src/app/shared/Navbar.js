@@ -67,8 +67,9 @@ const Navbar = (props) => {
               <button className="nav-link btn" onClick={(e) => {
                 // Redirect to homepage
                 e.preventDefault();
-                props.setHomepageState('chat');
-                history.push({pathname: '/home'});
+                window.location.pathname = '/chat';
+                // props.setHomepageState('chat');
+                // history.push({pathname: '/home'});
               }}>
                 <i className="mdi mdi-message-text-outline"></i>
                 <span className="count-symbol bg-warning"></span>

@@ -58,22 +58,6 @@ const ProfileSettings = (props) => {
     const sendUpdatePreferenceRequest = async (d) => {
         let url = '/user/profile/preferences/update';
 
-        // console.log(querystring.stringify({
-        //     lang: ulang,
-        //     co: uco,
-        //     gender: ugender,
-        //     dob: dob.toLocaleDateString('en-GB', {
-        //         day: 'numeric', month: 'short', year: 'numeric'
-        //       }).replace(/ /g, '-'),
-        //     hobbies: uhobbies,
-        //     bio: bio,
-        //     hashtags: hashtags,
-        //     plang: plang,
-        //     pgender: pgender,
-        //     ageFrom: ageFrom,
-        //     ageTo: ageTo
-        // }))
-
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -93,22 +77,6 @@ const ProfileSettings = (props) => {
                 ageTo: ageTo
             })
         });
-
-        // console.log(querystring.stringify({
-        //     lang: ulang,
-        //     co: uco,
-        //     gender: ugender,
-        //     dob: dob.toLocaleDateString('en-GB', {
-        //         day: 'numeric', month: 'short', year: 'numeric'
-        //       }).replace(/ /g, '-'),
-        //     hobbies: uhobbies,
-        //     bio: bio,
-        //     hashtags: hashtags,
-        //     plang: plang,
-        //     pgender: pgender,
-        //     ageFrom: ageFrom,
-        //     ageTo: ageTo
-        // }));
 
         let data
         try {
@@ -130,8 +98,6 @@ const ProfileSettings = (props) => {
             })
             return;
         }
-
-        // console.log(data.user)
 
         setUser(data.user)
         props.setUser(data.user)

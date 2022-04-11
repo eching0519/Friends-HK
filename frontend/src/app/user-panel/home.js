@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 // import Chatbox from './Chatbox/Chatbox';
 // import Sidebar from './Sidebar/Sidebar';
 import FriendMatch from './FriendMatch/FriendMatch';
@@ -8,11 +8,12 @@ import SocketContext from '../SocketContext'
 
 import { io } from 'socket.io-client';
 
-const socket = io({ //no url: default to localhost:8080
-    autoConnect: false
-});
+// const socket = io({ //no url: default to localhost:8080
+//     autoConnect: false
+// });
 
 const Home = (props) => {
+    const socket = useContext(SocketContext);
     const [preSelectedRoomId, setPreSelectedRoomId] = useState(''); //friends match component store new room ID in this state and pass it to chatroom component
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
@@ -25,8 +26,8 @@ const Home = (props) => {
         socket.connect(); //estiblish socket io connection
 
         return () => {
-            //socket.removeAllListeners();    //clean up listener
-            //socket.disconnect();    //disconnect socket io connection
+            socket.removeAllListeners();    //clean up listener
+            socket.disconnect();    //disconnect socket io connection
         }
     }, []);
 
@@ -44,9 +45,9 @@ const Home = (props) => {
 
     return (
         <>
-            <SocketContext.Provider value={socket}>
+            {/* <SocketContext.Provider value={socket}> */}
                 {pageplaceholder}
-            </SocketContext.Provider>
+            {/* </SocketContext.Provider> */}
         </>
     );
 }

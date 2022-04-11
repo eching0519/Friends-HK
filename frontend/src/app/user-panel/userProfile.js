@@ -151,7 +151,7 @@ export const UserProfileSidebar = (props) => {
         return (
             <div className={props.minimal? 'row justify-content-between' : 'row justify-content-between mt-3 mb-3'}>
                 <strong className='text-break'>{props.title}</strong>
-                <div className='text-break'>{props.value===undefined?'--':props.value}</div>
+                <div className='text-ellipsis'>{props.value===undefined?'--':props.value}</div>
             </div>
         )
     }

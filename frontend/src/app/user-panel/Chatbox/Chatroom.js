@@ -27,7 +27,6 @@ const Chatrooms = (props) => {
 
     const getChatroomlistSocketio = (id) => {
         socket.emit("getChatRoomList", id, (data) => {
-            // console.log(data)
             setGroupChatList(data.chatroom);
             setFriendChatList(data.friendChatroom);
             var jointData = [...data.chatroom, ...data.friendChatroom];
@@ -38,12 +37,13 @@ const Chatrooms = (props) => {
     };
 
     useEffect(() => {
+        socket.connect(); //estiblish socket io connection
         console.log('home component just mount');
         // socket.connect();   //estiblish socket io connection
-        // return () => {
-        //     socket.removeAllListeners();    //clean up listener
-        //     socket.disconnect();    //disconnect socket io connection
-        // }
+        return () => {
+            socket.removeAllListeners();    //clean up listener
+            socket.disconnect();    //disconnect socket io connection
+        }
     }, []);
 
     useEffect(() => {
@@ -188,7 +188,6 @@ const Chatrooms = (props) => {
                     userId={props.user.id} 
                     setCurrentPage={props.setCurrentPage} 
                     setmessageList={setmessageList} 
-                    getChatroomlistSocketio={getChatroomlistSocketio}
                     groupChatList={groupChatList}
                     friendChatList={friendChatList} />
 

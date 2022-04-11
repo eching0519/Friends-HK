@@ -297,8 +297,6 @@ class Admin {
             .find({ '_id': ObjectID(id) })
             .next()
             .then(data => {
-                
-                
                 return data;
             })
             .catch(err => {
