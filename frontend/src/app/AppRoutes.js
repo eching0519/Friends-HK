@@ -57,7 +57,7 @@ const AppRoutes = (props) => {
 
         {/* Our UI */}
         <Route path="/home"><Home setSelectedRoomId={props.setSelectedRoomId} user={props.user} /></Route>
-        <Route path="/chat"><Chatrooms user={props.user} selectedRoomId={props.selectedRoomId} /></Route>
+        <Route path="/chat"><Chatrooms user={props.user} setUser={props.setUser} selectedRoomId={props.selectedRoomId} /></Route>
         <Route path="/settings"><Settings user={props.user} setUser={props.setUser} /></Route>
         <Route path="/userProfile"><UserProfile user={props.user} /></Route>
         <Route path="/friend"><FriendList user={props.user} /></Route>

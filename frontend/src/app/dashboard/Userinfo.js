@@ -198,7 +198,7 @@ const Userinfo = (props) => { //Function for admin
           <UserProfileSidebar 
             user={userInfo} 
             target={userInfo} 
-            // targetId={props.user.id} 
+            // targetId={props.user._id} 
             detailed={false} 
             action={false} 
             setInfoContent={setInfoContent} 

@@ -75,7 +75,7 @@ class Friend {
 
     async create() {
         const db = getDatabase();
-        return db.collection('friendRequest').insertOne(this);
+        return await db.collection('friendRequest').insertOne(this).then(result => {this.id = result.insertedId});;
     }
 
     rejectRequest() {
@@ -98,6 +98,7 @@ class Friend {
 
     async deleteRequest() {
         const db = getDatabase();
+        if(typeof(this.id)=='string') this.id = ObjectID(this.id)
         return await db.collection('friendRequest').deleteOne( { _id: this.id },
                                                     { upsert: false })
     }

@@ -20,18 +20,18 @@ const UserProfile = (props) => {
 
         <div className="row">
             <div className="col-md-3 grid-margin">
-                <UserProfileSidebar user={props.user} target={props.user} targetId={props.user.id} detailed={false} action={false} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
+                <UserProfileSidebar user={props.user} target={props.user} targetId={props.user._id} detailed={false} action={false} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
                 {/* <UserProfileSidebar user={props.user} targetId="6238539fd9d1a253646a53f6" detailed={true} action={true} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} furtherInfo={furtherInfo} /> */}
             </div>
             <div className="col-md-9 grid-margin stretch-card">
                 <div className="card">
                     <div className="card-body">
-                        <UserInfoDetail  user={props.user} targetId={props.user.id} infoContent={infoContent} preferenceContent={preferenceContent} targetName={targetName} />
+                        <UserInfoDetail  user={props.user} targetId={props.user._id} infoContent={infoContent} preferenceContent={preferenceContent} targetName={targetName} />
                     </div>
                 </div>
             </div>
         </div>
-        {/* <UserProfileSidebar user={props.user} target={props.user} targetId={props.user.id} detailed={false} action={false} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
+        {/* <UserProfileSidebar user={props.user} target={props.user} targetId={props.user._id} detailed={false} action={false} setInfoContent={setInfoContent} setPreferenceContent={setPreferenceContent} setTargetName={setTargetName} />
         <UserInfoModalButton triggerBtn={<div>Hi</div>}></UserInfoModalButton>
         <UserInfoModal content={userProfile} /> */}
         </>
@@ -109,7 +109,7 @@ export const UserProfileSidebar = (props) => {
         if (target.picture) setPicture(target.picture);
 
         let t_sidebarContent_minial = {
-            "ID": userInfo.id==null?userInfo._id:userInfo.id,
+            "ID": userInfo._id,
             "Name": userInfo.name,
             "Gender": genderDic[userInfo.gender],
             "Nationality": coDic[userInfo.co],
@@ -145,6 +145,7 @@ export const UserProfileSidebar = (props) => {
         setPreferenceContent(t_preferenceContent);
         props.setPreferenceContent(t_preferenceContent);
         props.setTargetName(target.name);
+        getFriendRequest();
 
     }, [target])
 
@@ -184,8 +185,8 @@ export const UserProfileSidebar = (props) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: querystring.stringify({
-              user1 : props.targetId,
-              user2: props.user.id
+              user1 : props.target._id,
+              user2: props.user._id
             })
         });
     
@@ -196,23 +197,28 @@ export const UserProfileSidebar = (props) => {
           return;
         }
 
+        console.log("getFriendRequest", data);
         if (data.success) {
             setFriendRequest(data.request);
             setRequestExist(true);
             return;
         }
+        // getFriendRequest();
         setRequestExist(false);
     }
 
     const sendFriendRequest = async () => {
         let url = '/friend/sendRequest';
 
+        console.log(props.user._id)
+        console.log(target._id)
+
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: querystring.stringify({
-                'from' : props.user.id,
-                'to': props.targetId,
+                'from' : props.user._id,
+                'to': target._id,
             })
         });
     
@@ -222,14 +228,17 @@ export const UserProfileSidebar = (props) => {
         } catch (error) {
           return;
         }
+        console.log("sendFriendRequest",data)
 
+        // getFriendRequest();
+        if (data.success) {
+            console.log(data)
+            setFriendRequest(data.request);
+            setRequestExist(true);
+            return;
+        }
+        window.alert(data.message)
         getFriendRequest();
-        // if (data.success) {
-        //     setFriendRequest(data.request);
-        //     setRequestExist(true);
-        //     return;
-        // }
-        // console.log(data.message)
         // setRequestExist(false);
     }
 
@@ -255,21 +264,20 @@ export const UserProfileSidebar = (props) => {
             setFriendRequest(false);
             setRequestExist(false);
             return;
-        } else {
-            setFriendRequest(false);
-            setRequestExist(false);
         }
+        window.alert(data.message)
+        getFriendRequest();
     }
 
-    const acceptFriendRequest = async () => {
+    const acceptFriendRequest = async (targetId, userId) => {
         let url = '/friend/acceptRequest';
 
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: querystring.stringify({
-                from : props.targetId,
-                to: props.user.id
+                from : targetId,
+                to: userId
             })
         });
     
@@ -281,11 +289,14 @@ export const UserProfileSidebar = (props) => {
         }
 
         if (data.success) {
-            setFriendRequest(data.request);
-            setRequestExist(true);
+            setFriendRequest(false);
+            setRequestExist(false);
+            props.setUser({...props.user, 'friendlist':[...props.user.friendlist, targetId]})
+            // sessionStorage.setItem('UserProfile', JSON.stringify({...props.user, 'friendlist':[...props.user.friendlist, targetId]}))
             return;
         }
-        // getFriendRequest()
+        window.alert(data.message)
+        getFriendRequest();
     }
 
     const rejectFriendRequest = async (targetId, userId) => {
@@ -307,18 +318,33 @@ export const UserProfileSidebar = (props) => {
           return;
         }
 
-        // if (data.success) {
-        //     setFriendRequest(data.request);
-        //     setRequestExist(true);
-        //     return;
-        // }
+        if (data.success) {
+            setFriendRequest(false);
+            setRequestExist(false);
+            return;
+        }
         getFriendRequest()
     }
 
     useEffect(() => {
         if (target==null && props.targetId!=null) getTargetInfo(props.targetId);
-        if (props.targetId!=null && props.user!=null) getFriendRequest(props.targetId, props.user.id)
+        // if (props.targetId!=null && props.user!=null) getFriendRequest(props.targetId, props.user._id)
+        console.log("isFriend", isFriend())
     }, [])
+
+    const isFriend = () => {
+        if (!props.action) return
+        if (props.user._id == props.target._id)
+            return false
+        // User has no friend in list
+        if (props.user.friendlist == undefined || props.user.friendlist == null)
+            return false
+        if (props.user.friendlist.length == 0)
+            return false
+        if (!props.user.friendlist.includes(props.target._id))
+            return false
+        return true
+    }
 
     return (
         <>
@@ -364,28 +390,30 @@ export const UserProfileSidebar = (props) => {
                 <div className="pl-4 pr-4">
                 {props.action && 
                     <>
-                        {props.user.id != props.target._id && props.user.friendlist!=null && !props.user.friendlist.includes(props.target._id) && !requestExist && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
+                        {console.log("requestExist", requestExist)}
+                        {!isFriend() &&
+                         !requestExist && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             sendFriendRequest();
                             // console.log("requestExist", requestExist)
                             // console.log(friendRequest)
                             window.alert("Friend request is sent");
                         }}>Add Friend</button>}
-                        {requestExist && friendRequest.from===props.user.id && friendRequest.status==='pending' && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
+                        {requestExist && friendRequest.from===props.user._id && friendRequest.status==='pending' && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
                             cancelFriendRequest();
                             // console.log(requestExist)
                             // console.log(friendRequest)
                         }}>Cancel Friend Request</button>}
-                        {requestExist && friendRequest.to===props.user.id && friendRequest.status==='pending' && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
+                        {requestExist && friendRequest.to===props.user._id && friendRequest.status==='pending' && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
-                            acceptFriendRequest();
+                            acceptFriendRequest(target.id, props.user._id);
                             // console.log(requestExist)
                             // console.log(friendRequest)
                         }}>Accept Friend Request</button>}
-                        {requestExist && friendRequest.to===props.user.id && friendRequest.status==='pending' && <button className="btn btn-light w-100 mt-2" onClick={(e)=>{
+                        {requestExist && friendRequest.to===props.user._id && friendRequest.status==='pending' && <button className="btn btn-light w-100 mt-2" onClick={(e)=>{
                             e.preventDefault();
-                            rejectFriendRequest();
+                            rejectFriendRequest(target.id, props.user._id);
                             // console.log(requestExist)
                             // console.log(friendRequest)
                         }}>Reject Friend Request</button>}

@@ -3,9 +3,18 @@ import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import { EmptyIcon } from "../shared/Variable"
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const AdminNavbar = (props) => {
-  let admin = JSON.parse(sessionStorage.getItem('AdminProfile'));
+  const [admin, setAdmin] = useState(JSON.parse(sessionStorage.getItem('AdminProfile')))
+
+  useEffect(() => {
+    if (admin == null) {
+      window.location.pathname = "/admin/login"
+    }
+  }, [admin])
+  
 
   const toggleOffcanvas = () => {
     document.querySelector('.sidebar-offcanvas').classList.toggle('active');
@@ -34,7 +43,7 @@ const AdminNavbar = (props) => {
                   <img src={EmptyIcon} alt="user"/>
                 </div>
                 <div className="nav-profile-text">
-                  <p className="mb-1 text-black">{admin===null? "N/A" : admin.name}</p>
+                  <p className="mb-1 text-black">{admin==null? "N/A" : admin.name}</p>
                 </div>
               </Dropdown.Toggle>
 

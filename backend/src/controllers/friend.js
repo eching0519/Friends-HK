@@ -14,7 +14,6 @@ exports.SendFriendRequest = async (req, res, next) =>{
     const from = req.body.from
     const status = 'pending'
 
-    const friend = new Friend(to, from, status);
 
     var user_to, user_from;
 
@@ -60,7 +59,7 @@ exports.SendFriendRequest = async (req, res, next) =>{
         return
     }
 
-
+    const friend = new Friend(to, from, status);
     try {
         await friend.create();
     } catch (e) {
@@ -79,11 +78,11 @@ exports.SendFriendRequest = async (req, res, next) =>{
 }
 
 exports.RejectRequest = async(req, res, next)=>{
-    const to = req.body.to
-    const from = req.body.from
+    const id = req.body.id
+    // const from = req.body.from
     var friend;
     try {
-        friend = await Friend.findById(to, from)
+        friend = await Friend.findByRequestId(id)
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
@@ -196,6 +195,7 @@ exports.CancelRequest = async (req, res, next) => {
 exports.FindRequest = async (req, res, next) => {
     const to = req.body.user1;
     const from = req.body.user2;
+
     var friend;
     try {
         friend = await Friend.findById(to, from)

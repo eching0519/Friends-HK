@@ -20,7 +20,7 @@ const isSet = (val) => {
 const FriendList = (props) => {
     const [inRequest, setInRequest] = useState([])
     const [outRequest, setOutRequest] = useState([])
-    const [target, setTarget] = useState(props.user.id)
+    const [target, setTarget] = useState(props.user._id)
     const [userProfileModal, setUserProfileModal] = useState(null)
 
     useEffect(() => {
@@ -41,7 +41,7 @@ const FriendList = (props) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: querystring.stringify({
-              id : props.user.id
+              id : props.user._id
             })
         });
 
@@ -215,7 +215,7 @@ const FriendListTable = (props) => {
 
     let friendList;
     useEffect(() => {
-        PostRequestSender("/friend//listfriendinfo", {id: props.user.id}, (e, data) => {
+        PostRequestSender("/friend//listfriendinfo", {id: props.user._id}, (e, data) => {
             if (e) {
                 console.log(e);
                 return

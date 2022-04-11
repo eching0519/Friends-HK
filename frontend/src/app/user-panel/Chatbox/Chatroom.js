@@ -42,7 +42,7 @@ const Chatrooms = (props) => {
         console.log('home component just mount');
         socket.connect();   //estiblish socket io connection
         console.log("getChatRoomList Call")
-        getChatroomlistSocketio(props.user.id);
+        getChatroomlistSocketio(props.user._id);
 
         return () => {
             socket.removeAllListeners();    //clean up listener
@@ -58,7 +58,7 @@ const Chatrooms = (props) => {
         let userName = props.user.name;
 
         // for (let i = 0; i < chatList.length; i++) {
-        //     socket.emit("joinRoom", { userId: user.id, name: user.name, roomId: chatList[i]._id });
+        //     socket.emit("joinRoom", { userId: user._id, name: user.name, roomId: chatList[i]._id });
         // }
 
         socket.on("message", (response) => {
@@ -155,11 +155,11 @@ const Chatrooms = (props) => {
         chatList = [...Object.values(groupChatList), ...Object.values(friendChatList)];
         startSocketFunction();
 
-    }, [groupChatList, friendChatList, props.user.id]);
+    }, [groupChatList, friendChatList, props.user._id]);
 
     const startSocketFunction = () => {
         for (let i = 0; i < chatList.length; i++) {
-            socket.emit("joinRoom", { userId: props.user.id, name: props.user.name, roomId: chatList[i]._id });
+            socket.emit("joinRoom", { userId: props.user._id, name: props.user.name, roomId: chatList[i]._id });
         }
     }
 
@@ -189,7 +189,7 @@ const Chatrooms = (props) => {
     const sendMessage = (message, roomId) => {
         console.log("sendMessage", message)
         if (message) {
-            socket.emit('sendMessage', roomId, { message: message, senderId: props.user.id, timeElapse: Date.now() }, (message) => {
+            socket.emit('sendMessage', roomId, { message: message, senderId: props.user._id, timeElapse: Date.now() }, (message) => {
                 console.log('message delivered:', message);
             });
         }
@@ -201,7 +201,7 @@ const Chatrooms = (props) => {
                     chatroomList={allChatList}
                     selectedRoomId={selectedRoomId}
                     setSelectedRoomId={setSelectedRoomId} 
-                    userId={props.user.id} 
+                    userId={props.user._id} 
                     setCurrentPage={props.setCurrentPage} 
                     setmessageList={setmessageList} 
                     groupChatList={groupChatList}
@@ -218,6 +218,7 @@ const Chatrooms = (props) => {
                         // })
                         <ChatroomBox chatroomList={allChatList}
                                                 user={props.user}
+                                                setUser={props.setUser}
                                                 sendMessage={sendMessage}
                                                 selectedRoomId={selectedRoomId}
                                                 setSystemMsgList={setSystemMsgList} />
@@ -229,7 +230,7 @@ const Chatrooms = (props) => {
                                         <div className="brand-logo">
                                             <img src={require("../../../assets/images/logo.svg")} alt="logo" />
                                         </div>
-                                        <span className='display-5'>Select an existing chatroom or <a href='#' onClick={(e) => { e.preventDefault(); props.setCurrentPage('matchFriends'); }}>Meet New Friends Here</a>!</span>
+                                        <span className='display-5'>Select an existing chatroom or <a href='/home'>Meet New Friends Here</a>!</span>
                                     </div>
                                 </div>
                             </div>

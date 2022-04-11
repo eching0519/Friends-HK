@@ -50,7 +50,6 @@ mongoConnect(() => {
     var listener = server.listen(port, () => {
         console.log(`Server is up on port ${port}!`)
     })
-    console.log(app.address())
 })
 
 
@@ -110,7 +109,7 @@ io.on('connection', (socket) => {
         // const Chatbox = require('./models/chatbox');
 
         let cb = new Chatbox(message.senderId, message.message, message.timeElapse);
-        let cr = await Chatroom.findById(roomId);
+        let cr = await Chatrooms.findById(roomId);
         console.log("chatroom:", cr);
         cr.addChatBox(cb);
 
@@ -194,9 +193,9 @@ io.on('connection', (socket) => {
 
     //havent test it... coz i cant...
     socket.on("sendMatch", (user, callback) => {    //listen to match event emit...
-        console.log(`match recieve from ${user.id}`);
+        console.log(`match recieve from ${user._id}`);
         socket.join('randommatch'); //may not useful
-        matchUserQueue.push({ userId: user.id, socket: socket });   //save user id and its socket into queue for bookkeeping
+        matchUserQueue.push({ userId: user._id, socket: socket });   //save user id and its socket into queue for bookkeeping
 
         callback("match request recieved"); //send recieve event success message back to client
 

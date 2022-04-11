@@ -109,7 +109,7 @@ const Chatbox = (props) => {
     const sendMessage = (event) => {
         event.preventDefault();
         if (message) {
-            props.sendMessageBySocket(roomId, message, props.user.id, Date.now(), (message) => {
+            props.sendMessageBySocket(roomId, message, props.user._id, Date.now(), (message) => {
                 console.log('message delivered:', message);
                 setMessage('')  //clear message input box
             });
@@ -131,7 +131,7 @@ const Chatbox = (props) => {
                     
                 </div>
                 <div className="card-body bg-white">
-                    <Messagesbox systemMessage={systemMessage} messageList={messageList} userName={props.user.name} userId={props.user.id} chatRoom={chatRoom} />
+                    <Messagesbox systemMessage={systemMessage} messageList={messageList} userName={props.user.name} userId={props.user._id} chatRoom={chatRoom} />
                 </div>
                 <div className="card-footer bg-white">
                     <InputBar message={message} setMessage={setMessage} sendMessage={sendMessage} setWouldURgame={setWouldURgame}/>

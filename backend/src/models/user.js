@@ -21,7 +21,7 @@ class User {
                 switch (usage) {
                     case 'update':
                         var user = new User(data.email, data.name);
-                        user.id = data._id;
+                        user._id = data._id;
                         user.status = data.status;
                         user.preferences = data.preferences;
                         user.picture = data.picture;
@@ -57,7 +57,7 @@ class User {
                 switch (usage) {
                     case 'register', 'login':
                         var user = new User(data.email, data.name);
-                        user.id = data._id;
+                        user._id = data._id;
                         user.status = data.status;
                         user.preferences = data.preferences;
                         user.picture = data.picture;
@@ -89,7 +89,7 @@ class User {
             .next()
             .then(data => {
                 const user = new User(data.email, data.name);
-                user.id = data._id;
+                user._id = data._id;
                 user.status = data.status;
                 user.preferences = data.preferences;
                 user.picture = data.picture;
@@ -116,7 +116,7 @@ class User {
             .next()
             .then(data => {
                 const user = new User(data.email, data.name);
-                user.id = data._id;
+                user._id = data._id;
                 user.status = data.status;
                 user.picture = data.picture;
                 if (data.lang != null) user.lang = data.lang;

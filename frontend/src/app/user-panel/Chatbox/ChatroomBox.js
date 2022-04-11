@@ -18,13 +18,14 @@ const ChatroomBox = (props) => {
     // user
     // sendMessage
     const [message, setMessage] = useState('');
-    const [target, setTarget] = useState(props.user.id)
+    const [target, setTarget] = useState(props.user._id)
     const [userProfileModal, setUserProfileModal] = useState(null)
 
     useEffect(() => {
         console.log("TargetId", target)
         setUserProfileModal(<UserInfoModal content={<UserProfileSidebar 
                                                         user={props.user} 
+                                                        setUser={props.setUser}
                                                         target={target} 
                                                         detailed={true} 
                                                         action={true} 
@@ -104,7 +105,7 @@ const Box = (props) => {
                                 user={props.user}
                                 messageList={props.chatroom.chatbox} 
                                 userName={props.user.name} 
-                                userId={props.user.id} 
+                                userId={props.user._id} 
                                 chatRoom={props.chatroom}
                                 setTarget={props.setTarget} />
                 </div>
@@ -113,7 +114,7 @@ const Box = (props) => {
                             setMessage={props.setMessage} 
                             sendMessage={props.sendMessage}
                             roomId={props.chatroom._id}
-                            userId={props.user.id}
+                            userId={props.user._id}
                             setWouldURgame={setWouldURgame} />
                 </div>
             </div>

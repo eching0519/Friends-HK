@@ -67,7 +67,8 @@ const FriendMatch = (props) => {
 
     let matchstatusplaceholder = <UserProfileSidebar 
                                     user={props.user} 
-                                    targetId={props.user.id} 
+                                    target={props.user} 
+                                    // targetId={props.user._id} 
                                     minimal={true}
                                     detailed={false} 
                                     action={false} 
@@ -80,7 +81,8 @@ const FriendMatch = (props) => {
     if (matchStatus === 'pending') {
         matchstatusplaceholder = <UserProfileSidebar 
                                     user={props.user} 
-                                    targetId={props.user.id} 
+                                    target={props.user} 
+                                    // targetId={props.user._id} 
                                     minimal={true}
                                     detailed={false} 
                                     action={false} 
@@ -94,7 +96,8 @@ const FriendMatch = (props) => {
     if (matchStatus === 'success') {
         matchstatusplaceholder = <UserProfileSidebar 
                                     user={props.user} 
-                                    targetId={props.user.id} 
+                                    target={props.user} 
+                                    // targetId={props.user._id} 
                                     minimal={true}
                                     detailed={false} 
                                     action={false} 
