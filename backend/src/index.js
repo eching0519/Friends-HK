@@ -209,7 +209,7 @@ io.on('connection', (socket) => {
 
 
                 if (matchUserQueue.length >= 3) {   // if there are enough user request,
-                    console('got enough user, start grouping');
+                    console.log('got enough user, start grouping');
 
                     //gernerate 3 random index base on user queue array
                     let i = 0;
@@ -258,7 +258,7 @@ io.on('connection', (socket) => {
                     //matchTimerFlag = true;  
                     //clearInterval(matchInterval);
                 } else {
-                    console('not enough user'); //if there are <3 user.
+                    console.log('not enough user'); //if there are <3 user.
                 }
                 
             }, 10000);  //10s interval
@@ -290,7 +290,7 @@ io.on('connection', (socket) => {
 
 
             // const Chatroom = require('./models/chatroom');
-            let cr = new Chatroom([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
+            let cr = new Chatrooms([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
                 `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
 
             await cr.saveAsGroupChatroom();
