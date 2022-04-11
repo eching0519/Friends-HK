@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { useHistory } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { UserProfileSidebar } from "../userProfile";
 // import SpecialThemeCard from "./SpecialThemeCard";
@@ -14,6 +15,7 @@ const isSet = (val) => {
 
 const FriendMatch = (props) => {
     const socket = useContext(SocketContext);
+    const history = useHistory();
 
     const [matchTheme, setMatchTheme] = useState('default');
     const [matchStatus, setmatchStatus] = useState('wait');
@@ -34,9 +36,11 @@ const FriendMatch = (props) => {
     socket.on("waitMatch", (roomId) => {    //listen to server match result
         //when waitMatch recieved, match success.
         setmatchStatus('success');  //  set match status to success
-        props.setCurrentPage('chat');   //switch page to chat room page
-        console.log(roomId);
-        props.setRoomId(roomId);    //set chat room id as newly created room id
+        props.setSelectedRoomId(roomId)
+        history.push({pathname: '/chat'});
+        // props.setCurrentPage('chat');   //switch page to chat room page
+        // console.log(roomId);
+        // props.setRoomId(roomId);    //set chat room id as newly created room id
     });
 
     //let waitingMessage = '';

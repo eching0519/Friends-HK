@@ -438,7 +438,8 @@ exports.getUserInfo = async (req, res, next) => {
 }
 
 exports.updateProfilePicture = async (req, res, next) => {
-    const picUrl = "http://localhost:8080/user/profile/picture/" + req.file.filename
+    // const picUrl = "http://localhost:8080/user/profile/picture/" + req.file.filename
+    const picUrl = "http://" + req.get('host') + "/user/profile/picture/" + req.file.filename
 
     if (!userIsVerified(req, res)) return
 
@@ -481,15 +482,42 @@ exports.updatePreferences = async (req, res, next) => {
         return;
     }
     // Please update value in user.preferences
-    // ...
-    // console.log(typeof(req.body.language));
-    // console.log(req.body.language);
-    const language = new Array(req.body.language);
-    const hobbies = new Array(req.body.hobbies);
-    user.preferences = language.concat(hobbies);
-    user.updatePreferences();
+    let lang = req.body.lang;
+    let co = req.body.co;
+    let gender = req.body.gender;
+    let dob = req.body.dob
+    let hobbies = req.body.hobbies;
+    let bio = req.body.bio;
+    let hashtags = req.body.hashtags;
+    let plang = req.body.plang;
+    let ageFrom = req.body.ageFrom;
+    let ageTo = req.body.ageTo;
+    
+    user.lang = lang;
+    user.co = co;
+    user.dob = dob
+    if (hobbies == null) user.hobbies = []
+    else if (typeof(hobbies) == "string") user.hobbies = [hobbies] 
+    else user.hobbies = hobbies
+    user.bio = bio
+    if (hashtags == null) user.hashtags = []
+    else if (typeof(hashtags) == "string") user.hashtags = [hashtags] 
+    else user.hashtags = hashtags
+
+    var preferences = {}
+    if (plang == null) user.plang = []
+    else if (typeof(plang) == "string") preferences.lang = [plang] 
+    else preferences.lang = plang
+    preferences.ageFrom = ageFrom;
+    preferences.ageTo = ageTo;
+    user.preferences = preferences
+
+    user.update();
+
+    delete user['password']
     res.write(JSON.stringify({
-        "success": true
+        "success": true,
+        "user": user
     }, null, "\t"));
     res.end();
 }

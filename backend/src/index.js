@@ -47,18 +47,19 @@ app.get('/checkSession', (req, res, next) => {
 })
 // Connection of mongDB
 mongoConnect(() => {
-    server.listen(port, () => {
+    var listener = server.listen(port, () => {
         console.log(`Server is up on port ${port}!`)
     })
+    console.log(app.address())
 })
 
 
 // Model
-const Message = require('./models/message')
+// const Message = require('./models/message')
 const UserChatrooms = require('./models/user-chatrooms');
 const User = require('./models/user');
 const Chatrooms = require('./models/chatroom');
-const Chatbox = require('./models/chatbox')
+const Chatbox = require('./models/chatbox');
 
 const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
@@ -104,8 +105,8 @@ io.on('connection', (socket) => {
 
     socket.on("sendMessage", async (roomId, message, callback) => {
         //console.log('sockets in room before force join:', io.in(room).allSockets());
-        const Chatroom = require('./models/chatroom');
-        const Chatbox = require('./models/chatbox');
+        // const Chatroom = require('./models/chatroom');
+        // const Chatbox = require('./models/chatbox');
 
         let cb = new Chatbox(message.senderId, message.message, message.timeElapse);
         let cr = await Chatroom.findById(roomId);
@@ -290,8 +291,8 @@ io.on('connection', (socket) => {
 
 
 
-            const Chatroom = require('./models/chatroom');
-            let cr = new Chatroom([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
+            // const Chatroom = require('./models/chatroom');
+            let cr = new Chatrooms([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
                 `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
 
             await cr.saveAsGroupChatroom();

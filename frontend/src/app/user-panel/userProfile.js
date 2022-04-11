@@ -96,6 +96,7 @@ export const UserProfileSidebar = (props) => {
     }, [props.target])
 
     useEffect(() => {
+        if (props.targetId == null) return
         // setTarget(props.targetId);
         getTargetInfo(props.targetId);
     }, [props.targetId])
@@ -151,7 +152,7 @@ export const UserProfileSidebar = (props) => {
         return (
             <div className={props.minimal? 'row justify-content-between' : 'row justify-content-between mt-3 mb-3'}>
                 <strong className='text-break'>{props.title}</strong>
-                <div className='text-break'>{props.value===undefined?'--':props.value}</div>
+                <div className='text-ellipsis'>{props.value===undefined?'--':props.value}</div>
             </div>
         )
     }
@@ -321,10 +322,7 @@ export const UserProfileSidebar = (props) => {
 
     return (
         <>
-        <div className="card" onLoad={()=>{
-            if (target==null && props.targetId!=null) getTargetInfo(props.targetId);
-            if (props.targetId!=null && props.user!=null) getFriendRequest(props.targetId, props.user.id)
-        }}>
+        <div className="card">
             <div className="card-body">
                 <div className="pl-4 pr-4">
                     <img className="rounded-circle userSidebar-img" src={picture} />

@@ -245,7 +245,7 @@ const FriendListTable = (props) => {
     const setRowOnClickEvent = () => {
         $(".rdt_TableRow").attr('data-toggle', 'modal')
         $(".rdt_TableRow").attr('data-target', '#userInfoModal')
-        $(".rdt_TableRow").css('cursor', 'pointer')
+        // $(".rdt_TableRow").css('cursor', 'pointer')
         $(".rdt_TableRow").on('click', (event) => {
             let rowId = $(event.target).parent().attr("id");
             let targetId = rowId.split('-').at(-1)
@@ -270,6 +270,7 @@ const FriendListTable = (props) => {
             progressPending={pending}
             onChangeRowsPerPage={setRowOnClickEvent}
             onChangePage={setRowOnClickEvent}
+            pointerOnHover={true}
           />
         </DataTableExtensions>
       );

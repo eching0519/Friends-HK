@@ -8,12 +8,30 @@ import AdminSidebar from './admin-pages/AdminSidebar';
 import SettingsPanel from './shared/SettingsPanel';
 import Footer from './shared/Footer';
 import { withTranslation } from "react-i18next";
+import SocketContext from './SocketContext';
+import { io } from 'socket.io-client';
+
+const socket = io({ //no url: default to localhost:8080
+    autoConnect: false
+});
 
 
 const App = (props) => {
 	const [location, setLocation] = useState(props.location)
 	const [isFullPageLayout, setIsFullPageLayout] = useState(true)
 	const [isAdminPageLayout, setIsAdminPageLayout] = useState(window.location.pathname.substring(0, 6) === "/admin" ? true : false)
+
+	// // Chatroom socket
+	// const getChatroomlistSocketio = (id) => {
+    //     socket.emit("getChatRoomList", id, (data) => {
+    //         setGroupChatList(data.chatroom);
+    //         setFriendChatList(data.friendChatroom);
+    //         var jointData = [...data.chatroom, ...data.friendChatroom];
+    //         setAllChatList(Object.assign({}, ...jointData.map((x) => 
+    //             ({[x._id]: x})
+    //         )));
+    //     });
+    // };
 
 	useEffect(() => {
 		console.log("ROUTE CHANGED");
@@ -51,9 +69,9 @@ const App = (props) => {
 
 	let myUser = JSON.parse(sessionStorage.getItem('UserProfile'));
 	const [user, setUser] = useState(myUser)
-	const [homepageState, setHomepageState] = useState('matchFriends');
+	const [selectedRoomId, setSelectedRoomId] = useState(null)
 
-	let navbarComponent = !isFullPageLayout ? (!isAdminPageLayout ? <Navbar user={user} setHomepageState={setHomepageState} /> : <AdminNavbar />) : '';
+	let navbarComponent = !isFullPageLayout ? (!isAdminPageLayout ? <Navbar user={user} /> : <AdminNavbar />) : '';
 	let sidebarComponent = (!isFullPageLayout && isAdminPageLayout) ? <AdminSidebar /> : '';
 	let SettingsPanelComponent = !isFullPageLayout ? <SettingsPanel /> : '';
 	// let footerComponent = !isFullPageLayout ? <Footer/> : '';
@@ -66,7 +84,9 @@ const App = (props) => {
 					{sidebarComponent}
 					<div className="main-panel">
 						<div className="content-wrapper">
-							<AppRoutes user={user} setUser={setUser} homepageState={homepageState} setHomepageState={setHomepageState} />
+							<SocketContext.Provider value={socket}>
+								<AppRoutes user={user} setUser={setUser} selectedRoomId={selectedRoomId} setSelectedRoomId={setSelectedRoomId} />
+							</SocketContext.Provider>
 							{SettingsPanelComponent}
 						</div>
 						{/* { footerComponent } */}
