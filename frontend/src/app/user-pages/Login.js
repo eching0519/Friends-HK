@@ -6,6 +6,7 @@ import LoginVerify from "../component/login/LoginVerify";
 import AlertMessage from '../component/common/AlertMessage';
 import ForgotPassword from '../component/login/ForgotPassword';
 import ResetPasswordSuccess from '../component/login/ResetPasswordSuccess';
+import '../../assets/styles/login.css'
 const querystring = require('querystring');
 
 const Login = (props) => {
