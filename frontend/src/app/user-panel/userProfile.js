@@ -429,7 +429,7 @@ export const UserProfileSidebar = (props) => {
                             // }}>Accept Friend Request</button>
                         }
                         {requestExist && friendRequest.to===props.user._id && friendRequest.status==='pending' && 
-                        <RejectButton className="btn btn-gradient-dark btn-sm" 
+                        <RejectButton className="btn btn-light w-100 mt-2" 
                             request={friendRequest}
                             next={(error, data)=>{
                                 // if (error) {
