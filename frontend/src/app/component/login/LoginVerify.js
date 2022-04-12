@@ -78,7 +78,6 @@ const LoginVerify = props => {
                         () => {
                             props.setAlert({visible: false})
                             props.setloginState('login');
-                            props.setUserPassword('');
                         }
                     }>Cancel</button>
                 </div>
