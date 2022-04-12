@@ -411,10 +411,12 @@ io.on('connection', (socket) => {
             })
 
             // Remove from groupedUserId
-            userArr.forEach(user => {
-                let index = groupedUserId.indexOf(user);
-                groupedUserId = groupedUserId.slice(index, 1);
-            })
+            setTimeout(
+                userArr.forEach(user => {
+                    let index = groupedUserId.indexOf(user);
+                    groupedUserId = groupedUserId.slice(index, 1);
+                }), 10000)
+            
         }
     }, 5000);
 

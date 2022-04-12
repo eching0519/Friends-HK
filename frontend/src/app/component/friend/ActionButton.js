@@ -23,6 +23,7 @@ const sendFriendRequest = async (from, to) => {
 }
 
 const cancelFriendRequest = async (requestId) => {
+    console.log("requestId", requestId)
     let url = '/friend/cancelRequest';
 
     let res = await fetch(url, {
@@ -42,15 +43,15 @@ const cancelFriendRequest = async (requestId) => {
     }
 }
 
-const rejectFriendRequest = async (from, to) => {
+const rejectFriendRequest = async (id) => {
+    console.log("requestId",id)
     let url = '/friend/rejectRequest';
 
     let res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: querystring.stringify({
-            from : from,
-            to: to
+            id : id
         })
     });
 
@@ -98,17 +99,18 @@ export const CancelButton = (props) => {
     return (
         <button className={props.className} onClick={async (e)=>{
             e.preventDefault();
-            await cancelFriendRequest(props.request._id);
+            await cancelFriendRequest(props.request._id==undefined?props.request.id:props.request._id);
             props.next();
         }}>{props.text!=null?props.text:"Cancel Friend Request"}</button>
     )
 }
 
 export const RejectButton = (props) => {
+    console.log("RejectButton", props.request)
     return (
         <button className={props.className} onClick={async (e)=>{
             e.preventDefault();
-            await rejectFriendRequest(props.request.from, props.request.to);
+            await rejectFriendRequest(props.request._id==undefined?props.request.id:props.request._id);
             props.next();
         }}>{props.text!=null?props.text:"Reject Friend Request"}</button>
     )

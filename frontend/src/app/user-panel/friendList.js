@@ -22,6 +22,7 @@ const FriendList = (props) => {
     const [outRequest, setOutRequest] = useState([])
     const [target, setTarget] = useState(props.user._id)
     const [userProfileModal, setUserProfileModal] = useState(null)
+    const [friendRequest, setFriendRequest] = useState(null);
 
     useEffect(() => {
         setUserProfileModal(<UserInfoModal content={<UserProfileSidebar 
@@ -54,6 +55,7 @@ const FriendList = (props) => {
             setInRequest(data.requests.incoming);
             setOutRequest(data.requests.outgoing);
         }
+        setFriendRequest([...inRequest,...outRequest]);
         // console.log("FriendList", data)
     }
 
@@ -90,7 +92,12 @@ const FriendList = (props) => {
                                 <tbody>
                                     {inRequest.length==0 && <tr><td colspan="6">No pending request.</td></tr>}
                                     {inRequest.map((value, key) => 
-                                            <RequestTableRow request={value} getRequestList={getRequestList} type="incoming" setTarget={setTarget} />
+                                            <RequestTableRow 
+                                                            request={value} 
+                                                            getRequestList={getRequestList} 
+                                                            type="incoming" 
+                                                            setTarget={setTarget}
+                                                            setFriendRequest={setFriendRequest} />
                                         //    <span>{value.from.name}</span>
                                     )}
                                 </tbody>
@@ -117,7 +124,12 @@ const FriendList = (props) => {
                                 <tbody>
                                     {outRequest.length==0 && <tr><td colspan="6">No pending request</td></tr>}
                                     {outRequest.map((value, key) => 
-                                            <RequestTableRow request={value} getRequestList={getRequestList} type="outgoing" setTarget={setTarget} />
+                                            <RequestTableRow 
+                                                            request={value} 
+                                                            getRequestList={getRequestList} 
+                                                            type="outgoing" 
+                                                            setTarget={setTarget}
+                                                            setFriendRequest={setFriendRequest} />
                                     )}
                                 </tbody>
                                 </table>
@@ -132,7 +144,7 @@ const FriendList = (props) => {
             <div className="col-12 grid-margin stretch-card">
                 <div className="card">
                     <div className="card-body">
-                        <FriendListTable user={props.user} setTarget={setTarget} />
+                        <FriendListTable user={props.user} setTarget={setTarget} friendRequest={friendRequest} />
                     </div>
                 </div>
             </div>
@@ -184,6 +196,10 @@ const RequestTableRow = (props) => {
 }
 
 const FriendListTable = (props) => {
+    useEffect(() => {
+        getFriendList();
+    }, [props.friendRequest])
+
     const [pending, setPending] = useState(true);
     const [tableData, setTableData] = useState({
         columns: [
@@ -215,6 +231,10 @@ const FriendListTable = (props) => {
 
     let friendList;
     useEffect(() => {
+        getFriendList();
+    }, [])
+
+    const getFriendList = () => {
         PostRequestSender("/friend//listfriendinfo", {id: props.user._id}, (e, data) => {
             if (e) {
                 console.log(e);
@@ -240,7 +260,7 @@ const FriendListTable = (props) => {
             setPending(false);
             setRowOnClickEvent();
         })
-    }, [])
+    }
 
     const setRowOnClickEvent = () => {
         $(".rdt_TableRow").attr('data-toggle', 'modal')

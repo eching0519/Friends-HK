@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 // import LoginVerifier from '../component/common/LoginVerifier'
 import { EmptyIcon } from "../shared/Variable"
+import { AddFriendButton, CancelButton, RejectButton, AcceptButton } from '../component/friend/ActionButton';
 const querystring = require('querystring');
 
 const UserProfile = (props) => {
@@ -405,18 +406,51 @@ export const UserProfileSidebar = (props) => {
                             // console.log(requestExist)
                             // console.log(friendRequest)
                         }}>Cancel Friend Request</button>}
-                        {requestExist && friendRequest.to===props.user._id && friendRequest.status==='pending' && <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
-                            e.preventDefault();
-                            acceptFriendRequest(target.id, props.user._id);
-                            // console.log(requestExist)
-                            // console.log(friendRequest)
-                        }}>Accept Friend Request</button>}
-                        {requestExist && friendRequest.to===props.user._id && friendRequest.status==='pending' && <button className="btn btn-light w-100 mt-2" onClick={(e)=>{
-                            e.preventDefault();
-                            rejectFriendRequest(target.id, props.user._id);
-                            // console.log(requestExist)
-                            // console.log(friendRequest)
-                        }}>Reject Friend Request</button>}
+                        {requestExist && friendRequest.to===props.user._id && friendRequest.status==='pending' && 
+                            <AcceptButton className="btn btn-gradient-primary w-100 mt-2" 
+                                request={friendRequest}
+                                next={(error, data)=>{
+                                    // if (data.success) {
+                                    //     setFriendRequest(false);
+                                    //     setRequestExist(false);
+                                    //     props.setUser({...props.user, 'friendlist':[...props.user.friendlist, target.id]})
+                                    //     // sessionStorage.setItem('UserProfile', JSON.stringify({...props.user, 'friendlist':[...props.user.friendlist, targetId]}))
+                                    //     return;
+                                    // }
+                                    // window.alert(data.message)
+                                    getFriendRequest();
+                                }} 
+                                />
+                            // <button className="btn btn-gradient-primary w-100 mt-2" onClick={(e)=>{
+                            //     e.preventDefault();
+                            //     acceptFriendRequest(target.id, props.user._id);
+                            //     // console.log(requestExist)
+                            //     // console.log(friendRequest)
+                            // }}>Accept Friend Request</button>
+                        }
+                        {requestExist && friendRequest.to===props.user._id && friendRequest.status==='pending' && 
+                        <RejectButton className="btn btn-gradient-dark btn-sm" 
+                            request={friendRequest}
+                            next={(error, data)=>{
+                                // if (error) {
+                                //     console.log(error)
+                                //     return;
+                                // }
+                                // console.log(data)
+                                // if (data.success) {
+                                //     setFriendRequest(false);
+                                //     setRequestExist(false);
+                                //     return;
+                                // }
+                                getFriendRequest()
+                            }} />
+                        // <button className="btn btn-light w-100 mt-2" onClick={(e)=>{
+                        //     e.preventDefault();
+                        //     rejectFriendRequest(target.id, props.user._id);
+                        //     // console.log(requestExist)
+                        //     // console.log(friendRequest)
+                        // }}>Reject Friend Request</button>
+                        }
                         {/* <button className="btn btn-gradient-dark w-100 mt-2">Blacklisting</button> */}
                     </>
                 }
