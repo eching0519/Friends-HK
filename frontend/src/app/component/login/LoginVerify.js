@@ -70,10 +70,17 @@ const LoginVerify = props => {
 
                 <div className="mt-3">
                     <button type="submit" className="btn btn-gradient-primary mr-2 w-100 mb-2">Confirm</button>
-                    <button type="button" className="btn btn-light w-100" onClick={() => {
+                    <button type="button" className="btn btn-inverse-primary w-100 mb-2" onClick={() => {
                         props.setAlert({visible: false});
                         props.setloginState('password');
                     }}>Login By Password</button>
+                    <button type="button" className="btn btn-light w-100" onClick={
+                        () => {
+                            props.setAlert({visible: false})
+                            props.setloginState('login');
+                            props.setUserPassword('');
+                        }
+                    }>Cancel</button>
                 </div>
             </form>
         </>

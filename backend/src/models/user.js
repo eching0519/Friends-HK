@@ -151,19 +151,21 @@ class User {
 
     async create() {
         const db = getDatabase();
-        return db.collection('user').insertOne(this).then(result => {this.id = result.insertedId});
+        return db.collection('user').insertOne(this).then(result => {this._id = result.insertedId});
     }
 
     update() {
         const db = getDatabase();
-        return db.collection('user').updateOne( { _id: this.id },
-                                                { $set: this },
+        if (typeof(this._id) == 'string') this._id = ObjectID(this._id);
+        return db.collection('user').updateOne( { _id: this._id },
+                                                { $set: {...this} },
                                                 { upsert: false })
     }
 
     updatePreferences() {
         const db = getDatabase();
-        return db.collection('user').updateOne( { _id: this.id },
+        if (typeof(this._id) == 'string') this._id = ObjectID(this._id);
+        return db.collection('user').updateOne( { _id: this._id },
                                                 { $set: {
                                                     'preferences': this.preferences
                                                 } },
@@ -172,7 +174,8 @@ class User {
 
     updateProfilePicture() {
         const db = getDatabase();
-        return db.collection('user').updateOne( { _id: this.id },
+        if (typeof(this._id) == 'string') this._id = ObjectID(this._id);
+        return db.collection('user').updateOne( { _id: this._id },
                                                 { $set: {
                                                     'picture': this.picture
                                                 } },
@@ -181,7 +184,8 @@ class User {
 
     updateName() {
         const db = getDatabase();
-        return db.collection('user').updateOne( { _id: this.id },
+        if (typeof(this._id) == 'string') this._id = ObjectID(this._id);
+        return db.collection('user').updateOne( { _id: this._id },
                                                 { $set: {
                                                     'name': this.name
                                                 } },
@@ -190,7 +194,8 @@ class User {
 
     updatePassword() {
         const db = getDatabase();
-        return db.collection('user').updateOne( { _id: this.id },
+        if (typeof(this._id) == 'string') this._id = ObjectID(this._id);
+        return db.collection('user').updateOne( { _id: this._id },
                                                 { $set: {
                                                     'password': this.password
                                                 } },
@@ -199,7 +204,8 @@ class User {
 
     updateFriendlist() {
         const db = getDatabase();
-        return db.collection('user').updateOne( { _id: this.id },
+        if (typeof(this._id) == 'string') this._id = ObjectID(this._id);
+        return db.collection('user').updateOne( { _id: this._id },
                                                 { $push: {
                                                     'friendlist': this.friendlist
                                                 } },

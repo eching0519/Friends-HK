@@ -412,7 +412,7 @@ exports.getUserInfo = async (req, res, next) => {
 
     if (id == null) {
         if (!userIsVerified(req, res)) return
-        id = req.session.verification.id
+        id = req.session.verification._id
     }
 
     try {
@@ -439,18 +439,18 @@ exports.getUserInfo = async (req, res, next) => {
 
 exports.updateProfilePicture = async (req, res, next) => {
     // const picUrl = "http://localhost:8080/user/profile/picture/" + req.file.filename
-    const picUrl = "http://" + req.get('host') + "/user/profile/picture/" + req.file.filename
+    const picUrl = "http://" + req.get('host') + "/user/profile-picture/" + req.file.filename
 
     if (!userIsVerified(req, res)) return
 
-    const id = req.session.verification.id  // User Id
+    const id = req.session.verification._id  // User Id
     var user;
     try {
         user = await User.findById(id, 'update')
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Unknown error."
+            "message": "Unknown error. (" + e.message + ")"
         }, null, "\t"));
         res.end();
         return;
@@ -469,7 +469,7 @@ exports.updateProfilePicture = async (req, res, next) => {
 exports.updatePreferences = async (req, res, next) => {
     if (!userIsVerified(req, res)) return
 
-    const id = req.session.verification.id  // User Id
+    const id = req.session.verification._id  // User Id
     var user;
     try {
         user = await User.findById(id, 'update')
@@ -525,32 +525,37 @@ exports.updatePreferences = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
     if (!userIsVerified(req, res)) return
 
-    const id = req.session.verification.id  // User Id
-    var user;
+    let id = req.session.verification._id  // User Id
+    let passwrod = req.body.password;
+    let user;
     try {
-        user = await User.findById(id, 'update')
+        // user = await User.findById(id, 'update')
+        user = await User.findByIdAndPassword(id, passwrod);
     } catch (e) {
         res.write(JSON.stringify({
             "success": false,
-            "message": "Unknown error."
+            "message": "Incorrect password."
         }, null, "\t"));
         res.end();
         return;
     }
 
     // Password, Name...
-    const newName = req.body.name;
-    const newPassword = req.body.password;
+    let newName = req.body.name;
+    let newPassword = req.body.newPassword;
     if (newName!=""){
         user.name = newName;
-        user.updateName();
+        // user.updateName();
     }
 
     if (newPassword!=""){
         user.password = newPassword;
-        user.updatePassword();
-        delete user.password
+        // user.updatePassword();
+        // delete user.password
     }
+
+    user.update()
+    delete user.password
     
     res.write(JSON.stringify({
         "success": true,

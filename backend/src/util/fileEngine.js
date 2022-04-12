@@ -2,7 +2,7 @@ const multer  = require('multer')
 const path = require('path');
 
 const storage = multer.diskStorage({
-    destination: path.join(__dirname, '..', '..', '_file/profilePicture'),
+    destination: path.join(__dirname, '..', '..', 'public/profile-picture'),
     filename: function (req, file, cb) {
         if(!file.originalname.toLowerCase().match(/\.(png|jpg|jpeg|pdf|gif)$/)) {
             var err = new Error();
@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
             var picName
             const loginSession = req.session.verification;
             if (loginSession)
-                picName = req.session.verification.id
+                picName = req.session.verification._id
             else
                 picName = 'temp'
 

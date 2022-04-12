@@ -33,7 +33,7 @@ const adminRoute = require('./routes/admin')
 const friendRoute = require('./routes/friend')
 // const chatroomRoute = require('./routes/chatroom')
 const { Session } = require('inspector')
-app.use('/user/profile/picture', express.static(path.join(__dirname, '..', '_file/profilePicture')))
+app.use('/user/profile-picture', express.static(path.join(__dirname, '..', 'public/profile-picture')))
 app.use('/user', userRoute)
 app.use('/admin', adminRoute)
 app.use('/friend', friendRoute)
@@ -69,6 +69,7 @@ let matchInterval;
 let duplicateMatchQueue = false;
 const specialThemeQueue = {}; //queue for storing user id in special matching function
 const WURuserCount = {};    //count number of user have answer the WUR question
+let waitingRoom = [];     // list for grouping people in a waiting room and response once
 
 // Socket
 io.on('connection', (socket) => {
@@ -82,7 +83,7 @@ io.on('connection', (socket) => {
 
         console.log(`socket: ${socket.id}\n\n`);
 
-        socket.emit('systemMessage', { roomId: roomId, message: { message: `You(${name}) are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() } });
+        socket.emit('systemMessage', { roomId: roomId, message: { message: `You (${name}) are now in room: ${roomId}`, senderId: 'admin', timeElapse: Date.now() } });
         socket.broadcast.to(roomId).emit('systemMessage', { roomId: roomId, message: { message: `From system: ${name} has joined!`, senderId: 'admin', timeElapse: Date.now() } });
 
     });
@@ -287,49 +288,135 @@ io.on('connection', (socket) => {
     };
 
     //match by special theme
+    let groupedUserId = []
     socket.on("matchBySpecialTheme", async (theme, userId, callback) => {
         console.log(`recieved match request: theme: ${theme}, user id: ${userId}`);
         socket.join(theme);
+        console.log("socketId in matchBySpecialTheme:", socket.id)
 
         if (`${theme}` in specialThemeQueue) {  //save user id to specialThemeQueue.
             console.log("key found")
-            specialThemeQueue[`${theme}`].push(userId);
+            if (!(specialThemeQueue[`${theme}`].includes({user: userId, socket: socket.id}))) {
+                console.log("user is pushed to the list")
+                specialThemeQueue[`${theme}`].push({user: userId, socket: socket.id});
+            }
         } else {
             console.log("key not found")
-            specialThemeQueue[`${theme}`] = [userId];
+            console.log("user is pushed to the list")
+            specialThemeQueue[`${theme}`] = [{user: userId, socket: socket.id}];
         }
 
         console.log(specialThemeQueue);
 
-        if (io.sockets.adapter.rooms.get(theme).size >= 3) {
+        // Loop each theme to check if num of people is enough
+        for (let j = 0; j < Object.entries(specialThemeQueue).length; j++) {
+            let [theme, userList] = Object.entries(specialThemeQueue)[j]
 
-            console.log("themename:", theme.split("-")[0], theme.split("-")[1]);
-            checkduplicate(theme.split("-")[0])
+            // Remove the grouped uid from this user list. Prevent duplication
+            for (let i = 0; i < groupedUserId.length; i++) {
+                let groupedUid = groupedUserId[i];
+                if (userList.filter(u => u.user == groupedUid).length > 0) {
+                // if (userList.includes(groupedUid)) {
+                    let index = userList.map(e => {return e.user}).indexOf(groupedUid)
+                    let user_socket = userList[index]
+                    userList.splice(index, 1)
+                    // also leave the queue
+                    io.sockets.sockets.get(user_socket).leave(theme);
+                }
+            }
+            while (userList.length >= 3) {
+                // Get the first 3 user's id
+                let grouped = userList.slice(0, 3);
+                userList = userList.slice(3);                   // Remove grouped user in this user list
 
-            console.log(specialThemeQueue[`${theme}`]);
-            console.log(`able to form group for special theme: ${theme}`);
-            console.log(io.sockets.adapter.rooms.get(theme));
+                let userArr = []
+                let socketIdArr = []
+                grouped.forEach(obj => {
+                    userArr.push(obj.user);
+                    socketIdArr.push(obj.socket);
+                })
 
-            // const Chatroom = require('./models/chatroom');
-            let cr = new Chatrooms([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
-                `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
+                // Append to the groupedUserId but without duplicate
+                // so that we can remove these ID in other theme
+                groupedUserId = [...new Set([...groupedUserId, ...userArr])]  
 
-            await cr.saveAsGroupChatroom();
+                console.log("groupedUserId:", groupedUserId)
 
-            io.sockets.adapter.rooms.get(theme).forEach(element => {
-                console.log(element);
+                // Join a waiting room
+                console.log(`Theme ${theme} add to waiting room`)
+                waitingRoom = [...waitingRoom, grouped];
+                socketIdArr.forEach(socketId => {
+                    io.sockets.sockets.get(socketId).leave(theme);   //leave the queue after matching
+                })
 
-                let roomId = cr._id.toString();
-                console.log("room id:", roomId);
-                io.sockets.sockets.get(element).emit("waitMatch", roomId);
-                //io.sockets.sockets.get(element).leave(theme); //leave the queue after matching
-            });
-            delete specialThemeQueue[`${theme}`];
-            console.log(specialThemeQueue);
+                // Set updated user list to specialThemeQueue
+                specialThemeQueue[theme] = userList
+                if (userList.length == 0) delete specialThemeQueue[theme]
+                console.log(specialThemeQueue);
+            }
         }
+
+        // if (io.sockets.adapter.rooms.get(theme).size >= 3) {
+        //     console.log(io.sockets.adapter.rooms);
+
+        //     console.log("themename:", theme.split("-")[0], theme.split("-")[1]);
+        //     checkduplicate(theme.split("-")[0])
+
+        //     console.log(specialThemeQueue[`${theme}`]);
+        //     console.log(`able to form group for special theme: ${theme}`);
+        //     console.log(io.sockets.adapter.rooms.get(theme));
+
+        //     // const Chatroom = require('./models/chatroom');
+        //     let cr = new Chatrooms([specialThemeQueue[`${theme}`][0], specialThemeQueue[`${theme}`][1], specialThemeQueue[`${theme}`][2]],
+        //         `${specialThemeQueue[`${theme}`][0]},${specialThemeQueue[`${theme}`][1]},${specialThemeQueue[`${theme}`][2]}`);
+
+        //     await cr.saveAsGroupChatroom();
+
+        //     io.sockets.adapter.rooms.get(theme).forEach(element => {
+        //         console.log(element);
+
+        //         let roomId = cr._id.toString();
+        //         console.log("room id:", roomId);
+        //         io.sockets.sockets.get(element).emit("waitMatch", roomId);
+        //         //io.sockets.sockets.get(element).leave(theme); //leave the queue after matching
+        //     });
+        //     delete specialThemeQueue[`${theme}`];
+        //     console.log(specialThemeQueue);
+        // }
         let numberofpeople = io.sockets.adapter.rooms.get(theme).size;
         callback(numberofpeople);
     });
+
+    // Handling waiting room (Check every 5 seconds)
+    setInterval(async () => {
+        while (waitingRoom.length > 0) {
+            console.log("Handling waiting room. Num of waiting room:",waitingRoom.length)
+            // Get & Remove first waiting group
+            let groupedUser = waitingRoom.splice(0, 1)[0];
+            let userArr = []
+            let socketArr = []
+            for (let i = 0; i < groupedUser.length; i++) {
+                userArr.push(groupedUser[i].user);
+                socketArr.push(groupedUser[i].socket);
+            }
+
+            // form new chatroom
+            let cr = new Chatrooms(userArr);
+            await cr.saveAsGroupChatroom();
+            let roomId = cr._id.toString();
+            console.log("New Room Is Created:", roomId, (new Date()).toISOString());
+            // Response to user
+            socketArr.forEach(user_socket => {
+                io.to(user_socket).emit("waitMatch", roomId);
+            })
+
+            // Remove from groupedUserId
+            userArr.forEach(user => {
+                let index = groupedUserId.indexOf(user);
+                groupedUserId = groupedUserId.slice(index, 1);
+            })
+        }
+    }, 5000);
 
     socket.on("cancelMatchBySpecialTheme", async (theme, userId, callback) => {
         console.log(`recieved cancel match request: theme: ${theme}, user id: ${userId}`);

@@ -69,7 +69,7 @@ const Sidebar = (props) => {
             <div className="card card-fit-screen">
                 <div className='card-body pt-4'>
                     <div className="bottonlist preview-list pb-3">
-                        <button className="btn btn-light w-100" onClick={() => { props.setCurrentPage('matchFriends') }}><i className="mdi mdi-account-multiple mr-2 text-primary h3"></i>Meet New Friends!</button>
+                        <button className="btn btn-light w-100" onClick={() => { window.location.pathname = '/home' }}><i className="mdi mdi-account-multiple mr-2 text-primary h3"></i>Meet New Friends!</button>
                     </div>
 
                     <Tabs fill justify defaultActiveKey="chatroomlist" id="sidebar-func-tab" className="">

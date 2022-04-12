@@ -45,7 +45,7 @@ const FriendMatch = (props) => {
 
     //let waitingMessage = '';
     const sendSpecialThemeMatchRequest = (matchTheme) => {  //emit special match event to socket io
-        socket.emit('matchBySpecialTheme', matchTheme, props.userId, (numberofpeople) => {
+        socket.emit('matchBySpecialTheme', matchTheme, props.user._id, (numberofpeople) => {
             console.log(`Still need ${3 - numberofpeople} people.`);
             //waitingMessage = `Still need ${3 - numberofpeople} people.`;
         });
@@ -60,7 +60,7 @@ const FriendMatch = (props) => {
     
     // // Issac Help Help
     const cancelSpecialThemeMatchRequest = (matchTheme) => {    //emit cancel special match event to socket io
-        socket.emit("cancelMatchBySpecialTheme", matchTheme, props.userId, (message) => {
+        socket.emit("cancelMatchBySpecialTheme", matchTheme, props.user._id, (message) => {
             console.log("canel status:", message);
         })
     }
