@@ -14,7 +14,13 @@ const app = express();
 app.use(cors());
 
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server,
+    {
+        cors: {
+            origin: "https://deploy.d2qi1i7l9d21jh.amplifyapp.com/"
+        }
+    }
+);
 // const router=express.Router();
 
 
@@ -300,14 +306,14 @@ io.on('connection', (socket) => {
 
         if (`${theme}` in specialThemeQueue) {  //save user id to specialThemeQueue.
             console.log("key found")
-            if (!(specialThemeQueue[`${theme}`].includes({user: userId, socket: socket.id}))) {
+            if (!(specialThemeQueue[`${theme}`].includes({ user: userId, socket: socket.id }))) {
                 console.log("user is pushed to the list")
-                specialThemeQueue[`${theme}`].push({user: userId, socket: socket.id});
+                specialThemeQueue[`${theme}`].push({ user: userId, socket: socket.id });
             }
         } else {
             console.log("key not found")
             console.log("user is pushed to the list")
-            specialThemeQueue[`${theme}`] = [{user: userId, socket: socket.id}];
+            specialThemeQueue[`${theme}`] = [{ user: userId, socket: socket.id }];
         }
 
         console.log(specialThemeQueue);
@@ -320,8 +326,8 @@ io.on('connection', (socket) => {
             for (let i = 0; i < groupedUserId.length; i++) {
                 let groupedUid = groupedUserId[i];
                 if (userList.filter(u => u.user == groupedUid).length > 0) {
-                // if (userList.includes(groupedUid)) {
-                    let index = userList.map(e => {return e.user}).indexOf(groupedUid)
+                    // if (userList.includes(groupedUid)) {
+                    let index = userList.map(e => { return e.user }).indexOf(groupedUid)
                     let user_socket = userList[index]
                     userList.splice(index, 1)
                     // also leave the queue
@@ -342,7 +348,7 @@ io.on('connection', (socket) => {
 
                 // Append to the groupedUserId but without duplicate
                 // so that we can remove these ID in other theme
-                groupedUserId = [...new Set([...groupedUserId, ...userArr])]  
+                groupedUserId = [...new Set([...groupedUserId, ...userArr])]
 
                 console.log("groupedUserId:", groupedUserId)
 
@@ -394,7 +400,7 @@ io.on('connection', (socket) => {
     // Handling waiting room (Check every 5 seconds)
     setInterval(async () => {
         while (waitingRoom.length > 0) {
-            console.log("Handling waiting room. Num of waiting room:",waitingRoom.length)
+            console.log("Handling waiting room. Num of waiting room:", waitingRoom.length)
             // Get & Remove first waiting group
             let groupedUser = waitingRoom.splice(0, 1)[0];
             let userArr = []
@@ -420,7 +426,7 @@ io.on('connection', (socket) => {
                     let index = groupedUserId.indexOf(user);
                     groupedUserId = groupedUserId.slice(index, 1);
                 }), 10000)
-            
+
         }
     }, 5000);
 
