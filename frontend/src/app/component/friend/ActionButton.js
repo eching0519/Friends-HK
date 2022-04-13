@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 const querystring = require('querystring');
 
 const sendFriendRequest = async (from, to) => {
-    let url = '/friend/sendRequest';
+    let url = 'http://localhost:8080/friend/sendRequest';
 
     let res = await fetch(url, {
         method: 'POST',
@@ -24,7 +24,7 @@ const sendFriendRequest = async (from, to) => {
 
 const cancelFriendRequest = async (requestId) => {
     console.log("requestId", requestId)
-    let url = '/friend/cancelRequest';
+    let url = 'http://localhost:8080/friend/cancelRequest';
 
     let res = await fetch(url, {
         method: 'POST',
@@ -45,7 +45,7 @@ const cancelFriendRequest = async (requestId) => {
 
 const rejectFriendRequest = async (id) => {
     console.log("requestId",id)
-    let url = '/friend/rejectRequest';
+    let url = 'http://localhost:8080/friend/rejectRequest';
 
     let res = await fetch(url, {
         method: 'POST',
@@ -65,7 +65,7 @@ const rejectFriendRequest = async (id) => {
 }
 
 const acceptFriendRequest = async (from, to) => {
-    let url = '/friend/acceptRequest';
+    let url = 'http://localhost:8080/friend/acceptRequest';
 
     let res = await fetch(url, {
         method: 'POST',

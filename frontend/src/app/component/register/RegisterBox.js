@@ -9,7 +9,7 @@ function RegisterBox(props) {
     let password;
 
     const userRegistration = async () => {
-        let url = '/user/register';
+        let url = 'http://localhost:/user/register';
         // let body = `code=${verifyCode}`;
 
         let res = await fetch(url, {

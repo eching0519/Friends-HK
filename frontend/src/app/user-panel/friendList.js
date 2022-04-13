@@ -36,7 +36,7 @@ const FriendList = (props) => {
     }, [target])
 
     const getRequestList = async () => {
-        let url = '/friend/userFriendRequest';
+        let url = 'http://localhost:8080/friend/userFriendRequest';
 
         let res = await fetch(url, {
             method: 'POST',

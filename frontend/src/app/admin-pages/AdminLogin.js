@@ -10,7 +10,7 @@ const AdminLogin = (props) => {
     const [alert, setAlert] = useState({ visible: false, strongMsg: "123", msg: "456"});
 
   const sendAdminLoginRequest = async () => {
-    let url = '/admin/login';
+    let url = 'http://localhost:/admin/login';
 
     let res = await fetch(url, {
         method: 'POST',

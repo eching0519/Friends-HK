@@ -14,7 +14,7 @@ const Verify = () => {
         let m = queryData.get('m');
         let id = queryData.get('id');
 
-        let url = '/user/activate' + urlData
+        let url = 'http://localhost:8080/user/activate' + urlData
         let res = await fetch(url);
         
         let data

@@ -28,7 +28,7 @@ const Login = (props) => {
     };
 
     const sendVerifyEmail = async () => {
-      let url = '/user/login/email';
+      let url = 'http://localhost:8080/user/login/email';
       let res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

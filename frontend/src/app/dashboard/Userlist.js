@@ -69,7 +69,7 @@ const Userlist = (props) => {
 
 
 	const sendGetAllUserRequest = async () => {
-		let url = '/admin/userList';
+		let url = 'http://localhost:8080/admin/userList';
 
 		let res = await fetch(url, {
 			method: 'POST',

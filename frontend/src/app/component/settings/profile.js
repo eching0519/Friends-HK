@@ -56,7 +56,7 @@ const ProfileSettings = (props) => {
     }, [ulang, uco, ugender, dob, uhobbies, bio, hashtags, plang, ageFrom, ageTo]);
 
     const sendUpdatePreferenceRequest = async (d) => {
-        let url = '/user/profile/preferences/update';
+        let url = 'http://localhost:8080/user/profile/preferences/update';
 
         var dateOfBirth;
         try {

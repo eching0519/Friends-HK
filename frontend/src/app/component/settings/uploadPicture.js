@@ -85,7 +85,7 @@ const UploadPicture = (props) => {
     }
 
     const sendImageToServer = async (imgData) => {
-        let url = '/user/profile/picture/update';
+        let url = 'http://localhost:8080/user/profile/picture/update';
 
         let res = await fetch(url, {
             method: 'POST',

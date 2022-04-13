@@ -27,7 +27,7 @@ const AccountSettings = (props) => {
 
     const sendResetPwRequest = async () => {
         // Preparing data to send POST request
-        let url = '/user/profile/update';
+        let url = 'http://localhost:8080/user/profile/update';
 
         let res = await fetch(url, {
             method: 'POST',

@@ -6,7 +6,7 @@ const PrivacySettings = (props) => {
     let user = props.user
 
     const sendResetPwRequest = async () => {
-        let url = '/user/forgotPassword/reset';
+        let url = 'http://localhost:8080/user/forgotPassword/reset';
 
         let res = await fetch(url, {
             method: 'POST',

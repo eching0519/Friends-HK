@@ -35,7 +35,7 @@ const Userinfo = (props) => { //Function for admin
     
     const getUserInfo = async () => { //to fetch the user information from the backend
       try{
-      let res = await fetch('/admin/getuserbyid', { //fetch the api regards to its format
+      let res = await fetch('http://localhost:8080/admin/getuserbyid', { //fetch the api regards to its format
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -53,7 +53,7 @@ const Userinfo = (props) => { //Function for admin
   } 
     const resetUserPassword = async (email , password) => { //to change the user's password
       try{
-      let res = await fetch('/admin/resetUserPassword', { // to fetch the data from backend
+      let res = await fetch('http://localhost:8080/admin/resetUserPassword', { // to fetch the data from backend
         method: 'POST', //requirements to fetch the data from api
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -71,7 +71,7 @@ const Userinfo = (props) => { //Function for admin
   }
     const blockUser = async (id) => { // to block the user
       try{
-        let res = await fetch('/admin/block', { //fetch the data from api by submitting the requirements
+        let res = await fetch('http://localhost:8080/admin/block', { //fetch the data from api by submitting the requirements
           method: 'POST',
           headers : {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -94,7 +94,7 @@ const Userinfo = (props) => { //Function for admin
     const unblockUser = async (id) => { //to unblock the blocekd user
       console.log("unblockUser", id)
       try{
-        let res = await fetch('/admin/unblock', { //fetch the api by providing the requirements
+        let res = await fetch('http://localhost:8080/admin/unblock', { //fetch the api by providing the requirements
           method: 'POST',
           headers : {
             'Content-Type': 'application/x-www-form-urlencoded'
