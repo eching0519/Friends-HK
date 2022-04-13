@@ -51,6 +51,7 @@ const ChatroomBox = (props) => {
                     selectedRoomId={props.selectedRoomId}
                     setTarget={setTarget}
                     setSystemMsgList={props.setSystemMsgList}
+                    setAllChatList={props.setAllChatList}
                     userCount={chatroom.users.length} />
             )})
         }
@@ -94,7 +95,9 @@ const Box = (props) => {
                             userName={props.user.name} 
                             roomId={props.chatroom._id} 
                             setWouldURgame={setWouldURgame} 
+                            chatroom={props.chatroom}
                             setSystemMsgList={props.setSystemMsgList}
+                            setAllChatList={props.setAllChatList}
                             userCount={props.userCount} />: <></>}
             <div className="card card-chatbox">
                 <div className="card-header bg-white">

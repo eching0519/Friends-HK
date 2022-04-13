@@ -56,7 +56,14 @@ const WRUgame = (props) => {
                 message += `<br />${element[0]} would rather ${(element[1] == 'A')? answerA:answerB}`
             )
             let messageObj = { message: message, senderId: 'wur', timeElapse: Date.now() }
-            props.setSystemMsgList(prevList => ({...prevList, [props.roomId]: {...messageObj}}));
+            console.log("WUR:", messageObj, props.roomId)
+
+            console.log("WUR: ", props.chatroom)
+            var chatroom = {...props.chatroom, 'chatbox': [...props.chatroom.chatbox, messageObj]}
+            // console.log("WUR: ", chatroom)
+            // props.setSystemMsgList(prevList => ({...prevList, [props.roomId]: {...messageObj} }));
+
+            props.setAllChatList(prevList=>( {...prevList, [props.roomId]: chatroom} ))
         }
     }, [result])
 
