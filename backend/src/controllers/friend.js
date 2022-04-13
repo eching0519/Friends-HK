@@ -156,7 +156,7 @@ exports.AcceptRequest = async(req, res, next)=>{
     user2.updateFriendlist();
     
     // Add chatroom for private message
-    let chatroom = new Chatroom([user1.id, user2.id]);
+    let chatroom = new Chatroom([user1._id, user2._id]);
     await chatroom.saveAsFriendChatroom();
 
     friend.acceptRequest();
