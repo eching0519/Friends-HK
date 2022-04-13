@@ -8,7 +8,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoConnect = require('./util/database').mongoConnect
 
+const cors = require('cors');
+
 const app = express();
+app.use(cors);
 const server = http.createServer(app);
 const io = socketio(server);
 // const router=express.Router();
