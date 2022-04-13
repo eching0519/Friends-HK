@@ -2,7 +2,7 @@ const Signout = async () => {
     // Remove client session
     sessionStorage.removeItem('UserProfile')
     
-    let url = 'http://localhost:/user/logout';
+    let url = 'http://localhost:8080/user/logout';
     let res = await fetch(url, {
         method: 'GET',
     });
