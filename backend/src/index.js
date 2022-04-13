@@ -11,7 +11,8 @@ const mongoConnect = require('./util/database').mongoConnect
 const cors = require('cors');
 
 const app = express();
-app.use(cors);
+app.use(cors());
+
 const server = http.createServer(app);
 const io = socketio(server);
 // const router=express.Router();

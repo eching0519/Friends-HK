@@ -7,7 +7,7 @@ const LoginByPassword = props => {
     const [disableInput, setDisableInput] = useState(false);
 
     const sendLoginRequest = async () => {
-        let url = '/user/login';
+        let url = 'http://ec2-3-239-211-140.compute-1.amazonaws.com:8080/user/login';
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
