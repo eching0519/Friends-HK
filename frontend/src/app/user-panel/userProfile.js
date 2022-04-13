@@ -180,7 +180,7 @@ export const UserProfileSidebar = (props) => {
     }
 
     const getFriendRequest = async () => {
-        let url = '/friend/findRequest';
+        let url = 'http://localhost:8080/friend/findRequest';
 
         let res = await fetch(url, {
             method: 'POST',
@@ -209,7 +209,7 @@ export const UserProfileSidebar = (props) => {
     }
 
     const sendFriendRequest = async () => {
-        let url = '/friend/sendRequest';
+        let url = 'http://localhost:8080/friend/sendRequest';
 
         console.log(props.user._id)
         console.log(target._id)
@@ -244,7 +244,7 @@ export const UserProfileSidebar = (props) => {
     }
 
     const cancelFriendRequest = async () => {
-        let url = '/friend/cancelRequest';
+        let url = 'http://localhost:8080/friend/cancelRequest';
 
         let res = await fetch(url, {
             method: 'POST',
@@ -271,7 +271,7 @@ export const UserProfileSidebar = (props) => {
     }
 
     const acceptFriendRequest = async (targetId, userId) => {
-        let url = '/friend/acceptRequest';
+        let url = 'http://localhost:8080/friend/acceptRequest';
 
         let res = await fetch(url, {
             method: 'POST',
@@ -301,7 +301,7 @@ export const UserProfileSidebar = (props) => {
     }
 
     const rejectFriendRequest = async (targetId, userId) => {
-        let url = '/friend/rejectRequest';
+        let url = 'http://localhost:8080/friend/rejectRequest';
 
         let res = await fetch(url, {
             method: 'POST',
