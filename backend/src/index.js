@@ -7,15 +7,22 @@ const sessions = require('express-session')
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoConnect = require('./util/database').mongoConnect
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server);
+
+const io = socketio(server, {
+    cors: {
+        origin: "*"
+    }
+});
 // const router=express.Router();
 
 
-
 const port = process.env.PORT || 8080
+
+app.use(cors());
 
 // Session
 app.use(sessions({
