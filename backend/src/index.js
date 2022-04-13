@@ -443,7 +443,7 @@ io.on('connection', (socket) => {
         callback("success");
     });
 
-    let roomsize = 2;   //change roomsize here (2 -> 3)
+    let roomsize = 3;   //change roomsize here (2 -> 3)
     socket.on("joinWouldURgame", (userName, roomId, callback) => {
         socket.join(`wur:${roomId}`)    //join user to WUR session
         console.log(`user: ${userName} join the would you rather game. ${roomId}`)
