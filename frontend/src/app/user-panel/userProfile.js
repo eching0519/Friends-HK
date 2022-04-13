@@ -160,7 +160,7 @@ export const UserProfileSidebar = (props) => {
     }
 
     const getTargetInfo = async (targetId) => {
-        let url = '/admin/getuserbyid';
+        let url = 'http://localhost:8080/admin/getuserbyid';
 
         let res = await fetch(url, {
             method: 'POST',
