@@ -17,7 +17,7 @@ const server = http.createServer(app);
 const io = socketio(server,
     {
         cors: {
-            origin: "https://deploy.d2qi1i7l9d21jh.amplifyapp.com/"
+            origin: "*"
         }
     }
 );

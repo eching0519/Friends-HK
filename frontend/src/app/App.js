@@ -11,7 +11,7 @@ import { withTranslation } from "react-i18next";
 import SocketContext from './SocketContext';
 import { io } from 'socket.io-client';
 
-const socket = io('localhost:8080', { //no url: default to localhost:8080
+const socket = io('http://localhost:8080', { //no url: default to localhost:8080
     autoConnect: false
 });
 
