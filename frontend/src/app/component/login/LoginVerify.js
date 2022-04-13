@@ -6,7 +6,7 @@ const LoginVerify = props => {
     const [disableInput, setDisableInput] = useState(false);
 
     const sendVerifyRequest = async () => {
-        let url = 'http://ec2-3-239-211-140.compute-1.amazonaws.com:8080/user/login/verify';
+        let url = 'https://ec2-3-239-211-140.compute-1.amazonaws.com:8080/user/login/verify';
         let body = `code=${verifyCode}`;
 
         let res = await fetch(url, {

@@ -14,7 +14,7 @@ const LoginVerifier = async (props) => {
         return
     }
     
-    let url = 'http://ec2-3-239-211-140.compute-1.amazonaws.com:8080/checkSession';
+    let url = 'https://ec2-3-239-211-140.compute-1.amazonaws.com:8080/checkSession';
     let res = await fetch(url, {
         method: 'GET',
     });

@@ -18,7 +18,7 @@ const ForgotPassword = props => {
             props.setAlert({visible: false})
         }
 
-        let url = 'http://ec2-3-239-211-140.compute-1.amazonaws.com:8080/user/forgotPassword/mail';
+        let url = 'https://ec2-3-239-211-140.compute-1.amazonaws.com:8080/user/forgotPassword/mail';
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
