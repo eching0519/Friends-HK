@@ -18,7 +18,7 @@ const ForgotPassword = props => {
             props.setAlert({visible: false})
         }
 
-        let url = 'https://ec2-3-239-211-140.compute-1.amazonaws.com:8080/user/forgotPassword/mail';
+        let url = 'http://localhost:8080/user/forgotPassword/mail';
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -40,7 +40,7 @@ const ForgotPassword = props => {
       }
 
     const sendResetPwRequest = async () => {
-        let url = '/user/forgotPassword/reset';
+        let url = 'http://localhost:8080/user/forgotPassword/reset';
         let body = querystring.stringify({
             email: email,
             code: verifyCode,
