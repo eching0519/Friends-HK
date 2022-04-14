@@ -1,5 +1,5 @@
 {
-  "proxy": "http://ec2-44-199-250-95.compute-1.amazonaws.com:8080",
+  "proxy": "http://ec2-44-195-88-90.compute-1.amazonaws.com:8080",
   "name": "purple-react-free",
   "version": "1.1.0",
   "homepage": "http://bootstrapdash.com/demo/purple-react-free/template/demo_1/preview",
