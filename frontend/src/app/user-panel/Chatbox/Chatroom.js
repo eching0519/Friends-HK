@@ -116,8 +116,9 @@ const Chatrooms = (props) => {
         }
     }, [allChatList]);
 
+    // Add the system message to chat list
     useEffect(() => {
-        // console.log("System message", systemMsgList);
+        console.log("System message", systemMsgList);
 
         if (!allChatList) return
         Object.entries(systemMsgList).map((value, key) => {
@@ -125,10 +126,15 @@ const Chatrooms = (props) => {
             var msg = value[1];
             if (allChatList && roomId in allChatList) {
                 var targetChatroom = allChatList[roomId];
+                console.log("System message chatbox", targetChatroom.chatbox)
                 setAllChatList({...allChatList, [roomId]: {...targetChatroom, 'chatbox': [...targetChatroom.chatbox, msg]}});
             }
         });
     }, [systemMsgList]);
+
+    useEffect(() => {
+        console.log("WUR: All chatroom", allChatList)
+    }, [allChatList])
 
     useEffect(() => {
         if (!allChatList) return
@@ -221,7 +227,8 @@ const Chatrooms = (props) => {
                                                 setUser={props.setUser}
                                                 sendMessage={sendMessage}
                                                 selectedRoomId={selectedRoomId}
-                                                setSystemMsgList={setSystemMsgList} />
+                                                setSystemMsgList={setSystemMsgList}
+                                                setAllChatList={setAllChatList} />
                      : (<>
                         <div className="card card-fit-screen">
                             <div className='card-body'>
