@@ -1,5 +1,8 @@
 # Friends@HK - CSCI3100 Project
 
+## Demo
+[![CSCI3100 demo](https://i.ytimg.com/vi/WIw6h7JHln4/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG\u0026rs=AOn4CLBkltF_ziYop4-pN1cWAg2jH1ryyQ)](https://www.youtube.com/watch?v=WIw6h7JHln4 "CSCI3100 demo")
+
 ## Backend
 ```
 cd ./backend
